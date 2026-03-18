@@ -90,7 +90,7 @@ export function Attendance() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-32 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
+        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
       >
         <div>
           <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-2">
@@ -119,8 +119,12 @@ export function Attendance() {
           const rate = Math.round((a.present + a.wfh) / (a.present + a.wfh + a.leave + a.absent) * 100);
           const flag = a.absent >= 3 || rate < 80;
           return (
-            <button
+            <motion.button
               key={e.id}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: empIdx * 0.07, duration: 0.5 }}
               onClick={() => setSelectedEmp(e.id)}
               className={`relative p-5 rounded-[2rem] border text-left transition-all duration-500 overflow-hidden group hover:border-white/10 ${
                 selectedEmp === e.id ? 'bg-white/10 border-white/20' : 'bg-white/5 border-white/5'
@@ -131,7 +135,7 @@ export function Attendance() {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 blur-[50px] rounded-full pointer-events-none" />
               )}
               <div className="flex items-center gap-2 mb-4 relative z-10">
-                <img src={e.avatar} alt={e.name} className="w-8 h-8 rounded-full object-cover grayscale" />
+                <img src={e.avatar} alt={e.name} className="w-8 h-8 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                 {flag && <AlertTriangle size={10} className="text-rose-400" />}
               </div>
               <p className="text-white/80 text-sm font-light truncate relative z-10">{e.name.split(' ')[0]}</p>
@@ -150,7 +154,7 @@ export function Attendance() {
                   background: rate >= 90 ? '#10b981' : rate >= 80 ? '#f59e0b' : '#f43f5e'
                 }} />
               </div>
-            </button>
+            </motion.button>
           );
         })}
       </div>
@@ -191,7 +195,7 @@ export function Attendance() {
             {/* Breakdown */}
             <div className="relative bg-white/5 border border-white/5 rounded-[2rem] p-6 overflow-hidden group">
               <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-purple-500/8 blur-[40px] rounded-full pointer-events-none" />
-              <h3 className="text-[9px] uppercase tracking-widest text-white/30 mb-6 font-mono">// Orbital Log</h3>
+              <h3 className="text-white/30 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-3 border-b border-white/10 pb-3"><CalendarDays size={10} className="text-cyan-400" /> Temporal Breakdown</h3>
               <div className="space-y-4 relative z-10">
                 {[
                   { label: 'In Orbit', val: att.present, color: '#10b981' },
@@ -215,8 +219,8 @@ export function Attendance() {
             {/* Leave balance */}
             <div className="relative bg-white/5 border border-white/5 rounded-[2rem] p-6 overflow-hidden group">
               <div className="absolute top-0 right-0 w-28 h-28 bg-amber-500/5 blur-[40px] rounded-full pointer-events-none" />
-              <h3 className="text-[9px] uppercase tracking-widest text-white/30 mb-6 font-mono flex items-center gap-2">
-                <CalendarDays size={9} /> // Leave Matrix
+              <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-3 border-b border-white/10 pb-3">
+                <CalendarDays size={10} className="text-amber-400" /> Leave Matrix
               </h3>
               <div className="space-y-5 relative z-10">
                 {[
@@ -236,7 +240,7 @@ export function Attendance() {
                 ))}
                 {lb.sabbaticalEligible && (
                   <div className="pt-3 border-t border-white/5 flex items-center gap-2">
-                    <span className="text-[8px] uppercase tracking-widest text-purple-400 font-mono">★ Sabbatical Protocol Available</span>
+                    <span className="text-[8px] uppercase tracking-widest text-purple-400 font-mono flex items-center gap-1.5"><span className="w-1 h-1 rounded-full bg-purple-400 inline-block"/>Sabbatical Protocol Available</span>
                   </div>
                 )}
               </div>
@@ -245,8 +249,8 @@ export function Attendance() {
             {/* Work pattern */}
             <div className="relative bg-white/5 border border-white/5 rounded-[2rem] p-6 overflow-hidden group" data-cursor="Scan Pattern">
               <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-emerald-500/5 blur-[30px] rounded-full pointer-events-none" />
-              <h3 className="text-[9px] uppercase tracking-widest text-white/30 mb-6 font-mono flex items-center gap-2">
-                <MapPin size={9} /> // Location Telemetry
+              <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-3 border-b border-white/10 pb-3">
+                <MapPin size={10} className="text-rose-400" /> Location Pattern
               </h3>
               <div className="flex items-center gap-4 relative z-10">
                 <div className="relative w-16 h-16 flex-shrink-0" data-cursor="Scan Bio">

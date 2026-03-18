@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Cpu, TrendingUp, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { Cpu, TrendingUp, ArrowUpRight, ArrowDownRight, Coins } from 'lucide-react';
 import { ResponsiveContainer, ComposedChart, Area, Line, Bar, XAxis, YAxis, Tooltip, CartesianGrid, BarChart } from 'recharts';
 import { employees, orgROIData, departmentROI } from '../mockData';
 
@@ -36,7 +36,7 @@ export function ROIInvestment() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-32 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
+        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
       >
         <div>
           <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-2">
@@ -64,7 +64,7 @@ export function ROIInvestment() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none group-hover:bg-emerald-500/8 transition-all duration-1000" />
           <div className="flex justify-between items-center mb-10 relative z-10">
             <div>
-              <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold">ROI Trajectory (6M)</h3>
+              <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold flex items-center gap-4 border-b border-white/10 pb-4">ROI Trajectory (6M)</h3>
               <p className="text-white/20 text-[9px] font-mono mt-1">Investment vs Value Generated ($M)</p>
             </div>
             <div className="flex items-center gap-2 text-emerald-400">
@@ -100,7 +100,7 @@ export function ROIInvestment() {
 
         <div className="relative bg-white/5 border border-white/5 rounded-[2rem] p-8 overflow-hidden group">
           <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-purple-500/8 blur-[60px] rounded-full pointer-events-none" />
-          <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 relative z-10">Department Vectors</h3>
+          <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 relative z-10 flex items-center gap-4 border-b border-white/10 pb-4">Department Vectors</h3>
           <div className="space-y-5 relative z-10">
             {departmentROI.map((dept, i) => (
               <div key={i} data-cursor="Trace">
@@ -131,7 +131,7 @@ export function ROIInvestment() {
       </div>
 
       {/* Individual ROI profiles */}
-      <h3 className="text-white/30 uppercase tracking-[0.2em] text-xs font-semibold mb-6 font-mono">// Individual Capital Profiles</h3>
+      <h2 className="text-white/30 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-4 border-b border-white/10 pb-4"><Coins size={10} className="text-emerald-400" /> Individual Capital Nodes</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {employees.map((e, i) => {
           const surplus = e.revenueContribution - e.costInvestment;

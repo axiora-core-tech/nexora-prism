@@ -58,7 +58,7 @@ export function Dashboard() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-16 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
+        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
       >
         <div>
           <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6">Director Overview</p>
@@ -69,17 +69,17 @@ export function Dashboard() {
         <div className="flex gap-16 text-right">
           <div>
             <span className="text-white/30 text-[10px] uppercase tracking-[0.2em] block mb-2">Live Feed</span>
-            <span className="text-3xl font-light text-white font-mono">
+            <span className="text-4xl font-light text-white font-mono">
               {time.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
             </span>
           </div>
-          <div className="flex flex-col items-end group cursor-pointer">
+          <div className="flex flex-col items-end group cursor-crosshair">
             <span className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2 flex items-center gap-2 group-hover:text-cyan-400 transition-colors">
               Global Efficiency <ArrowUpRight size={12} />
             </span>
             <span className="text-4xl font-light text-white">84.2%</span>
           </div>
-          <div className="flex flex-col items-end group cursor-pointer">
+          <div className="flex flex-col items-end group cursor-crosshair">
             <span className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2 flex items-center gap-2 group-hover:text-rose-400 transition-colors">
               Risk Index <ShieldAlert size={12} />
             </span>
@@ -170,7 +170,7 @@ export function Dashboard() {
                 animate={{ opacity: 1, x: 0, rotateY: 0 }}
                 transition={{ delay: 0.2 + (index * 0.1), duration: 0.8, ease: "easeOut" }}
                 whileHover={{ y: -20, scale: 1.02 }}
-                className="group relative w-[260px] h-[370px] shrink-0 rounded-[2rem] overflow-hidden bg-[#111] snap-center cursor-pointer border border-white/5 hover:border-white/20 transition-all duration-500"
+                className="group relative w-[260px] h-[370px] shrink-0 rounded-[2rem] overflow-hidden bg-[#111] snap-center cursor-crosshair border border-white/5 hover:border-white/20 transition-all duration-500"
               >
                 <img
                   src={emp.avatar}
@@ -229,12 +229,12 @@ export function Dashboard() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="md:col-span-8 bg-white/5 border border-white/5 rounded-[2rem] p-8 md:p-10 relative overflow-hidden group hover:bg-white/[0.07] transition-colors"
+          className="md:col-span-8 bg-white/5 border border-white/5 rounded-[2rem] p-8 md:p-10 relative overflow-hidden group hover:bg-white/[0.04] transition-colors"
         >
           <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 blur-[100px] rounded-full group-hover:bg-cyan-500/20 transition-all duration-1000" />
           <div className="flex justify-between items-center mb-8 relative z-10">
             <div>
-              <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold">Vector Quality Trend</h3>
+              <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold flex items-center gap-4 border-b border-white/10 pb-4">Vector Quality Trend</h3>
               <p className="text-white/20 text-xs mt-1">15-day rolling performance signal</p>
             </div>
             <TrendingUp size={14} className="text-cyan-400" />
@@ -277,7 +277,7 @@ export function Dashboard() {
           className="md:col-span-4 bg-white/5 border border-white/5 rounded-[2rem] p-8 md:p-10 relative overflow-hidden"
         >
           <div className="flex justify-between items-center mb-8">
-            <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold">Live Feed</h3>
+            <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold flex items-center gap-4 border-b border-white/10 pb-4">Live Feed</h3>
             <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_10px_red]" />
           </div>
 
@@ -312,14 +312,14 @@ export function Dashboard() {
           >
             <div className="flex items-center gap-3 mb-6">
               <ShieldAlert size={14} className="text-rose-400" />
-              <h3 className="text-rose-400 uppercase tracking-[0.2em] text-xs font-semibold">At-Risk Employees</h3>
+              <h3 className="text-rose-400 uppercase tracking-[0.2em] text-xs font-semibold flex items-center gap-4 border-b border-white/10 pb-4">At-Risk Employees</h3>
             </div>
             <div className="space-y-4">
               {atRisk.map(emp => (
                 <NavLink to={`/employee/${emp.id}`} key={emp.id}
                   className="flex items-center gap-4 group hover:bg-rose-500/5 -mx-2 px-2 py-2 rounded-xl transition-colors"
                 >
-                  <img src={emp.avatar} alt={emp.name} className="w-9 h-9 rounded-full object-cover grayscale" />
+                  <img src={emp.avatar} alt={emp.name} className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                   <div className="flex-1">
                     <p className="text-white text-sm font-light">{emp.name}</p>
                     <p className="text-white/40 text-xs">{emp.recentFeedback}</p>
@@ -345,15 +345,15 @@ export function Dashboard() {
         >
           <div className="flex items-center gap-3 mb-6">
             <Star size={14} className="text-amber-400" />
-            <h3 className="text-amber-400 uppercase tracking-[0.2em] text-xs font-semibold">Top Performers</h3>
+            <h3 className="text-amber-400 uppercase tracking-[0.2em] text-xs font-semibold flex items-center gap-4 border-b border-white/10 pb-4">Top Performers</h3>
           </div>
           <div className="space-y-4">
             {topPerformers.map((emp, i) => (
               <NavLink to={`/employee/${emp.id}`} key={emp.id}
                 className="flex items-center gap-4 group hover:bg-amber-500/5 -mx-2 px-2 py-2 rounded-xl transition-colors"
               >
-                <div className="w-6 text-center text-lg flex-shrink-0">{i === 0 ? '🥇' : '🥈'}</div>
-                <img src={emp.avatar} alt={emp.name} className="w-9 h-9 rounded-full object-cover grayscale" />
+                <div className="w-6 text-center flex-shrink-0 text-xs font-mono text-white/30">{i === 0 ? '01' : '02'}</div>
+                <img src={emp.avatar} alt={emp.name} className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                 <div className="flex-1">
                   <p className="text-white text-sm font-light">{emp.name}</p>
                   <p className="text-white/40 text-xs">{emp.role}</p>
@@ -368,7 +368,7 @@ export function Dashboard() {
           </div>
 
           <NavLink to="/leaderboard" className="mt-6 flex items-center gap-2 text-[9px] uppercase tracking-widest text-white/30 hover:text-amber-400 transition-colors">
-            <Trophy size={10} /> Full Leaderboard <ChevronRight size={10} />
+            <Trophy size={10} /> Signal Hierarchy <ChevronRight size={10} />
           </NavLink>
         </motion.div>
       </div>

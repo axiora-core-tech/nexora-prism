@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Activity, TrendingUp, AlertTriangle, BrainCircuit, DollarSign, Target, Users, Zap } from 'lucide-react';
-import { ResponsiveContainer, AreaChart, Area, Tooltip, XAxis, CartesianGrid, ComposedChart, Line, Bar, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from 'recharts';
+import { ResponsiveContainer, AreaChart, Area, Tooltip, XAxis, YAxis, CartesianGrid, ComposedChart, Line, Bar, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from 'recharts';
 import { performanceData, globalRevenueForecast, globalLearningData, orgROIData, employees } from '../mockData';
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -59,11 +59,11 @@ export function Analytics() {
         <div className="text-right flex gap-12">
           <div>
             <p className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2">Network Resonance</p>
-            <p className="text-5xl font-light text-white tracking-tighter">98.9<span className="text-xl text-white/30">%</span></p>
+            <p className="text-4xl font-light text-white">98.9<span className="text-xl text-white/30">%</span></p>
           </div>
           <div>
             <p className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2">Global ROI</p>
-            <p className="text-5xl font-light text-white tracking-tighter">246<span className="text-xl text-white/30">%</span></p>
+            <p className="text-4xl font-light text-white">246<span className="text-xl text-white/30">%</span></p>
           </div>
         </div>
       </motion.div>
@@ -97,7 +97,7 @@ export function Analytics() {
             >
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none" />
               <div className="flex justify-between items-center mb-12">
-                <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold">Revenue vs Human Capital Cost ($M)</h3>
+                <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold flex items-center gap-4 border-b border-white/10 pb-4">Revenue vs Human Capital Cost ($M)</h3>
                 <TrendingUp size={16} className="text-emerald-400" />
               </div>
               <div className="h-[300px] w-full -ml-4">
@@ -129,7 +129,7 @@ export function Analytics() {
                 className="bg-white/5 border border-white/5 rounded-[2rem] p-8 relative overflow-hidden"
               >
                 <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold">Global Attrition Risk</h3>
+                  <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold flex items-center gap-4 border-b border-white/10 pb-4">Global Attrition Risk</h3>
                   <AlertTriangle size={16} className="text-rose-400" />
                 </div>
                 <div className="flex items-end justify-between gap-2 h-24">
@@ -157,7 +157,7 @@ export function Analytics() {
                 transition={{ duration: 0.8, delay: 0.6 }}
                 className="bg-white/5 border border-white/5 rounded-[2rem] p-8"
               >
-                <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6">Performance Trend (6M)</h3>
+                <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-4 border-b border-white/10 pb-4">Performance Trend (6M)</h3>
                 <div className="h-28">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={performanceData}>
@@ -179,7 +179,7 @@ export function Analytics() {
 
           {/* Employee comparison grid */}
           <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-            <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8">Employee Performance Matrix</h3>
+            <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Employee Performance Matrix</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
@@ -194,7 +194,7 @@ export function Analytics() {
                     <tr key={emp.id} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors cursor-crosshair" data-cursor="Deep Dive">
                       <td className="py-4 pr-8">
                         <div className="flex items-center gap-3">
-                          <img src={emp.avatar} alt={emp.name} className="w-7 h-7 rounded-full object-cover grayscale" />
+                          <img src={emp.avatar} alt={emp.name} className="w-7 h-7 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                           <div>
                             <p className="text-white text-sm font-light">{emp.name}</p>
                             <p className="text-white/30 text-[9px] uppercase tracking-widest">{emp.department}</p>
@@ -249,7 +249,7 @@ export function Analytics() {
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-              <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8">Organisation ROI Trajectory</h3>
+              <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Organisation ROI Trajectory</h3>
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <ComposedChart data={orgROIData}>
@@ -270,7 +270,7 @@ export function Analytics() {
             </div>
 
             <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-              <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8">Individual ROI Comparison</h3>
+              <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Individual ROI Comparison</h3>
               <div className="space-y-5">
                 {employees.map(emp => (
                   <div key={emp.id}>
@@ -302,7 +302,7 @@ export function Analytics() {
       {activeView === 'health' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-            <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8">Org Health Radar</h3>
+            <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Org Health Radar</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
@@ -316,7 +316,7 @@ export function Analytics() {
           </div>
 
           <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-            <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8">Learning Domain Completion</h3>
+            <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Learning Domain Completion</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={globalLearningData} layout="vertical">
@@ -332,7 +332,7 @@ export function Analytics() {
 
           {/* Burnout heatmap */}
           <div className="lg:col-span-2 bg-white/5 border border-white/5 rounded-[2rem] p-8">
-            <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8">Wellbeing & Burnout Matrix</h3>
+            <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Wellbeing & Burnout Matrix</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {employees.map(emp => (
                 <div key={emp.id} className="relative group">
@@ -347,7 +347,7 @@ export function Analytics() {
                     }}
                   >
                     <div className="flex items-center gap-2 mb-4">
-                      <img src={emp.avatar} alt={emp.name} className="w-7 h-7 rounded-full object-cover grayscale" />
+                      <img src={emp.avatar} alt={emp.name} className="w-7 h-7 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                       <p className="text-white/70 text-xs font-light">{emp.name.split(' ')[0]}</p>
                     </div>
                     <div className="space-y-2">

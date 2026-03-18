@@ -177,13 +177,13 @@ export function Settings() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -16 }}
               transition={{ duration: 0.3 }}
-              className="bg-white/[0.02] border border-white/5 rounded-[2rem] p-8"
+              className="bg-white/[0.02] border border-white/5 rounded-[2rem] p-8 relative overflow-hidden"
             >
+              <div className="absolute top-0 right-0 w-96 h-64 bg-purple-500/5 blur-[100px] rounded-full pointer-events-none" />
               {/* PERFORMANCE */}
               {activeSection === 'performance' && (
                 <div>
-                  <h2 className="text-white text-xl font-light mb-2">Performance Telemetry</h2>
-                  <p className="text-white/30 text-xs uppercase tracking-widest mb-8">Engine configuration for the performance tracking system</p>
+                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Telemetry Engine</h2>
 
                   <div className="space-y-0 mb-8">
                     {settingRow('Live Data Streaming', 'Continuous real-time update of employee vectors', <Toggle on={perf.liveStreaming} onChange={v => setPerf(p => ({ ...p, liveStreaming: v }))} />)}
@@ -215,15 +215,14 @@ export function Settings() {
               {/* NOTIFICATIONS */}
               {activeSection === 'notifications' && (
                 <div>
-                  <h2 className="text-white text-xl font-light mb-2">Notification Rules</h2>
-                  <p className="text-white/30 text-xs uppercase tracking-widest mb-8">Configure alerts, thresholds, and delivery channels</p>
+                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Alert Feed</h2>
 
                   <div className="grid grid-cols-2 gap-4 mb-8">
                     {[
                       { label: 'Attrition Alert Threshold', key: 'attritionThreshold', unit: '%', min: 30, max: 90 },
                       { label: 'Burnout Alert Threshold', key: 'burnoutThreshold', unit: '%', min: 30, max: 95 },
                     ].map(({ label, key, unit, min, max }) => (
-                      <div key={key} className="bg-white/[0.02] border border-white/5 rounded-2xl p-5">
+                      <div key={key} className="bg-white/[0.02] border border-white/5 rounded-[2rem] p-5">
                         <p className="text-white/40 text-xs uppercase tracking-widest mb-3">{label}</p>
                         <div className="flex items-center gap-3 mb-3">
                           <span className="text-3xl font-light text-white">{(notifs as any)[key]}<span className="text-lg text-white/30">{unit}</span></span>
@@ -255,8 +254,7 @@ export function Settings() {
               {/* TEAM */}
               {activeSection === 'team' && (
                 <div>
-                  <h2 className="text-white text-xl font-light mb-2">Team Configuration</h2>
-                  <p className="text-white/30 text-xs uppercase tracking-widest mb-8">Review cycles, visibility rules, and goal management</p>
+                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Team Protocol</h2>
 
                   <div className="space-y-0 mb-8">
                     {settingRow('Self-Reviews', 'Allow employees to submit self-assessments in 360° cycles', <Toggle on={team.selfReviewEnabled} onChange={v => setTeam(t => ({ ...t, selfReviewEnabled: v }))} />)}
@@ -283,8 +281,7 @@ export function Settings() {
               {/* SECURITY */}
               {activeSection === 'security' && (
                 <div>
-                  <h2 className="text-white text-xl font-light mb-2">Security Matrix</h2>
-                  <p className="text-white/30 text-xs uppercase tracking-widest mb-8">Authentication, audit trails, and data governance</p>
+                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Security Matrix</h2>
 
                   <div className="space-y-0 mb-8">
                     {settingRow('Two-Factor Authentication', 'Require 2FA for all HR and manager accounts', <Toggle on={sec.twoFA} onChange={v => setSec(s => ({ ...s, twoFA: v }))} />)}
@@ -318,8 +315,7 @@ export function Settings() {
               {/* INTEGRATIONS */}
               {activeSection === 'integrations' && (
                 <div>
-                  <h2 className="text-white text-xl font-light mb-2">Connected Systems</h2>
-                  <p className="text-white/30 text-xs uppercase tracking-widest mb-8">External data sources and pipeline connections</p>
+                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Node Links</h2>
 
                   <div className="space-y-4">
                     {[
@@ -335,7 +331,7 @@ export function Settings() {
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.06 }}
-                        className="flex items-center justify-between p-5 bg-white/[0.02] border border-white/5 rounded-2xl hover:border-white/10 transition-colors"
+                        className="flex items-center justify-between p-5 bg-white/[0.02] border border-white/5 rounded-[2rem] hover:border-white/10 transition-colors"
                       >
                         <div className="flex items-center gap-4">
                           <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold" style={{ background: intg.color + '20', color: intg.color }}>
@@ -351,7 +347,7 @@ export function Settings() {
                             ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/5 hover:bg-emerald-500/10'
                             : 'border-white/10 text-white/40 hover:border-white/20 hover:text-white'
                         }`}>
-                          {intg.status === 'connected' ? '✓ Connected' : 'Connect'}
+                          {intg.status === 'connected' ? 'Connected' : 'Connect'}
                         </button>
                       </motion.div>
                     ))}
@@ -362,8 +358,7 @@ export function Settings() {
               {/* TERMINAL */}
               {activeSection === 'terminal' && (
                 <div>
-                  <h2 className="text-white text-xl font-light mb-2">Terminal Override</h2>
-                  <p className="text-white/30 text-xs uppercase tracking-widest mb-8">Direct system configuration commands</p>
+                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">System Override</h2>
 
                   <div className="bg-black/60 border border-white/10 rounded-2xl p-6 font-mono text-xs space-y-2 mb-6">
                     <p className="text-white/20">// APEX Performance Intelligence v2.4.1</p>
@@ -389,7 +384,7 @@ export function Settings() {
                     ].map(({ label, icon: Icon, color }) => (
                       <button
                         key={label}
-                        className="flex items-center gap-3 px-5 py-4 bg-white/[0.02] border border-white/5 rounded-2xl text-sm font-light text-white/50 hover:text-white hover:border-white/15 hover:bg-white/[0.04] transition-all text-left"
+                        className="flex items-center gap-3 px-5 py-4 bg-white/[0.02] border border-white/5 rounded-[2rem] text-sm font-light text-white/50 hover:text-white hover:border-white/15 hover:bg-white/[0.04] transition-all text-left"
                       >
                         <Icon size={14} style={{ color }} />
                         {label}

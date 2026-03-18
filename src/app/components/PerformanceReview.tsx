@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Crosshair, Star, MessageSquare, Target, Brain, Heart, Users, Zap, ArrowUpRight, CheckCircle2, ChevronRight } from 'lucide-react';
+import { Crosshair, Star, MessageSquare, Target, Brain, Heart, Users, Zap, ArrowUpRight, CheckCircle2, ChevronRight, ArrowLeft } from 'lucide-react';
 import { NavLink } from 'react-router';
 import { employees } from '../mockData';
 
@@ -102,7 +102,7 @@ export function PerformanceReview() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-32 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
+        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
       >
         <div>
           <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-2">
@@ -143,7 +143,7 @@ export function PerformanceReview() {
           {/* PHASE 1: ORBIT — select target node */}
           {phase === 'orbit' && (
             <div>
-              <p className="text-[10px] uppercase tracking-[0.3em] text-white/20 mb-12 font-mono">// 01 — Select Target Node</p>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-white/20 mb-12 font-mono">01 &nbsp;·&nbsp; Select Target Node</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                 {employees.map((e, i) => (
                   <motion.button
@@ -193,7 +193,7 @@ export function PerformanceReview() {
 
               {/* Relation selector */}
               <div className="mb-12">
-                <p className="text-[9px] uppercase tracking-widest text-white/20 mb-5 font-mono">// Transmitter Context</p>
+                <p className="text-[9px] uppercase tracking-widest text-white/20 mb-5 font-mono">Transmitter Context</p>
                 <div className="flex flex-wrap gap-3">
                   {[
                     { val: 'manager',       label: 'Direct Manager' },
@@ -231,9 +231,9 @@ export function PerformanceReview() {
           {/* PHASE 2: CALIBRATE — score sliders as abstract arcs */}
           {phase === 'calibrate' && emp && (
             <div>
-              <p className="text-[10px] uppercase tracking-[0.3em] text-white/20 mb-4 font-mono">// 02 — Calibrate Signal Vectors</p>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-white/20 mb-4 font-mono">02 &nbsp;·&nbsp; Calibrate Signal Vectors</p>
               <div className="flex items-center gap-4 mb-16">
-                <img src={emp.avatar} alt={emp.name} className="w-10 h-10 rounded-full object-cover grayscale"/>
+                <img src={emp.avatar} alt={emp.name} className="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"/>
                 <div>
                   <span className="text-white font-light">{emp.name.split(' ')[0]} </span>
                   <span className="text-white/30 font-serif italic">{emp.name.split(' ')[1]}</span>
@@ -296,8 +296,8 @@ export function PerformanceReview() {
               <div className="flex gap-4">
                 <button onClick={() => setPhase('orbit')}
                   className="px-8 py-3 rounded-full border border-white/5 text-white/30 text-sm hover:text-white hover:border-white/15 transition-all"
-                  data-cursor="Back">
-                  ← Retarget
+                  data-cursor="Return">
+                  <ArrowLeft size={16} />
                 </button>
                 <button onClick={() => setPhase('transmit')}
                   className="flex items-center gap-3 px-10 py-3 rounded-full bg-white/5 border border-white/10 text-white/60 text-sm hover:bg-white/10 hover:text-white hover:border-white/20 transition-all"
@@ -311,9 +311,9 @@ export function PerformanceReview() {
           {/* PHASE 3: TRANSMIT — qualitative narrative */}
           {phase === 'transmit' && emp && (
             <div>
-              <p className="text-[10px] uppercase tracking-[0.3em] text-white/20 mb-4 font-mono">// 03 — Encode Qualitative Signals</p>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-white/20 mb-4 font-mono">03 &nbsp;·&nbsp; Encode Qualitative Signals</p>
               <div className="flex items-center gap-4 mb-16">
-                <img src={emp.avatar} alt={emp.name} className="w-10 h-10 rounded-full object-cover grayscale"/>
+                <img src={emp.avatar} alt={emp.name} className="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"/>
                 <span className="text-white/60 font-light">{emp.name}</span>
                 <span className="text-white/20 text-[9px] font-mono ml-auto uppercase tracking-widest">Composite // {composite}</span>
               </div>
@@ -347,8 +347,8 @@ export function PerformanceReview() {
               <div className="flex gap-4">
                 <button onClick={() => setPhase('calibrate')}
                   className="px-8 py-3 rounded-full border border-white/5 text-white/30 text-sm hover:text-white hover:border-white/15 transition-all"
-                  data-cursor="Back">
-                  ← Recalibrate
+                  data-cursor="Return">
+                  <ArrowLeft size={16} />
                 </button>
                 <button onClick={() => setPhase('confirm')}
                   className="flex items-center gap-3 px-10 py-3 rounded-full bg-white/5 border border-white/10 text-white/60 text-sm hover:bg-white/10 hover:text-white hover:border-white/20 transition-all"
@@ -362,13 +362,13 @@ export function PerformanceReview() {
           {/* PHASE 4: CONFIRM */}
           {phase === 'confirm' && emp && (
             <div>
-              <p className="text-[10px] uppercase tracking-[0.3em] text-white/20 mb-4 font-mono">// 04 — Confirm Transmission</p>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-white/20 mb-4 font-mono">04 &nbsp;·&nbsp; Confirm Transmission</p>
               <div className="relative bg-white/5 border border-white/5 rounded-[2rem] p-8 md:p-12 overflow-hidden mb-8 group">
                 <div className="absolute top-0 right-0 w-80 h-80 bg-cyan-500/5 blur-[100px] rounded-full pointer-events-none group-hover:bg-cyan-500/10 transition-all duration-1000" />
 
                 {/* Subject */}
                 <div className="flex items-center gap-6 mb-10 pb-10 border-b border-white/5 relative z-10">
-                  <img src={emp.avatar} alt={emp.name} className="w-16 h-16 rounded-full object-cover grayscale"/>
+                  <img src={emp.avatar} alt={emp.name} className="w-16 h-16 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"/>
                   <div>
                     <h2 className="text-white text-3xl font-light leading-none">{emp.name.split(' ')[0]}</h2>
                     <h2 className="text-white/30 font-serif italic text-2xl leading-none mt-1">{emp.name.split(' ')[1]}</h2>
@@ -426,7 +426,7 @@ export function PerformanceReview() {
                 <button onClick={() => setPhase('transmit')}
                   className="px-8 py-4 rounded-full border border-white/5 text-white/30 text-sm hover:text-white hover:border-white/15 transition-all"
                   data-cursor="Edit">
-                  ← Re-encode
+                  Back
                 </button>
                 <button
                   onClick={() => setTransmitted(true)}

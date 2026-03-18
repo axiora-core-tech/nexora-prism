@@ -450,7 +450,7 @@ export function EmployeeDetail() {
                   </div>
                   {employee.leaveBalance.sabbaticalEligible && (
                     <div className="pt-4 mt-2 border-t border-white/5 text-[10px] uppercase tracking-widest text-purple-400">
-                      ★ Sabbatical Protocol Available
+                      · Sabbatical Protocol Available
                     </div>
                   )}
                 </div>

@@ -24,7 +24,8 @@ const podiumBorder: Record<number, string> = {
   1: 'rgba(148,163,184,0.25)',
   2: 'rgba(180,83,9,0.25)',
 };
-const medals = ['🥇','🥈','🥉'];
+const rankLabels = ['I', 'II', 'III'];
+const rankNumerals = ['01', '02', '03'];
 
 function ranked(metric: Metric) {
   const cfg = metricConfig[metric];
@@ -45,7 +46,7 @@ export function Leaderboard() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-32 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
+        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
       >
         <div>
           <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-2">
@@ -95,11 +96,11 @@ export function Leaderboard() {
               className="flex flex-col items-center"
             >
               <NavLink to={`/employee/${emp.id}`} data-cursor="View Node">
-                <motion.div whileHover={{ y: -5 }} className="flex flex-col items-center mb-3 group cursor-pointer">
+                <motion.div whileHover={{ y: -5 }} className="flex flex-col items-center mb-3 group cursor-crosshair">
                   <div className="relative mb-3">
                     <img src={emp.avatar} alt={emp.name}
-                      className="w-14 h-14 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ring-2"
-                      style={{ ringColor: podiumBorder[rank] }} />
+                      className="w-14 h-14 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                      style={{ outline: `2px solid ${podiumBorder[rank]}`, outlineOffset: '2px' }} />
                     <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border"
                       style={{ background: podiumGlow[rank], borderColor: podiumBorder[rank] }}>
                       {rank + 1}
@@ -116,7 +117,7 @@ export function Leaderboard() {
                 className={`w-full ${heights[i]} rounded-t-xl flex items-end justify-center pb-3 border-t-2 transition-all`}
                 style={{ background: podiumGlow[rank], borderColor: podiumBorder[rank] }}
               >
-                <span className="text-xl">{medals[rank]}</span>
+                <span className="text-lg font-mono font-light" style={{ color: podiumBorder[rank] }}>0{rank + 1}</span>
               </div>
             </motion.div>
           );
@@ -129,7 +130,7 @@ export function Leaderboard() {
           style={{ background: cfg.color + '05' }} />
 
         <div className="px-8 py-5 border-b border-white/5 flex items-center justify-between relative z-10">
-          <p className="text-[9px] uppercase tracking-widest text-white/30 font-mono">// Full Ranking — {cfg.label}</p>
+          <p className="text-[9px] uppercase tracking-widest text-white/30 font-mono">Full Ranking · {cfg.label}</p>
           <p className="text-[9px] uppercase tracking-widest text-white/20 font-mono">{employees.length} nodes</p>
         </div>
 
@@ -150,14 +151,14 @@ export function Leaderboard() {
                   {/* Rank */}
                   <div className="w-8 text-center flex-shrink-0">
                     {i < 3
-                      ? <span className="text-lg">{medals[i]}</span>
+                      ? <span className="text-sm font-mono font-light" style={{ color: i === 0 ? '#FCD34D' : i === 1 ? '#94A3B8' : '#B45309' }}>{String(i+1).padStart(2,'0')}</span>
                       : <span className="text-white/20 text-sm font-mono">{i+1}</span>}
                   </div>
 
                   {/* Employee */}
                   <div className="flex items-center gap-3 w-52 flex-shrink-0">
                     <img src={emp.avatar} alt={emp.name}
-                      className="w-9 h-9 rounded-full object-cover grayscale group-hover/row:grayscale-0 transition-all duration-500" />
+                      className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 group-hover/row:grayscale group-hover:grayscale-0-0 transition-all duration-500" />
                     <div>
                       <p className="text-white/80 text-sm font-light leading-none">{emp.name.split(' ')[0]}</p>
                       <p className="text-white/30 font-serif italic text-xs leading-none mt-0.5">{emp.name.split(' ')[1]}</p>

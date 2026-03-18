@@ -6,10 +6,10 @@ import { employees } from '../mockData';
 const scoreLabels = ['communication', 'technical', 'leadership', 'collaboration', 'innovation'] as const;
 const scoreColors: Record<string, string> = {
   communication: '#38bdf8',
-  technical:     '#c084fc',
-  leadership:    '#f59e0b',
+  technical: '#c084fc',
+  leadership: '#f59e0b',
   collaboration: '#10b981',
-  innovation:    '#f43f5e',
+  innovation: '#f43f5e',
 };
 
 function RadarWeb({ scores }: { scores: Record<string, number> }) {
@@ -27,10 +27,10 @@ function RadarWeb({ scores }: { scores: Record<string, number> }) {
 
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      {[0.25,0.5,0.75,1].map(f => (
+      {[0.25, 0.5, 0.75, 1].map(f => (
         <polygon key={f} points={grid(f)} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="0.5" />
       ))}
-      {keys.map((_,i) => {
+      {keys.map((_, i) => {
         const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
         return <line key={i} x1={cx} y1={cy} x2={cx + r * Math.cos(angle)} y2={cy + r * Math.sin(angle)} stroke="rgba(255,255,255,0.04)" strokeWidth="0.5" />;
       })}
@@ -68,13 +68,13 @@ function ResonanceCard({ review, expanded, onToggle }: { review: any; expanded: 
 
       <AnimatePresence>
         {expanded && (
-          <motion.div
+          <motion.div>
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.35 }}
             className="overflow-hidden"
-          >
+
             <div className="px-7 pb-7 border-t border-white/5 relative z-10">
               <div className="flex flex-col md:flex-row gap-8 mt-6">
                 <div className="flex-shrink-0 flex flex-col items-center gap-5">
@@ -126,9 +126,9 @@ export function Reviews360() {
   const reviews = emp.reviews360 || [];
   const avgScores = reviews.length > 0
     ? scoreLabels.reduce((acc, k) => {
-        acc[k] = Math.round(reviews.reduce((s, r) => s + (r.scores[k] || 0), 0) / reviews.length);
-        return acc;
-      }, {} as Record<string, number>)
+      acc[k] = Math.round(reviews.reduce((s, r) => s + (r.scores[k] || 0), 0) / reviews.length);
+      return acc;
+    }, {} as Record<string, number>)
     : {};
   const overallAvg = reviews.length > 0
     ? Math.round(reviews.reduce((s, r) => s + r.overall, 0) / reviews.length)
@@ -143,7 +143,7 @@ export function Reviews360() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-32 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
+        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
       >
         <div>
           <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-2">
@@ -168,23 +168,22 @@ export function Reviews360() {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Node selector */}
         <div className="lg:w-72 flex-shrink-0">
-          <p className="text-[9px] uppercase tracking-widest text-white/20 mb-4 font-mono">// Select Node</p>
+          <p className="text-[9px] uppercase tracking-widest text-white/20 mb-4 font-mono">Select Node</p>
           <div className="space-y-2">
             {employees.map(e => {
               const revs = e.reviews360 || [];
               const avg = revs.length > 0 ? Math.round(revs.reduce((s, r) => s + r.overall, 0) / revs.length) : 0;
               return (
-                <button
+                <motion.button>
                   key={e.id}
                   onClick={() => { setSelectedEmp(e.id); setExpandedReview(null); }}
-                  className={`w-full flex items-center gap-4 p-4 rounded-[1.5rem] border transition-all text-left group ${
-                    selectedEmp === e.id
+                  className={`w-full flex items-center gap-4 p-4 rounded-[1.5rem] border transition-all text-left group ${selectedEmp === e.id
                       ? 'bg-white/10 border-white/20'
                       : 'bg-white/[0.02] border-white/5 hover:border-white/10 hover:bg-white/5'
-                  }`}
+                    }`}
                   data-cursor="Select Node"
-                >
-                  <img src={e.avatar} alt={e.name} className="w-9 h-9 rounded-full object-cover grayscale" />
+
+                  <img src={e.avatar} alt={e.name} className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                   <div className="flex-1 min-w-0">
                     <p className="text-white/80 text-sm font-light truncate">{e.name}</p>
                     <p className="text-[8px] uppercase tracking-widest text-white/30 mt-0.5 truncate font-mono">{e.department}</p>
@@ -194,7 +193,7 @@ export function Reviews360() {
                       {avg}
                     </span>
                   )}
-                </button>
+                </motion.button>
               );
             })}
           </div>
@@ -218,7 +217,7 @@ export function Reviews360() {
                     <RadarWeb scores={avgScores} />
                     <div className="flex-1">
                       <div className="flex items-center gap-4 mb-6">
-                        <img src={emp.avatar} alt={emp.name} className="w-12 h-12 rounded-full object-cover grayscale" />
+                        <img src={emp.avatar} alt={emp.name} className="w-12 h-12 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                         <div>
                           <h2 className="text-white text-xl font-light leading-none">{emp.name.split(' ')[0]}</h2>
                           <h2 className="text-white/30 font-serif italic text-lg leading-none mt-0.5">{emp.name.split(' ')[1]}</h2>
@@ -251,7 +250,7 @@ export function Reviews360() {
 
               {/* Individual nodes */}
               <div className="space-y-3">
-                <p className="text-[9px] uppercase tracking-widest text-white/20 mb-4 font-mono">// {reviews.length} Reviewer Node{reviews.length !== 1 ? 's' : ''}</p>
+                <p className="text-[9px] uppercase tracking-widest text-white/20 mb-4 font-mono">{reviews.length} Reviewer Node{reviews.length !== 1 ? 's' : ''}</p>
                 {reviews.map((review, i) => (
                   <ResonanceCard
                     key={i}

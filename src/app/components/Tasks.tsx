@@ -35,7 +35,7 @@ const columns: { id: Status; label: string; accent: string; glow: string }[] = [
   { id: 'backlog',  label: 'Dormant',    accent: '#52525b', glow: 'rgba(82,82,91,0.1)' },
   { id: 'active',   label: 'In Flux', accent: '#38bdf8', glow: 'rgba(56,189,248,0.08)' },
   { id: 'review',   label: 'Orbit',   accent: '#c084fc', glow: 'rgba(192,132,252,0.08)' },
-  { id: 'resolved', label: 'Resolved',     accent: '#10b981', glow: 'rgba(16,185,129,0.08)' },
+  { id: 'resolved', label: 'Transmitted', accent: '#10b981', glow: 'rgba(16,185,129,0.08)' },
 ];
 
 const priorityConfig: Record<Priority, { color: string; label: string }> = {
@@ -58,7 +58,7 @@ function TaskCard({ task, onMove }: { task: Task; onMove: (id: string, dir: 'lef
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10, scale: 0.96 }}
       whileHover={{ y: -3 }}
-      className={`relative group p-5 rounded-[1.5rem] border cursor-pointer transition-colors duration-300 ${
+      className={`relative group p-5 rounded-[1.5rem] border cursor-crosshair transition-colors duration-300 ${
         task.status === 'resolved'
           ? 'bg-white/[0.01] border-white/5 opacity-60'
           : 'bg-white/[0.03] border-white/8 hover:border-white/15'
@@ -110,7 +110,7 @@ function TaskCard({ task, onMove }: { task: Task; onMove: (id: string, dir: 'lef
       {/* Footer */}
       <div className="flex items-center justify-between pt-3 border-t border-white/5">
         <div className="flex items-center gap-2">
-          {emp && <img src={emp.avatar} alt={emp.name} className="w-5 h-5 rounded-full object-cover grayscale opacity-60" />}
+          {emp && <img src={emp.avatar} alt={emp.name} className="w-5 h-5 rounded-full object-cover grayscale group-hover:grayscale-0 opacity-60 transition-all duration-500" />}
           <span className="text-[10px] text-white/40 font-light">{task.owner}</span>
         </div>
         <div className="flex items-center gap-2 text-[9px] font-mono text-white/30">
@@ -169,9 +169,10 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
         transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-        className="w-full max-w-lg bg-[#0e0e10] border border-white/10 rounded-[2rem] p-8 relative"
+        className="w-full max-w-lg bg-[#0e0e10] border border-white/10 rounded-[2rem] p-8 relative overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
+        <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 blur-[80px] rounded-full pointer-events-none" />
         <div className="flex items-center justify-between mb-8">
           <h3 className="text-white text-xl font-light">New Task Vector</h3>
           <button onClick={onClose} className="p-2 rounded-full bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-all">
@@ -181,7 +182,7 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
 
         <div className="space-y-4">
           <div>
-            <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Title</label>
+            <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Vector Label</label>
             <input
               autoFocus
               value={form.title}
@@ -192,11 +193,11 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
           </div>
 
           <div>
-            <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Details</label>
+            <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Signal Description</label>
             <textarea
               value={form.desc}
               onChange={e => setForm(f => ({ ...f, desc: e.target.value }))}
-              placeholder="Additional context..."
+              placeholder="Signal description..."
               rows={2}
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm font-light outline-none focus:border-white/30 transition-colors placeholder:text-white/20 resize-none"
             />
@@ -204,7 +205,7 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Priority</label>
+              <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Priority Class</label>
               <select
                 value={form.priority}
                 onChange={e => setForm(f => ({ ...f, priority: e.target.value as Priority }))}
@@ -216,7 +217,7 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
               </select>
             </div>
             <div>
-              <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Assign To</label>
+              <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Assign Node</label>
               <select
                 value={form.ownerId}
                 onChange={e => setForm(f => ({ ...f, ownerId: e.target.value }))}
@@ -231,7 +232,7 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Due Date</label>
+              <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Terminus</label>
               <input
                 type="text"
                 value={form.due}
@@ -241,7 +242,7 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
               />
             </div>
             <div>
-              <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Tags (comma-sep)</label>
+              <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Tags</label>
               <input
                 type="text"
                 value={form.tags}
@@ -255,7 +256,7 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
 
         <div className="flex gap-3 mt-8">
           <button onClick={onClose} className="flex-1 py-3 rounded-xl border border-white/10 text-white/40 text-sm hover:text-white hover:border-white/20 transition-all">
-            Cancel
+            Abort
           </button>
           <button
             onClick={handleAdd}
@@ -309,7 +310,7 @@ export function Tasks() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-16 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
+        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
       >
         <div>
           <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-2">
@@ -368,7 +369,7 @@ export function Tasks() {
                 filterOwner === e.id ? 'bg-white/10 border-white/20 text-white' : 'border-white/5 text-white/40 hover:border-white/10'
               }`}
             >
-              <img src={e.avatar} alt={e.name} className="w-4 h-4 rounded-full object-cover grayscale" />
+              <img src={e.avatar} alt={e.name} className="w-4 h-4 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
               {e.name.split(' ')[0]}
             </button>
           ))}
@@ -403,7 +404,7 @@ export function Tasks() {
                 <div className="flex items-center justify-between pb-4 border-b border-white/5">
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 rounded-full" style={{ background: col.accent }} />
-                    <h3 className="text-white/60 text-xs uppercase tracking-widest font-medium">{col.label}</h3>
+                    <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold flex items-center gap-4 border-b border-white/10 pb-4">{col.label}</h3>
                   </div>
                   <span className="text-[10px] font-mono text-white/30 bg-white/5 px-2 py-0.5 rounded-full">
                     {colTasks.length}
@@ -458,7 +459,7 @@ export function Tasks() {
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-2">
-                          {emp && <img src={emp.avatar} alt={emp.name} className="w-6 h-6 rounded-full object-cover grayscale" />}
+                          {emp && <img src={emp.avatar} alt={emp.name} className="w-6 h-6 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />}
                           <span className="text-white/60 text-xs">{task.owner}</span>
                         </div>
                       </td>

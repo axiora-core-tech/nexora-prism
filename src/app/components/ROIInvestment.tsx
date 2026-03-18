@@ -100,7 +100,7 @@ export function ROIInvestment() {
 
         <div className="relative bg-white/5 border border-white/5 rounded-[2rem] p-8 overflow-hidden group">
           <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-purple-500/8 blur-[60px] rounded-full pointer-events-none" />
-          <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 relative z-10 flex items-center gap-4 border-b border-white/10 pb-4">Department Vectors</h3>
+          <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold flex items-center gap-4 border-b border-white/10 pb-4 mb-6 relative z-10">Department Vectors</h3>
           <div className="space-y-5 relative z-10">
             {departmentROI.map((dept, i) => (
               <div key={i} data-cursor="Trace">
@@ -155,18 +155,18 @@ export function ROIInvestment() {
                 <img src={e.avatar} alt={e.name} className="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"/>
                 <div>
                   <p className="text-white/80 text-sm font-light leading-none">{e.name.split(' ')[0]}</p>
-                  <p className="text-white/30 font-serif italic text-xs leading-none mt-0.5">{e.department}</p>
+                  <p className="text-white/30 font-serif italic text-sm leading-none mt-0.5">{e.department}</p>
                 </div>
               </div>
 
               <div className="space-y-3 relative z-10">
                 <div>
                   <p className="text-[8px] uppercase tracking-widest text-white/20 mb-0.5 font-mono">Investment</p>
-                  <p className="text-lg font-light text-white/60 font-mono">${(e.costInvestment/1000).toFixed(0)}K</p>
+                  <p className="text-sm font-light text-white/60 font-mono">${(e.costInvestment/1000).toFixed(0)}K</p>
                 </div>
                 <div>
                   <p className="text-[8px] uppercase tracking-widest text-white/20 mb-0.5 font-mono">Surplus Value</p>
-                  <p className="text-lg font-light text-emerald-400 font-mono">${(e.revenueContribution/1000).toFixed(0)}K</p>
+                  <p className="text-sm font-light text-emerald-400 font-mono">${(e.revenueContribution/1000).toFixed(0)}K</p>
                 </div>
                 <div className="pt-3 border-t border-white/5 flex items-center justify-between">
                   <div>
@@ -210,7 +210,7 @@ export function ROIInvestment() {
           <div className="flex items-center justify-between mb-8 relative z-10">
             <div>
               <h3 className="text-white text-xl font-light leading-none">{emp.name.split(' ')[0]}</h3>
-              <h3 className="text-white/30 font-serif italic text-lg leading-none mt-0.5">Quarterly Capital Trajectory</h3>
+              <h3 className="text-white/30 font-serif italic text-sm leading-relaxed mt-0.5">Quarterly Capital Trajectory</h3>
             </div>
             <button onClick={() => setSelectedEmp(null)}
               className="text-[9px] uppercase tracking-widest text-white/20 hover:text-white transition-colors font-mono">

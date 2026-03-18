@@ -175,7 +175,7 @@ export function Attendance() {
             <div className="flex items-center justify-between mb-8 relative z-10">
               <div>
                 <h2 className="text-white text-xl font-light leading-none">{emp.name.split(' ')[0]}</h2>
-                <h2 className="text-white/30 font-serif italic text-lg leading-none mt-0.5">{emp.name.split(' ')[1]}</h2>
+                <h2 className="text-white/30 font-serif italic text-sm leading-none mt-0.5">{emp.name.split(' ')[1]}</h2>
                 <p className="text-[9px] uppercase tracking-widest text-white/20 mt-2 font-mono">November 2025 — Temporal Log</p>
               </div>
               <div className="text-right">

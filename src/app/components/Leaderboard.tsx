@@ -91,7 +91,8 @@ export function Leaderboard() {
             <motion.div
               key={emp.id}
               initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.7 }}
               className="flex flex-col items-center"
             >
@@ -117,7 +118,7 @@ export function Leaderboard() {
                 className={`w-full ${heights[i]} rounded-t-xl flex items-end justify-center pb-3 border-t-2 transition-all`}
                 style={{ background: podiumGlow[rank], borderColor: podiumBorder[rank] }}
               >
-                <span className="text-lg font-mono font-light" style={{ color: podiumBorder[rank] }}>0{rank + 1}</span>
+                <span className="text-sm font-mono font-light" style={{ color: podiumBorder[rank] }}>0{rank + 1}</span>
               </div>
             </motion.div>
           );
@@ -161,7 +162,7 @@ export function Leaderboard() {
                       className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 group-hover/row:grayscale group-hover:grayscale-0-0 transition-all duration-500" />
                     <div>
                       <p className="text-white/80 text-sm font-light leading-none">{emp.name.split(' ')[0]}</p>
-                      <p className="text-white/30 font-serif italic text-xs leading-none mt-0.5">{emp.name.split(' ')[1]}</p>
+                      <p className="text-white/30 font-serif italic text-sm leading-none mt-0.5">{emp.name.split(' ')[1]}</p>
                     </div>
                   </div>
 

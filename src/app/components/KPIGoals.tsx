@@ -198,7 +198,7 @@ export function KPIGoals() {
                   <img src={emp.avatar} alt={emp.name}
                     className="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
                   <div>
-                    <h3 className="text-white font-light text-lg leading-none">{emp.name.split(' ')[0]}</h3>
+                    <h3 className="text-white font-light text-sm">{emp.name.split(' ')[0]}</h3>
                     <h3 className="text-white/30 font-serif italic text-sm leading-none mt-0.5">{emp.name.split(' ')[1]}</h3>
                   </div>
                 </div>

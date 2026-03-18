@@ -124,7 +124,8 @@ export function Analytics() {
             <div className="space-y-6">
               <motion.div 
                 initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.4 }}
                 className="bg-white/5 border border-white/5 rounded-[2rem] p-8 relative overflow-hidden"
               >
@@ -153,7 +154,8 @@ export function Analytics() {
               {/* Performance trend */}
               <motion.div 
                 initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.6 }}
                 className="bg-white/5 border border-white/5 rounded-[2rem] p-8"
               >
@@ -179,7 +181,7 @@ export function Analytics() {
 
           {/* Employee comparison grid */}
           <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-            <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Employee Performance Matrix</h3>
+            <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-4 border-b border-white/10 pb-4">Employee Performance Matrix</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
@@ -249,7 +251,7 @@ export function Analytics() {
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-              <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Organisation ROI Trajectory</h3>
+              <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-4 border-b border-white/10 pb-4">Organisation ROI Trajectory</h3>
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <ComposedChart data={orgROIData}>
@@ -270,7 +272,7 @@ export function Analytics() {
             </div>
 
             <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-              <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Individual ROI Comparison</h3>
+              <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-4 border-b border-white/10 pb-4">Individual ROI Comparison</h3>
               <div className="space-y-5">
                 {employees.map(emp => (
                   <div key={emp.id}>
@@ -302,7 +304,7 @@ export function Analytics() {
       {activeView === 'health' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-            <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Org Health Radar</h3>
+            <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-4 border-b border-white/10 pb-4">Org Health Radar</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
@@ -316,7 +318,7 @@ export function Analytics() {
           </div>
 
           <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-            <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Learning Domain Completion</h3>
+            <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-4 border-b border-white/10 pb-4">Learning Domain Completion</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={globalLearningData} layout="vertical">
@@ -332,7 +334,7 @@ export function Analytics() {
 
           {/* Burnout heatmap */}
           <div className="lg:col-span-2 bg-white/5 border border-white/5 rounded-[2rem] p-8">
-            <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Wellbeing & Burnout Matrix</h3>
+            <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-4 border-b border-white/10 pb-4">Wellbeing & Burnout Matrix</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {employees.map(emp => (
                 <div key={emp.id} className="relative group">

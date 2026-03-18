@@ -2,3 +2,16 @@
 @source '../**/*.{js,ts,jsx,tsx}';
 
 @import 'tw-animate-css';
+
+@theme {
+  --font-family-sans: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-family-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-family-mono: 'Space Mono', 'Courier New', Courier, monospace;
+}
+
+/* Ensure body uses our font stack */
+body {
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

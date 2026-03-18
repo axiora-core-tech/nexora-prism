@@ -27,7 +27,7 @@ function ScoreArc({ value, color, size = 80 }: { value: number; color: string; s
         strokeDasharray={`${circ} ${circ}`}
         initial={{ strokeDashoffset: circ }}
         animate={{ strokeDashoffset: offset }}
-        transition={{ duration: 1.2, ease: [0.16,1,0.3,1] }}
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
       />
     </svg>
   );
@@ -135,7 +135,8 @@ export function PerformanceReview() {
         <motion.div
           key={phase}
           initial={{ opacity: 0, x: 24 }}
-          animate={{ opacity: 1, x: 0 }}
+          whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
           exit={{ opacity: 0, x: -24 }}
           transition={{ duration: 0.4, ease: [0.16,1,0.3,1] }}
         >
@@ -149,7 +150,8 @@ export function PerformanceReview() {
                   <motion.button
                     key={e.id}
                     initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
                     transition={{ delay: i * 0.08, duration: 0.5 }}
                     onClick={() => setSelectedEmp(e.id)}
                     className={`relative flex items-center gap-6 p-7 rounded-[2rem] border text-left transition-all duration-500 overflow-hidden group ${
@@ -176,8 +178,8 @@ export function PerformanceReview() {
                     </div>
 
                     <div className="flex-1 relative z-10">
-                      <h3 className="text-white text-2xl font-light leading-none">{e.name.split(' ')[0]}</h3>
-                      <h3 className="text-white/30 font-serif italic text-xl leading-none mt-1">{e.name.split(' ')[1]}</h3>
+                      <h3 className="text-white text-xl font-light leading-none">{e.name.split(' ')[0]}</h3>
+                      <h3 className="text-white/30 font-serif italic text-sm leading-none mt-0.5">{e.name.split(' ')[1]}</h3>
                       <p className="text-[9px] uppercase tracking-widest text-white/30 mt-2 font-mono">{e.role} // {e.department}</p>
                     </div>
 
@@ -251,7 +253,8 @@ export function PerformanceReview() {
                   <motion.div
                     key={cat.key}
                     initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
                     transition={{ delay: i * 0.08 }}
                     className={`relative bg-white/5 border border-white/5 rounded-[2rem] p-7 overflow-hidden group hover:border-white/10 transition-all duration-500 ${i === 4 ? 'md:col-span-2' : ''}`}
                     data-cursor={`Set ${cat.label}`}
@@ -264,7 +267,7 @@ export function PerformanceReview() {
                       <div className="relative flex-shrink-0">
                         <ScoreArc value={scores[cat.key]} color={cat.color} size={72} />
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-lg font-light text-white">{scores[cat.key]}</span>
+                          <span className="text-sm font-light text-white">{scores[cat.key]}</span>
                         </div>
                       </div>
                       <div>
@@ -370,8 +373,8 @@ export function PerformanceReview() {
                 <div className="flex items-center gap-6 mb-10 pb-10 border-b border-white/5 relative z-10">
                   <img src={emp.avatar} alt={emp.name} className="w-16 h-16 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"/>
                   <div>
-                    <h2 className="text-white text-3xl font-light leading-none">{emp.name.split(' ')[0]}</h2>
-                    <h2 className="text-white/30 font-serif italic text-2xl leading-none mt-1">{emp.name.split(' ')[1]}</h2>
+                    <h2 className="text-white text-2xl font-light leading-none">{emp.name.split(' ')[0]}</h2>
+                    <h2 className="text-white/30 font-serif italic text-xl leading-none mt-0.5">{emp.name.split(' ')[1]}</h2>
                     <p className="text-[8px] uppercase tracking-widest text-white/20 mt-2 font-mono">{relation} signal // {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
                   </div>
                   <div className="ml-auto text-right relative z-10">

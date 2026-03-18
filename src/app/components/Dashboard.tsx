@@ -367,7 +367,7 @@ export function Dashboard() {
             ))}
           </div>
 
-          <NavLink to="/leaderboard" className="mt-6 flex items-center gap-2 text-[9px] uppercase tracking-widest text-white/30 hover:text-amber-400 transition-colors">
+          <NavLink to="/app/leaderboard" className="mt-6 flex items-center gap-2 text-[9px] uppercase tracking-widest text-white/30 hover:text-amber-400 transition-colors">
             <Trophy size={10} /> Signal Hierarchy <ChevronRight size={10} />
           </NavLink>
         </motion.div>

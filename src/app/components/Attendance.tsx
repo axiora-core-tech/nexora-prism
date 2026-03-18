@@ -114,7 +114,7 @@ export function Attendance() {
 
       {/* Node selector row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-        {employees.map(e => {
+        {employees.map((e, empIdx) => {
           const a = e.attendance;
           const rate = Math.round((a.present + a.wfh) / (a.present + a.wfh + a.leave + a.absent) * 100);
           const flag = a.absent >= 3 || rate < 80;

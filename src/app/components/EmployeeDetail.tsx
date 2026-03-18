@@ -80,7 +80,7 @@ export function EmployeeDetail() {
         <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#030303] via-[#030303]/60 to-transparent" />
         <div className="absolute inset-0 z-10 bg-gradient-to-r from-transparent to-[#030303]" />
         
-        <NavLink to="/" className="absolute top-12 left-12 z-50 text-white/40 hover:text-white transition-colors p-4 rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10" data-cursor="Return">
+        <NavLink to="/app" className="absolute top-12 left-12 z-50 text-white/40 hover:text-white transition-colors p-4 rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10" data-cursor="Return">
           <ArrowLeft size={20} />
         </NavLink>
 
@@ -133,7 +133,7 @@ export function EmployeeDetail() {
         
         {/* Mobile Header (Hidden on Desktop) */}
         <div className="xl:hidden mb-16 pt-12">
-          <NavLink to="/" className="inline-flex text-white/40 hover:text-white transition-colors mb-8" data-cursor="Return">
+          <NavLink to="/app" className="inline-flex text-white/40 hover:text-white transition-colors mb-8" data-cursor="Return">
             <ArrowLeft size={20} />
           </NavLink>
           <div className="flex items-center gap-4 mb-4">

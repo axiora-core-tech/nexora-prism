@@ -4,19 +4,19 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Home, Users, Activity, Target, Network, CalendarDays, DollarSign, Settings, ChevronUp, Trophy, FileText, Layers } from 'lucide-react';
 
 const primaryNav = [
-  { icon: Home,     path: '/',          label: 'Overview' },
-  { icon: Users,    path: '/team',      label: 'Team' },
-  { icon: Activity, path: '/analytics', label: 'Analytics' },
-  { icon: Layers,   path: '/tasks',     label: 'Tasks' },
+  { icon: Home,     path: '/app',          label: 'Overview' },
+  { icon: Users,    path: '/app/team',      label: 'Team' },
+  { icon: Activity, path: '/app/analytics', label: 'Analytics' },
+  { icon: Layers,   path: '/app/tasks',     label: 'Tasks' },
 ];
 
 const featureNav = [
-  { icon: Target,       path: '/kpis',        label: 'KPI Goals',    color: '#f59e0b' },
-  { icon: Network,      path: '/reviews',      label: '360° Reviews', color: '#c084fc' },
-  { icon: CalendarDays, path: '/attendance',   label: 'Attendance',   color: '#38bdf8' },
-  { icon: DollarSign,   path: '/roi',          label: 'ROI Intel',    color: '#10b981' },
-  { icon: Trophy,       path: '/leaderboard',  label: 'Leaderboard',  color: '#f59e0b' },
-  { icon: FileText,     path: '/review',       label: 'Start Review', color: '#38bdf8' },
+  { icon: Target,       path: '/app/kpis',        label: 'KPI Goals',    color: '#f59e0b' },
+  { icon: Network,      path: '/app/reviews',      label: '360° Reviews', color: '#c084fc' },
+  { icon: CalendarDays, path: '/app/attendance',   label: 'Attendance',   color: '#38bdf8' },
+  { icon: DollarSign,   path: '/app/roi',          label: 'ROI Intel',    color: '#10b981' },
+  { icon: Trophy,       path: '/app/leaderboard',  label: 'Leaderboard',  color: '#f59e0b' },
+  { icon: FileText,     path: '/app/review',       label: 'Start Review', color: '#38bdf8' },
 ];
 
 export function Dock() {
@@ -121,7 +121,7 @@ export function Dock() {
         <div className="w-px h-5 bg-white/10 mx-1" />
 
         <NavLink
-          to="/settings"
+          to="/app/settings"
           className={({ isActive }) =>
             `relative p-2.5 rounded-full transition-all duration-300 ${
               isActive ? 'text-white' : 'text-white/40 hover:text-white hover:bg-white/5'

@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router";
 import { Layout } from "./components/Layout";
+import { Landing } from "./components/Landing";
 import { Dashboard } from "./components/Dashboard";
 import { EmployeeDetail } from "./components/EmployeeDetail";
 import { Analytics } from "./components/Analytics";
@@ -13,8 +14,14 @@ import { Leaderboard } from "./components/Leaderboard";
 import { PerformanceReview } from "./components/PerformanceReview";
 
 export const router = createBrowserRouter([
+  // Landing page — no Layout wrapper, no Dock
   {
     path: "/",
+    Component: Landing,
+  },
+  // App shell — all app routes under /app
+  {
+    path: "/app",
     Component: Layout,
     children: [
       { index: true, Component: Dashboard },
@@ -31,5 +38,10 @@ export const router = createBrowserRouter([
       { path: "settings", Component: Settings },
       { path: "*", Component: () => <div className="h-screen w-full flex items-center justify-center font-mono text-white/30 tracking-[0.5em] text-xs uppercase">404 // Signal Lost</div> },
     ],
+  },
+  // Redirect /dashboard → /app for convenience
+  {
+    path: "/dashboard",
+    Component: () => { window.location.replace('/app'); return null; },
   },
 ]);

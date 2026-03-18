@@ -207,7 +207,7 @@ export function KPIGoals() {
                     <p className="text-[8px] uppercase tracking-widest text-white/30 mb-1">Efficiency</p>
                     <p className="text-2xl font-light text-white">{emp.performanceScore}</p>
                   </div>
-                  <NavLink to={`/employee/${emp.id}`}
+                  <NavLink to={`/app/employee/${emp.id}`}
                     className="p-2 rounded-full bg-white/5 text-white/30 hover:bg-white/10 hover:text-white transition-all"
                     data-cursor="Deep Dive">
                     <ChevronRight size={14} />

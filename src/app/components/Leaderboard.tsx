@@ -96,7 +96,7 @@ export function Leaderboard() {
               transition={{ delay: i * 0.1, duration: 0.7 }}
               className="flex flex-col items-center"
             >
-              <NavLink to={`/employee/${emp.id}`} data-cursor="View Node">
+              <NavLink to={`/app/employee/${emp.id}`} data-cursor="View Node">
                 <motion.div whileHover={{ y: -5 }} className="flex flex-col items-center mb-3 group cursor-crosshair">
                   <div className="relative mb-3">
                     <img src={emp.avatar} alt={emp.name}
@@ -195,7 +195,7 @@ export function Leaderboard() {
                     </span>
                   </div>
 
-                  <NavLink to={`/employee/${emp.id}`}
+                  <NavLink to={`/app/employee/${emp.id}`}
                     className="opacity-0 group-hover/row:opacity-100 transition-opacity p-2 rounded-full bg-white/5 text-white/30 hover:text-white hover:bg-white/10">
                     <ArrowUpRight size={11}/>
                   </NavLink>

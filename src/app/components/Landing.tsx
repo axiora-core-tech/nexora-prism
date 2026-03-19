@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router';
 import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } from 'motion/react';
-import { ArrowUpRight, ChevronRight, Activity, Target, Network, DollarSign, Brain, Heart, Shield, Zap, Users, BarChart2, CheckCircle2, X, ArrowLeft, Eye, EyeOff, Mail, Lock, Building2, UserPlus, Send, Sparkles } from 'lucide-react';;
+import { ArrowUpRight, ChevronRight, Target, Network, DollarSign, Brain, Heart, Shield, Zap, Users, BarChart2, CheckCircle2, X, ArrowLeft, Eye, EyeOff, Mail, Lock, Building2, UserPlus, Send, Sparkles } from 'lucide-react';
 
 // ─── Custom Cursor (same as app) ────────────────────────────────────────────
 function LandingCursor() {
@@ -49,6 +49,69 @@ function LandingCursor() {
   );
 }
 
+
+// ─── Prism Mark ─────────────────────────────────────────────────────────────
+// Six spectral arcs forming the bowl of a P.
+// Animations use Framer Motion so they work reliably in React.
+// compact=true → arc-fan only (no stem) used in the nav lockup beside "PRISM"
+// compact=false → full letterform (stem + bowl) used standalone
+function PrismMark({ size = 32, compact = false }: { size?: number; compact?: boolean }) {
+  const w = size;
+  const h = compact ? size : size * (184 / 74);
+  const vbW = 74;
+  const vbH = compact ? 74 : 184;
+
+  // Arc specs: [stroke, radius, period-seconds]
+  const arcs: [string, number, number][] = [
+    ['#f43f5e', 36.7, 4.00],
+    ['#fb923c', 38.5, 3.60],
+    ['#fbbf24', 40.8, 3.31],
+    ['#34d399', 43.7, 3.03],
+    ['#38bdf8', 46.1, 2.69],
+    ['#a78bfa', 49.5, 2.40],
+  ];
+
+  return (
+    <svg width={w} height={h} viewBox={`0 0 ${vbW} ${vbH}`} fill="none"
+      style={{ overflow: 'visible', display: 'block', flexShrink: 0 }}>
+
+      {/* Entry ray + stem — only in full mode */}
+      {!compact && (
+        <>
+          <motion.line x1="21" y1="0" x2="21" y2="10"
+            stroke="rgba(255,255,255,0.45)" strokeWidth="0.7" strokeLinecap="round"
+            animate={{ opacity: [0.45, 0.96, 0.45] }}
+            transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity }} />
+          <motion.line x1="21" y1="10" x2="21" y2="172"
+            stroke="rgba(255,255,255,0.90)" strokeWidth="1.6" strokeLinecap="round"
+            animate={{ opacity: [0.78, 0.96, 0.78] }}
+            transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity }} />
+        </>
+      )}
+
+      {/* Refraction node */}
+      <motion.circle cx="21" cy="10" r="1.8" fill="rgba(255,255,255,0.90)"
+        animate={{ scale: [1, 1.6, 1], opacity: [0.65, 1, 0.65] }}
+        transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity }}
+        style={{ transformOrigin: '21px 10px' }} />
+
+      {/* Spectral arcs — each breathes at its own frequency */}
+      {arcs.map(([stroke, r, dur], i) => (
+        <motion.path
+          key={i}
+          d={`M21 10 A${r} ${r} 0 0 1 21 80`}
+          stroke={stroke}
+          strokeWidth="0.85"
+          strokeLinecap="round"
+          fill="none"
+          animate={{ opacity: [0.35 + i * 0.02, 0.92 + i * 0.01, 0.35 + i * 0.02] }}
+          transition={{ duration: dur, ease: 'easeInOut', repeat: Infinity }}
+        />
+      ))}
+    </svg>
+  );
+}
+
 // ─── Auth Modal ──────────────────────────────────────────────────────────────
 type AuthMode = 'login' | 'signup' | 'org' | 'invite';
 
@@ -85,7 +148,7 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
              mode === 'signup' || mode === 'org' ? 'Organisation node initialised' :
              `${invites.filter(Boolean).length} team nodes invited`}
           </p>
-          <NavLink to="/app" onClick={onClose}
+          <NavLink to="/enter" onClick={onClose}
             className="inline-flex items-center gap-3 px-8 py-3 rounded-2xl bg-white/5 border border-white/10 text-white text-sm font-light hover:bg-white/[0.04] hover:border-white/20 transition-all"
             data-cursor="Enter App">
             Enter Dashboard <ArrowUpRight size={14} />
@@ -120,7 +183,7 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
         {/* Header */}
         <div className="flex items-start justify-between p-8 pb-0 relative z-10">
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-2">Apex Intelligence</p>
+            <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-2">Prism Intelligence</p>
             <h3 className="text-2xl font-light text-white">
               {mode === 'login'  ? 'Welcome' :
                mode === 'signup' ? 'New' :
@@ -338,7 +401,7 @@ const featureBlocks = [
     label: 'Capital Matrix', tag: 'ROI · Investment · Value',
     headline: 'Quantify the human capital return',
     body: 'Map every salary dollar to revenue generated, cost saved, and project value delivered. Quarterly ROI curves per employee, per department, per initiative.',
-    stat: '$246%', statLabel: 'median org ROI on Apex teams',
+    stat: '$246%', statLabel: 'median org ROI on Prism teams',
   },
   {
     icon: Brain, color: '#38bdf8', glow: 'rgba(56,189,248,0.1)',
@@ -379,7 +442,7 @@ const pricingPlans = [
     featured: true,
   },
   {
-    name: 'Apex', price: 'Custom', unit: '', color: '#c084fc',
+    name: 'Prism', price: 'Custom', unit: '', color: '#c084fc',
     desc: 'Enterprise-grade for 200+ node organisations',
     features: ['All Constellation features', 'SSO / SAML integration', 'Custom benchmarks', 'Dedicated CSM', 'SLA 99.99%', 'Unlimited nodes'],
     cta: 'org' as AuthMode,
@@ -426,11 +489,9 @@ export function Landing() {
           className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-8 md:px-12 py-6"
         >
           {/* Logo */}
-          <div className="flex items-center gap-3 cursor-crosshair" data-cursor="Apex">
-            <div className="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
-              <Activity size={13} className="text-cyan-400" />
-            </div>
-            <span className="text-white text-sm font-light tracking-widest uppercase">Apex</span>
+          <div className="flex items-center gap-3 cursor-crosshair" data-cursor="Prism">
+            <PrismMark size={18} compact={true} />
+            <span className="text-white text-sm font-light tracking-widest uppercase">PRISM</span>
             <span className="text-white/20 text-[9px] font-mono uppercase tracking-widest border border-white/10 px-1.5 py-0.5 rounded-full">Intelligence</span>
           </div>
 
@@ -472,6 +533,16 @@ export function Landing() {
         <section className="min-h-screen flex flex-col justify-center px-6 md:px-12 pt-32 pb-24 relative">
           <motion.div style={{ y: heroY, opacity: heroOpacity }} className="w-full max-w-[1400px] mx-auto">
 
+            {/* Hero mark */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              className="mb-16"
+            >
+              <PrismMark size={48} />
+            </motion.div>
+
             {/* Eyebrow */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -507,7 +578,7 @@ export function Landing() {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
               className="text-white/50 text-lg font-light leading-relaxed max-w-xl mb-12"
             >
-              Apex transforms scattered HR data into precision performance intelligence. 
+              Prism transforms scattered HR data into precision performance intelligence. 
               Real-time KPIs, 360° resonance, ROI mapping, and burnout telemetry — 
               all in a single obsidian interface.
             </motion.p>
@@ -817,6 +888,9 @@ export function Landing() {
               viewport={{ once: true }}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
             >
+              <div className="flex justify-center mb-10">
+                <PrismMark size={28} />
+              </div>
               <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center justify-center gap-2">
                 <Heart size={12} className="text-rose-400" /> Ready to Amplify Your Signal
               </p>
@@ -825,7 +899,7 @@ export function Landing() {
                 <span className="text-white/30 italic font-serif">better intelligence.</span>
               </h2>
               <p className="text-white/40 text-sm font-light max-w-lg mx-auto mb-12 leading-relaxed">
-                Join 2,400+ organisations using Apex to turn HR data into competitive advantage. 
+                Join 2,400+ organisations using Prism to turn HR data into competitive advantage. 
                 30-day trial. No card required. Full-access from day one.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
@@ -854,10 +928,8 @@ export function Landing() {
         <footer className="border-t border-white/5 px-6 md:px-12 py-12">
           <div className="w-full max-w-[1400px] mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
             <div className="flex items-center gap-3">
-              <div className="w-6 h-6 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
-                <Activity size={11} className="text-cyan-400" />
-              </div>
-              <span className="text-white/40 text-xs font-light tracking-widest uppercase">Apex Intelligence</span>
+              <PrismMark size={14} compact={true} />
+              <span className="text-white/40 text-xs font-light tracking-widest uppercase">Prism Intelligence</span>
               <span className="text-white/20 text-[8px] font-mono uppercase tracking-widest">v2.4.1</span>
             </div>
 
@@ -888,7 +960,7 @@ export function Landing() {
 
           <div className="w-full max-w-[1400px] mx-auto mt-8 pt-6 border-t border-white/[0.03] flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-[8px] font-mono uppercase tracking-widest text-white/15">
-              © 2025 Apex Intelligence Ltd. All signals reserved.
+              © 2025 Prism Intelligence Ltd. All signals reserved.
             </p>
             <p className="text-[8px] font-mono uppercase tracking-widest text-white/15">
               Built with peer-reviewed methodology · SOC 2 Type II · ISO 27001

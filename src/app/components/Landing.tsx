@@ -450,526 +450,570 @@ const pricingPlans = [
 ];
 
 // ─── Landing Page ────────────────────────────────────────────────────────────
+
+// ─── Dimensions ───────────────────────────────────────────────────────────────
+const DIMS = [
+  { label: 'Output',    n: 94,  u: 'pt', color: '#C8001A', bg: 'rgba(200,0,26,0.06)',   desc: 'KPI velocity · Delivery quality'        },
+  { label: 'Risk',      n: 12,  u: '%',  color: '#B84800', bg: 'rgba(184,72,0,0.06)',   desc: 'Attrition probability · Early drift'    },
+  { label: 'Return',    n: 218, u: '%',  color: '#926800', bg: 'rgba(146,104,0,0.06)',  desc: 'Revenue per unit of investment'         },
+  { label: 'Growth',    n: 78,  u: 'pt', color: '#005828', bg: 'rgba(0,88,40,0.06)',    desc: 'Learning velocity · Skill acquisition'  },
+  { label: 'Presence',  n: 91,  u: '%',  color: '#004868', bg: 'rgba(0,72,104,0.06)',   desc: 'Temporal patterns · Engagement rhythm'  },
+  { label: 'Wellbeing', n: 63,  u: 'pt', color: '#300868', bg: 'rgba(48,8,104,0.06)',   desc: 'Burnout probability · Stress telemetry' },
+];
+
+// ─── useInView ────────────────────────────────────────────────────────────────
+function useInView(t = 0.1) {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [v, setV] = React.useState(false);
+  React.useEffect(() => {
+    if (!ref.current) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setV(true); obs.disconnect(); }
+    }, { threshold: t });
+    obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+  return { ref, inView: v };
+}
+
+// ─── Landing ──────────────────────────────────────────────────────────────────
 export function Landing() {
   const [authMode, setAuthMode] = useState<AuthMode | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ container: containerRef });
-  const heroY = useTransform(scrollYProgress, [0, 0.2], ['0%', '12%']);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
+  const [activeDim, setActiveDim] = useState<number | null>(null);
+  const [scoreOpen, setScoreOpen] = useState(false);
+
+  // Headline stagger
+  const chunks = ['What', 'you', 'measure', 'is', 'not', 'who', 'they', 'are.'];
+  const [shown, setShown] = useState(0);
+  useEffect(() => {
+    if (shown >= chunks.length) return;
+    const t = setTimeout(() => setShown(s => s + 1), shown === 0 ? 800 : 70 + shown * 22);
+    return () => clearTimeout(t);
+  }, [shown]);
+
+  const { ref: s2ref, inView: s2 } = useInView(0.05);
+  const { ref: s3ref, inView: s3 } = useInView(0.05);
+  const { ref: s4ref, inView: s4 } = useInView();
+  const { ref: ctaRef, inView: ctaV } = useInView();
 
   return (
-    <div className="min-h-screen bg-[#030303] text-[#e5e5e5] font-sans selection:bg-purple-500/30 selection:text-white cursor-none overflow-hidden relative">
+    <div className="bg-[#030303] min-h-screen cursor-none overflow-x-hidden"
+      style={{ color: '#e5e5e5', fontFamily: 'system-ui, sans-serif' }}>
       <LandingCursor />
 
-      {/* ── Ambient background orbs (identical to Layout) ── */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen">
-        <motion.div
-          animate={{ rotate: [0, 90, 0], scale: [1, 1.2, 1], x: [0, 50, -50, 0], y: [0, 50, -50, 0] }}
-          transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
-          className="absolute -top-[20%] -left-[10%] w-[60vw] h-[60vw] rounded-full bg-purple-900/20 blur-[120px]"
-        />
-        <motion.div
-          animate={{ rotate: [0, -90, 0], scale: [1, 1.3, 1], x: [0, -50, 50, 0], y: [0, -50, 50, 0] }}
-          transition={{ duration: 50, repeat: Infinity, ease: 'linear' }}
-          className="absolute -bottom-[20%] -right-[10%] w-[60vw] h-[60vw] rounded-full bg-cyan-900/10 blur-[120px]"
-        />
+      {/* Ambient */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <motion.div animate={{ rotate:[0,120,0], scale:[1,1.3,1] }}
+          transition={{ duration:50, repeat:Infinity, ease:'linear' }}
+          style={{ position:'absolute', top:'-30%', left:'-20%', width:'70vw', height:'70vw',
+            borderRadius:'50%', background:'rgba(80,0,120,0.12)', filter:'blur(140px)' }} />
+        <motion.div animate={{ rotate:[0,-80,0], scale:[1,1.2,1] }}
+          transition={{ duration:65, repeat:Infinity, ease:'linear' }}
+          style={{ position:'absolute', bottom:'-30%', right:'-20%', width:'60vw', height:'60vw',
+            borderRadius:'50%', background:'rgba(0,40,80,0.08)', filter:'blur(140px)' }} />
       </div>
 
-      {/* ── Scrollable content ── */}
-      <div ref={containerRef} className="relative z-10 h-screen overflow-y-auto overflow-x-hidden" style={{ scrollbarWidth: 'none' }}>
-        <style dangerouslySetInnerHTML={{ __html: '::-webkit-scrollbar { display: none; }' }} />
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          NAV — hairline, nearly invisible
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <nav style={{
+        position:'fixed', top:0, left:0, right:0, zIndex:50,
+        display:'flex', alignItems:'center', justifyContent:'space-between',
+        padding:'20px 48px',
+        background:'linear-gradient(to bottom,rgba(3,3,3,0.92),transparent)',
+      }}>
+        <div style={{ display:'flex', alignItems:'center', gap:10 }} data-cursor="Prism">
+          <PrismMark size={11} compact />
+          <span style={{ fontSize:10, letterSpacing:'0.32em', textTransform:'uppercase',
+            color:'rgba(255,255,255,0.5)', fontWeight:300 }}>PRISM</span>
+        </div>
+        <div style={{ display:'flex', gap:32 }}>
+          {['Research','Pricing'].map(l => (
+            <a key={l} href={`#${l.toLowerCase()}`} data-cursor={l}
+              style={{ fontSize:10, letterSpacing:'0.14em', textTransform:'uppercase',
+                color:'rgba(255,255,255,0.2)', textDecoration:'none', transition:'color 0.3s' }}
+              onMouseEnter={e => (e.currentTarget.style.color='rgba(255,255,255,0.6)')}
+              onMouseLeave={e => (e.currentTarget.style.color='rgba(255,255,255,0.2)')}
+            >{l}</a>
+          ))}
+        </div>
+        <div style={{ display:'flex', gap:16, alignItems:'center' }}>
+          <button onClick={() => setAuthMode('login')} data-cursor="Sign In"
+            style={{ fontSize:10, letterSpacing:'0.14em', textTransform:'uppercase',
+              color:'rgba(255,255,255,0.25)', background:'none', border:'none', cursor:'none',
+              transition:'color 0.3s' }}
+            onMouseEnter={e => (e.currentTarget.style.color='rgba(255,255,255,0.65)')}
+            onMouseLeave={e => (e.currentTarget.style.color='rgba(255,255,255,0.25)')}
+          >Sign in</button>
+          <button onClick={() => setAuthMode('signup')} data-cursor="Begin"
+            style={{ fontSize:10, letterSpacing:'0.14em', textTransform:'uppercase',
+              color:'rgba(255,255,255,0.55)', background:'none',
+              border:'1px solid rgba(255,255,255,0.12)', padding:'8px 20px', cursor:'none',
+              transition:'all 0.3s' }}
+            onMouseEnter={e => { e.currentTarget.style.color='white'; e.currentTarget.style.borderColor='rgba(255,255,255,0.35)'; }}
+            onMouseLeave={e => { e.currentTarget.style.color='rgba(255,255,255,0.55)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.12)'; }}
+          >Begin</button>
+        </div>
+      </nav>
 
-        {/* ════════════════════════════════════════════
-            NAV
-        ════════════════════════════════════════════ */}
-        <motion.nav
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-8 md:px-12 py-6"
-        >
-          {/* Logo */}
-          <div className="flex items-center gap-3 cursor-crosshair" data-cursor="Prism">
-            <PrismMark size={18} compact={true} />
-            <span className="text-white text-sm font-light tracking-widest uppercase">PRISM</span>
-            <span className="text-white/20 text-[9px] font-mono uppercase tracking-widest border border-white/10 px-1.5 py-0.5 rounded-full">Intelligence</span>
-          </div>
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          01 — HERO
+          Asymmetric. Mark enormous top-right.
+          Headline fragments at different scales,
+          scattered across the vertical.
+          "not" is the only colour.
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section style={{ position:'relative', minHeight:'100vh', overflow:'hidden', display:'flex', flexDirection:'column', justifyContent:'flex-end', paddingBottom:80 }}>
 
-          {/* Nav links */}
-          <div className="hidden md:flex items-center gap-8">
-            {[
-              { label: 'Research',  href: '#research'  },
-              { label: 'Features',  href: '#features'  },
-              { label: 'Pricing',   href: '#pricing'   },
-            ].map(link => (
-              <a key={link.label} href={link.href}
-                className="text-white/40 text-xs uppercase tracking-widest hover:text-white transition-colors font-light"
-                data-cursor={link.label}>
-                {link.label}
-              </a>
+        {/* Mark — structural element, top right, partial crop */}
+        <motion.div initial={{ opacity:0, scale:1.08 }} animate={{ opacity:1, scale:1 }}
+          transition={{ duration:2.2, ease:[0.16,1,0.3,1] }}
+          style={{ position:'absolute', top:'-4%', right:'-6%', pointerEvents:'none', zIndex:1 }}>
+          <PrismMark size={460} />
+        </motion.div>
+
+        {/* Headline — NOT a flex column. Each word placed deliberately */}
+        <div style={{ position:'relative', zIndex:2, padding:'0 48px' }}>
+
+          {/* "What you measure" — left, enormous */}
+          <div style={{ overflow:'hidden', marginBottom:'-0.04em' }}>
+            {['What','you','measure'].map((w,i) => (
+              <motion.span key={w}
+                initial={{ y:'100%', opacity:0 }}
+                animate={i < shown ? { y:0, opacity:1 } : { y:'100%', opacity:0 }}
+                transition={{ duration:0.7, ease:[0.16,1,0.3,1] }}
+                style={{ display:'inline-block', marginRight:'0.15em',
+                  fontSize:'clamp(52px,9vw,128px)', fontWeight:300,
+                  letterSpacing:'-0.03em', lineHeight:0.9, color:'rgba(255,255,255,0.92)' }}
+              >{w}</motion.span>
             ))}
           </div>
 
-          {/* Auth CTAs */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setAuthMode('login')}
-              className="px-4 py-2 rounded-full text-xs uppercase tracking-widest text-white/40 border border-white/5 hover:text-white hover:border-white/20 hover:bg-white/[0.04] transition-all font-light"
-              data-cursor="Sign In">
-              Sign In
-            </button>
-            <button
-              onClick={() => setAuthMode('signup')}
-              className="px-4 py-2 rounded-full text-xs uppercase tracking-widest text-white bg-white/5 border border-white/10 hover:bg-white/[0.04] hover:border-white/20 transition-all font-light flex items-center gap-2"
-              data-cursor="Get Started">
-              Get Started <ArrowUpRight size={11} />
-            </button>
+          {/* "is not" — shifted right, spectrum coloured, smaller */}
+          <div style={{ marginLeft:'28%', marginBottom:'-0.06em', overflow:'hidden' }}>
+            {['is','not'].map((w,i) => (
+              <motion.span key={w}
+                initial={{ y:'100%', opacity:0 }}
+                animate={i + 3 < shown ? { y:0, opacity:1 } : { y:'100%', opacity:0 }}
+                transition={{ duration:0.7, ease:[0.16,1,0.3,1] }}
+                style={{
+                  display:'inline-block', marginRight:'0.18em',
+                  fontSize:'clamp(40px,7vw,100px)', fontWeight:300,
+                  letterSpacing:'-0.03em', lineHeight:0.92,
+                  color: w === 'not' ? 'transparent' : 'rgba(255,255,255,0.38)',
+                  fontStyle: w === 'not' ? 'italic' : 'normal',
+                  fontFamily: w === 'not' ? 'Playfair Display,Georgia,serif' : undefined,
+                  background: w === 'not' ? 'linear-gradient(90deg,#C8001A,#926800,#300868)' : undefined,
+                  WebkitBackgroundClip: w === 'not' ? 'text' : undefined,
+                }}
+              >{w}</motion.span>
+            ))}
           </div>
-        </motion.nav>
 
-        {/* ════════════════════════════════════════════
-            HERO
-        ════════════════════════════════════════════ */}
-        <section className="min-h-screen flex flex-col justify-center px-6 md:px-12 pt-32 pb-24 relative">
-          <motion.div style={{ y: heroY, opacity: heroOpacity }} className="w-full max-w-[1400px] mx-auto">
+          {/* "who they are." — left again, with the serif */}
+          <div style={{ overflow:'hidden' }}>
+            {['who','they','are.'].map((w,i) => (
+              <motion.span key={w}
+                initial={{ y:'100%', opacity:0 }}
+                animate={i + 5 < shown ? { y:0, opacity:1 } : { y:'100%', opacity:0 }}
+                transition={{ duration:0.7, ease:[0.16,1,0.3,1] }}
+                style={{
+                  display:'inline-block', marginRight:'0.15em',
+                  fontSize:'clamp(52px,9vw,128px)', fontWeight:300,
+                  letterSpacing:'-0.03em', lineHeight:0.9,
+                  color: w === 'are.' ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.92)',
+                  fontStyle: w === 'are.' ? 'italic' : 'normal',
+                  fontFamily: w === 'are.' ? 'Playfair Display,Georgia,serif' : undefined,
+                }}
+              >{w}</motion.span>
+            ))}
+          </div>
 
-            {/* Hero mark */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="mb-16"
-            >
-              <PrismMark size={48} />
-            </motion.div>
-
-            {/* Eyebrow */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="flex items-center gap-4 mb-10"
-            >
-              <span className="text-cyan-400 uppercase tracking-[0.3em] text-[10px] font-bold border-l-2 border-cyan-400 pl-4 py-1">
-                Performance Intelligence Platform
-              </span>
-              <span className="px-2.5 py-1 rounded-full border border-emerald-500/30 text-emerald-400 bg-emerald-500/8 text-[9px] uppercase tracking-widest font-mono">
-                v2.4 — Now in Production
-              </span>
-            </motion.div>
-
-            {/* H1 */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-            >
-              <h1 className="text-[clamp(3.5rem,10vw,9rem)] font-light tracking-tighter text-white leading-[0.88] mb-6">
-                Your people are<br />
-                your <span className="text-white/30 italic font-serif">greatest</span><br />
-                signal.
-              </h1>
-            </motion.div>
-
-            {/* Sub-headline */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-              className="text-white/50 text-lg font-light leading-relaxed max-w-xl mb-12"
-            >
-              Prism transforms scattered HR data into precision performance intelligence. 
-              Real-time KPIs, 360° resonance, ROI mapping, and burnout telemetry — 
-              all in a single obsidian interface.
-            </motion.p>
-
-            {/* Hero CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
-              className="flex flex-wrap items-center gap-4 mb-20"
-            >
-              <button
-                onClick={() => setAuthMode('signup')}
-                className="group relative overflow-hidden px-8 py-4 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/[0.04] hover:border-white/20 transition-all flex items-center gap-3"
-                data-cursor="Deploy Node">
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                <span className="relative text-white text-sm font-light">Deploy Your Organisation</span>
-                <ArrowUpRight size={14} className="relative text-white/40 group-hover:text-cyan-400 transition-colors" />
-              </button>
-              <button
-                onClick={() => setAuthMode('login')}
-                className="px-8 py-4 rounded-2xl border border-white/5 text-white/50 text-sm font-light hover:text-white hover:border-white/10 transition-all"
-                data-cursor="Sign In">
-                Sign in to Dashboard
-              </button>
-            </motion.div>
-
-            {/* Hero stats row */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 0.5 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-4"
-            >
-              {[
-                { val: '246%',    label: 'Median org ROI', color: '#10b981' },
-                { val: '88%',     label: 'Burnout prediction accuracy', color: '#f59e0b' },
-                { val: '34%',     label: 'Performance uplift', color: '#38bdf8' },
-                { val: '2.4×',    label: 'Attrition prediction', color: '#c084fc' },
-              ].map((s, i) => (
-                <motion.div key={s.label}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 + i * 0.07, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative bg-white/[0.02] border border-white/5 rounded-[2rem] p-6 overflow-hidden group hover:bg-white/[0.04] hover:border-white/10 transition-colors cursor-crosshair"
-                  data-cursor="Research Data"
-                >
-                  <div className="absolute top-0 right-0 w-24 h-24 rounded-full blur-[50px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700" style={{ background: s.color + '20' }} />
-                  <p className="text-3xl font-light text-white mb-1">{s.val}</p>
-                  <p className="text-[9px] uppercase tracking-widest text-white/30 font-mono">{s.label}</p>
-                </motion.div>
-              ))}
-            </motion.div>
-          </motion.div>
-
-          {/* Scroll indicator */}
+          {/* Sub + CTA — appears after headline, small, right-aligned */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.8 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+            initial={{ opacity:0 }}
+            animate={{ opacity: shown >= chunks.length ? 1 : 0 }}
+            transition={{ duration:0.8, delay:0.4 }}
+            style={{ marginTop:52, display:'flex', alignItems:'flex-end', justifyContent:'space-between', flexWrap:'wrap', gap:24 }}
           >
-            <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-              className="w-px h-8 bg-gradient-to-b from-white/20 to-transparent" />
-            <span className="text-[8px] uppercase tracking-widest text-white/20 font-mono">Scroll to explore</span>
+            <p style={{ fontSize:13, fontWeight:300, color:'rgba(255,255,255,0.32)', lineHeight:1.8,
+              maxWidth:340, borderLeft:'1px solid rgba(255,255,255,0.08)', paddingLeft:20 }}>
+              A performance score compresses a human being into a single number.
+              Prism separates that number into the six dimensions that actually compose a person.
+            </p>
+            <div style={{ display:'flex', alignItems:'center', gap:28 }}>
+              <button onClick={() => setAuthMode('signup')} data-cursor="Deploy"
+                style={{ display:'flex', alignItems:'center', gap:8, fontSize:13, fontWeight:300,
+                  color:'white', background:'none', border:'none', cursor:'none',
+                  borderBottom:'1px solid rgba(255,255,255,0.22)', paddingBottom:2, transition:'border-color 0.3s' }}
+                onMouseEnter={e => (e.currentTarget.style.borderColor='rgba(255,255,255,0.7)')}
+                onMouseLeave={e => (e.currentTarget.style.borderColor='rgba(255,255,255,0.22)')}
+              >
+                Deploy Prism
+                <ArrowUpRight size={14} style={{ color:'rgba(255,255,255,0.4)' }} />
+              </button>
+              <button onClick={() => setAuthMode('login')} data-cursor="Sign In"
+                style={{ fontSize:13, fontWeight:300, color:'rgba(255,255,255,0.22)',
+                  background:'none', border:'none', cursor:'none', transition:'color 0.3s' }}
+                onMouseEnter={e => (e.currentTarget.style.color='rgba(255,255,255,0.55)')}
+                onMouseLeave={e => (e.currentTarget.style.color='rgba(255,255,255,0.22)')}
+              >Sign in</button>
+            </div>
           </motion.div>
-        </section>
+        </div>
 
-        {/* ════════════════════════════════════════════
-            RESEARCH STATS TICKER
-        ════════════════════════════════════════════ */}
-        <section className="border-y border-white/5 py-12 px-6 md:px-12" id="research">
-          <div className="w-full max-w-[1400px] mx-auto">
-            <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-10 flex items-center gap-2">
-              <BarChart2 size={12} className="text-amber-400" /> Peer-Reviewed Research Basis
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {researchStats.map((s, i) => (
-                <motion.div key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.08, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative bg-white/5 border border-white/5 rounded-[2rem] p-6 overflow-hidden group hover:bg-white/[0.04] transition-colors cursor-crosshair"
-                  data-cursor="Source"
-                >
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 blur-[50px] rounded-full pointer-events-none group-hover:bg-amber-500/8 transition-all duration-700" />
-                  <p className="text-4xl font-light text-white mb-3">{s.value}</p>
-                  <p className="text-xs text-white/50 font-light leading-relaxed mb-4">{s.label}</p>
-                  <p className="text-[8px] uppercase tracking-widest text-white/25 font-mono border-t border-white/5 pt-3">{s.source}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* Scroll cue */}
+        <motion.div initial={{ opacity:0 }} animate={{ opacity: shown >= chunks.length ? 1 : 0 }}
+          transition={{ delay:1.4 }}
+          style={{ position:'absolute', bottom:32, left:'50%', transform:'translateX(-50%)', display:'flex', flexDirection:'column', alignItems:'center', gap:8 }}>
+          <motion.div animate={{ y:[0,7,0] }} transition={{ duration:2.8, repeat:Infinity, ease:'easeInOut' }}
+            style={{ width:1, height:40, background:'linear-gradient(to bottom, rgba(255,255,255,0.2), transparent)' }} />
+          <span style={{ fontSize:8, letterSpacing:'0.22em', textTransform:'uppercase', color:'rgba(255,255,255,0.15)', fontFamily:'monospace' }}>Scroll</span>
+        </motion.div>
+      </section>
 
-        {/* ════════════════════════════════════════════
-            FEATURES
-        ════════════════════════════════════════════ */}
-        <section className="py-32 px-6 md:px-12" id="features">
-          <div className="w-full max-w-[1400px] mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
-            >
-              <div>
-                <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-2">
-                  <Sparkles size={12} className="text-cyan-400" /> Module Architecture
-                </p>
-                <h2 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
-                  Four <span className="text-white/30 italic font-serif">Engines</span>
-                </h2>
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          02 — THE SCORE
+          "84" at room scale. Hover to refract.
+          Not centered. Tension in the layout.
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section ref={s2ref} style={{ position:'relative', borderTop:'1px solid rgba(255,255,255,0.04)', minHeight:'100vh', overflow:'hidden' }}
+        onMouseEnter={() => setScoreOpen(true)} onMouseLeave={() => setScoreOpen(false)}
+        data-cursor={scoreOpen ? '6 truths' : 'Reveal'}>
+
+        {/* Label top-left */}
+        <motion.div initial={{ opacity:0 }} animate={s2 ? { opacity:1 } : {}}
+          transition={{ duration:0.6 }}
+          style={{ position:'absolute', top:40, left:48, zIndex:10 }}>
+          <p style={{ fontSize:9, letterSpacing:'0.24em', textTransform:'uppercase', color:'rgba(255,255,255,0.2)', fontFamily:'monospace' }}>Alex Mercer · Senior Engineer</p>
+        </motion.div>
+
+        {/* Score — huge, left-aligned, fades on hover */}
+        <motion.div animate={{ opacity: scoreOpen ? 0.03 : 1, x: scoreOpen ? -20 : 0 }}
+          transition={{ duration:0.7, ease:[0.16,1,0.3,1] }}
+          style={{ position:'absolute', bottom:-40, left:32, pointerEvents:'none', zIndex:5, lineHeight:1 }}>
+          <span style={{ fontSize:'clamp(200px,30vw,420px)', fontWeight:100, color:'white',
+            letterSpacing:'-0.05em', display:'block', fontVariantNumeric:'tabular-nums' }}>84</span>
+          <span style={{ fontSize:11, letterSpacing:'0.2em', textTransform:'uppercase',
+            color:'rgba(255,255,255,0.18)', fontFamily:'monospace', display:'block', marginTop:-20 }}>Composite Score</span>
+        </motion.div>
+
+        {/* Six panels — fill on hover */}
+        <motion.div animate={{ opacity: scoreOpen ? 1 : 0 }}
+          transition={{ duration:0.5 }}
+          style={{ position:'absolute', inset:0, display:'grid', gridTemplateColumns:'repeat(3,1fr)', gridTemplateRows:'1fr 1fr', zIndex:8 }}>
+          {DIMS.map((d, i) => (
+            <motion.div key={d.label}
+              initial={{ opacity:0, y:16 }}
+              animate={scoreOpen ? { opacity:1, y:0 } : { opacity:0, y:16 }}
+              transition={{ delay: i * 0.055, duration:0.45, ease:[0.16,1,0.3,1] }}
+              style={{ borderRight: i % 3 !== 2 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+                borderBottom: i < 3 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+                background: d.bg, padding:'40px 40px',
+                display:'flex', flexDirection:'column', justifyContent:'center', position:'relative', overflow:'hidden' }}>
+              <div style={{ position:'absolute', top:0, left:0, right:0, height:1, background: d.color + '60' }} />
+              <p style={{ fontSize:9, letterSpacing:'0.2em', textTransform:'uppercase', marginBottom:12, fontFamily:'monospace', color: d.color + 'bb' }}>{d.label}</p>
+              <p style={{ fontSize:'clamp(40px,5vw,72px)', fontWeight:200, color:'white', lineHeight:1, marginBottom:8, fontVariantNumeric:'tabular-nums' }}>
+                {d.n}<span style={{ fontSize:'0.35em', color:'rgba(255,255,255,0.3)', marginLeft:4 }}>{d.u}</span>
+              </p>
+              <div style={{ height:1, background:'rgba(255,255,255,0.05)', marginBottom:10, position:'relative', overflow:'hidden' }}>
+                <motion.div style={{ position:'absolute', left:0, top:0, height:'100%', background: d.color }}
+                  initial={{ width:0 }}
+                  animate={scoreOpen ? { width:`${Math.min(d.n,100)}%` } : { width:0 }}
+                  transition={{ delay:0.2 + i * 0.055, duration:0.7, ease:[0.16,1,0.3,1] }} />
               </div>
-              <p className="text-white/40 text-sm font-light leading-relaxed max-w-sm">
-                Each module is independently powerful. Together they form a complete 
-                performance intelligence layer for your organisation.
-              </p>
+              <p style={{ fontSize:11, color:'rgba(255,255,255,0.28)', fontWeight:300 }}>{d.desc}</p>
             </motion.div>
+          ))}
+        </motion.div>
+      </section>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {featureBlocks.map((f, i) => (
-                <motion.div key={f.label}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative bg-white/5 border border-white/5 rounded-[2rem] p-8 overflow-hidden group hover:bg-white/[0.04] hover:border-white/10 transition-colors cursor-crosshair"
-                  data-cursor="Explore"
-                >
-                  <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-[80px] pointer-events-none opacity-40 group-hover:opacity-80 transition-opacity duration-700" style={{ background: f.glow }} />
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          03 — SIX DIMENSIONS
+          Each row is a full-width graphic moment.
+          Height expands on hover. Colour floods in.
+          Nothing is decorative.
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section ref={s3ref} id="platform" style={{ borderTop:'1px solid rgba(255,255,255,0.04)' }}>
 
-                  <div className="flex items-start justify-between mb-8 relative z-10">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ background: f.color + '15' }}>
-                        <f.icon size={16} style={{ color: f.color }} />
-                      </div>
-                      <div>
-                        <p className="text-white/40 text-[9px] uppercase tracking-widest font-mono">{f.tag}</p>
-                        <p className="text-white text-sm font-light mt-0.5">{f.label}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-3xl font-light" style={{ color: f.color }}>{f.stat}</p>
-                      <p className="text-[9px] uppercase tracking-widest text-white/30 font-mono mt-0.5">{f.statLabel}</p>
-                    </div>
-                  </div>
-
-                  <h3 className="text-xl font-light text-white/90 mb-4 leading-snug relative z-10">{f.headline}</h3>
-                  <p className="text-xs text-white/40 font-light leading-relaxed relative z-10">{f.body}</p>
-
-                  <div className="mt-6 pt-4 border-t border-white/5 flex items-center gap-2 relative z-10">
-                    <button
-                      onClick={() => setAuthMode('signup')}
-                      className="text-[9px] uppercase tracking-widest font-mono transition-colors flex items-center gap-1.5"
-                      style={{ color: f.color }}
-                      data-cursor="Deploy"
-                    >
-                      Deploy this module <ChevronRight size={9} />
-                    </button>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+        {/* Section label — ultra small, tracking, top */}
+        <div style={{ padding:'60px 48px 48px', display:'flex', justifyContent:'space-between', alignItems:'flex-end' }}>
+          <div>
+            <p style={{ fontSize:9, letterSpacing:'0.28em', textTransform:'uppercase', color:'rgba(255,255,255,0.18)', fontFamily:'monospace', marginBottom:20 }}>The Spectrum</p>
+            <h2 style={{ fontSize:'clamp(36px,5.5vw,72px)', fontWeight:300, letterSpacing:'-0.03em', lineHeight:0.9, color:'white' }}>
+              Six truths.<br/>
+              <em style={{ color:'rgba(255,255,255,0.2)', fontFamily:'Playfair Display,Georgia,serif', fontStyle:'italic' }}>One person.</em>
+            </h2>
           </div>
-        </section>
+          <p style={{ fontSize:12, fontWeight:300, color:'rgba(255,255,255,0.22)', lineHeight:1.8, maxWidth:260, textAlign:'right' }}>
+            Every score you have given a person collapsed six signals into one. Prism holds them apart.
+          </p>
+        </div>
 
-        {/* ════════════════════════════════════════════
-            CITATIONS
-        ════════════════════════════════════════════ */}
-        <section className="py-24 px-6 md:px-12 border-t border-white/5">
-          <div className="w-full max-w-[1400px] mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="mb-16"
-            >
-              <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold flex items-center gap-2">
-                <Shield size={12} className="text-purple-400" /> Academic & Industry Citations
-              </p>
-            </motion.div>
+        {/* Dimension rows — accordion with full colour */}
+        <div>
+          {DIMS.map((d,i) => {
+            const active = activeDim === i;
+            const any    = activeDim !== null;
+            return (
+              <motion.div key={d.label}
+                onHoverStart={() => setActiveDim(i)}
+                onHoverEnd={() => setActiveDim(null)}
+                initial={{ opacity:0 }}
+                animate={s3 ? { opacity: any && !active ? 0.2 : 1 } : { opacity:0 }}
+                transition={{ opacity:{ duration: any ? 0.15 : 0.5, delay: s3 ? i*0.06:0 } }}
+                style={{
+                  borderTop:'1px solid rgba(255,255,255,0.04)',
+                  background: active ? d.bg : 'transparent',
+                  height: active ? 130 : 76,
+                  transition:'height 0.55s cubic-bezier(0.16,1,0.3,1), background 0.4s ease',
+                  overflow:'hidden', cursor:'crosshair', position:'relative',
+                }}
+                data-cursor={d.label}
+              >
+                {/* Left accent */}
+                <motion.div style={{ position:'absolute', left:0, top:0, bottom:0, width:3, background: d.color }}
+                  animate={{ opacity: active ? 1 : 0 }} transition={{ duration:0.3 }} />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {citations.map((c, i) => (
-                <motion.div key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative bg-white/5 border border-white/5 rounded-[2rem] p-8 overflow-hidden group hover:bg-white/[0.04] transition-colors cursor-crosshair"
-                  data-cursor="Read Source"
-                >
-                  <div className="absolute top-0 right-0 w-40 h-40 bg-purple-500/5 blur-[60px] rounded-full pointer-events-none" />
-                  <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-500/40 to-transparent rounded-l-[2rem]" />
+                {/* Top hairline */}
+                <motion.div style={{ position:'absolute', top:0, left:0, right:0, height:1, background: d.color }}
+                  animate={{ opacity: active ? 0.5 : 0 }} transition={{ duration:0.3 }} />
 
-                  <p className="text-white/60 text-sm font-light font-serif italic leading-relaxed mb-6 relative z-10">
-                    "{c.quote}"
-                  </p>
-                  <div className="flex items-center justify-between relative z-10 border-t border-white/5 pt-4">
-                    <p className="text-white/40 text-xs font-light">{c.source}</p>
-                    <p className="text-[9px] font-mono text-white/25 uppercase tracking-widest">{c.year}</p>
+                {/* Main row */}
+                <div style={{ display:'flex', alignItems:'center', height:76, padding:'0 48px', gap:24 }}>
+                  <span style={{ fontSize:10, fontFamily:'monospace', width:24, flexShrink:0,
+                    color: active ? d.color : 'rgba(255,255,255,0.15)' }}>
+                    {String(i+1).padStart(2,'0')}
+                  </span>
+                  <span style={{ fontSize:'clamp(22px,3.5vw,44px)', fontWeight:300, flex:'0 0 auto', minWidth:180,
+                    color: active ? 'white' : 'rgba(255,255,255,0.7)',
+                    transition:'color 0.3s' }}>
+                    {d.label}
+                  </span>
+                  {/* Track */}
+                  <div style={{ flex:1, height:1, background:'rgba(255,255,255,0.06)', position:'relative', overflow:'hidden' }}>
+                    <motion.div style={{ position:'absolute', left:0, top:0, height:'100%', background: d.color }}
+                      animate={{ width: active ? `${Math.min(d.n,100)}%` : '0%' }}
+                      transition={{ duration:0.65, ease:[0.16,1,0.3,1] }} />
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
+                  {/* Value */}
+                  <motion.span style={{ fontSize:'clamp(20px,2.8vw,36px)', fontWeight:300, color: d.color,
+                    width:100, textAlign:'right', flexShrink:0, fontVariantNumeric:'tabular-nums' }}
+                    animate={{ opacity: active ? 1 : 0, x: active ? 0 : 10 }}
+                    transition={{ duration:0.25 }}>
+                    {d.n}{d.u}
+                  </motion.span>
+                </div>
 
-        {/* ════════════════════════════════════════════
-            PRICING
-        ════════════════════════════════════════════ */}
-        <section className="py-32 px-6 md:px-12 border-t border-white/5" id="pricing">
-          <div className="w-full max-w-[1400px] mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
-            >
-              <div>
-                <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-2">
-                  <Zap size={12} className="text-amber-400" /> Deployment Tiers
-                </p>
-                <h2 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
-                  Choose <span className="text-white/30 italic font-serif">Protocol</span>
-                </h2>
+                {/* Expanded description */}
+                <motion.p animate={{ opacity: active ? 1 : 0, y: active ? 0 : -6 }}
+                  transition={{ duration:0.3, delay: active ? 0.12 : 0 }}
+                  style={{ fontSize:12, color:'rgba(255,255,255,0.38)', fontWeight:300, padding:'0 48px 0 78px' }}>
+                  {d.desc}
+                </motion.p>
+              </motion.div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          04 — RESEARCH
+          Numbers as the design. No cards.
+          Full bleed. Extreme scale contrast.
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section ref={s4ref} id="research" style={{ borderTop:'1px solid rgba(255,255,255,0.04)' }}>
+        <div style={{ padding:'80px 48px 0' }}>
+          <p style={{ fontSize:9, letterSpacing:'0.28em', textTransform:'uppercase', color:'rgba(255,255,255,0.18)', fontFamily:'monospace', marginBottom:60 }}>Research Basis</p>
+        </div>
+
+        {/* Alternating large/small layout — not equal columns */}
+        {[
+          { n:'$11.1T', body:'Lost annually to disengaged, unseen employees worldwide.', src:'Gallup State of the Global Workplace · 2024' },
+          { n:'92%',    body:'Of HR leaders say their performance data is siloed or incomplete.', src:'Deloitte Global Human Capital Trends · 2024' },
+          { n:'200%',   body:'Cost of replacing one person, relative to their annual salary.', src:'SHRM Employee Benefits Research · 2023' },
+          { n:'34%',    body:'Performance gain from structured, multi-dimensional continuous feedback.', src:'MIT Sloan Management Review · 2022' },
+        ].map((p, i) => (
+          <motion.div key={i}
+            initial={{ opacity:0, y:20 }}
+            animate={s4 ? { opacity:1, y:0 } : {}}
+            transition={{ delay:i*0.1, duration:0.7, ease:[0.16,1,0.3,1] }}
+            style={{
+              display:'grid',
+              gridTemplateColumns: i % 2 === 0 ? '1fr 2fr' : '2fr 1fr',
+              borderTop:'1px solid rgba(255,255,255,0.04)',
+              alignItems:'center',
+            }}>
+            <div style={{ padding:'52px 48px', order: i%2===0 ? 0 : 1 }}>
+              <p style={{ fontSize:'clamp(52px,8vw,110px)', fontWeight:200, color:'white',
+                letterSpacing:'-0.04em', lineHeight:1 }}>{p.n}</p>
+            </div>
+            <div style={{ padding:'52px 48px', borderLeft: i%2===0 ? '1px solid rgba(255,255,255,0.04)' : 'none',
+              borderRight: i%2===1 ? '1px solid rgba(255,255,255,0.04)' : 'none', order: i%2===0 ? 1 : 0 }}>
+              <p style={{ fontSize:15, fontWeight:300, color:'rgba(255,255,255,0.55)', lineHeight:1.7, marginBottom:20 }}>{p.body}</p>
+              <p style={{ fontSize:9, letterSpacing:'0.16em', textTransform:'uppercase', color:'rgba(255,255,255,0.18)', fontFamily:'monospace' }}>{p.src}</p>
+            </div>
+          </motion.div>
+        ))}
+      </section>
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          05 — QUOTE
+          Full-width. Massive italic. Breathe.
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section style={{ borderTop:'1px solid rgba(255,255,255,0.04)', padding:'120px 48px' }}>
+        <blockquote style={{ fontFamily:'Playfair Display,Georgia,serif', fontStyle:'italic',
+          fontWeight:300, fontSize:'clamp(22px,3.2vw,48px)', lineHeight:1.4,
+          color:'rgba(255,255,255,0.55)', maxWidth:900, marginBottom:40 }}>
+          "The person with an 84 score may be your highest-output employee
+          and your most urgent wellbeing intervention. The number makes both invisible."
+        </blockquote>
+        <cite style={{ fontSize:9, letterSpacing:'0.18em', textTransform:'uppercase',
+          color:'rgba(255,255,255,0.2)', fontFamily:'monospace', fontStyle:'normal',
+          display:'block', borderTop:'1px solid rgba(255,255,255,0.06)', paddingTop:20 }}>
+          Prism Intelligence · 2025
+        </cite>
+      </section>
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          06 — PRICING
+          Three vertical rows. Price enormous.
+          No equal cards. Pure typography.
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section id="pricing" style={{ borderTop:'1px solid rgba(255,255,255,0.04)' }}>
+        <div style={{ padding:'80px 48px 48px' }}>
+          <p style={{ fontSize:9, letterSpacing:'0.28em', textTransform:'uppercase', color:'rgba(255,255,255,0.18)', fontFamily:'monospace', marginBottom:0 }}>Deployment</p>
+        </div>
+
+        {[
+          { name:'Signal',        price:'$18',   unit:'/node/mo', desc:'Small teams beginning to see clearly.',
+            features:['KPI & OKR tracking','Basic 360° reviews','Attendance matrix','Up to 10 nodes'], cta:'login' as AuthMode },
+          { name:'Constellation', price:'$42',   unit:'/node/mo', desc:'Full intelligence for growing organisations.',
+            features:['All Signal features','ROI intelligence','Bio-rhythm telemetry','Leaderboard','Up to 200 nodes'], cta:'org' as AuthMode, featured:true },
+          { name:'Prism',         price:'Custom',unit:'',          desc:'Enterprise for 200+ node organisations.',
+            features:['All Constellation features','SSO / SAML','Custom benchmarks','SLA 99.99%','Unlimited nodes'], cta:'org' as AuthMode },
+        ].map((plan, i) => (
+          <div key={plan.name} style={{
+            borderTop:'1px solid rgba(255,255,255,0.04)',
+            display:'grid', gridTemplateColumns:'1fr 1fr 1fr',
+            background: plan.featured ? 'rgba(255,255,255,0.018)' : 'transparent',
+          }}>
+            {/* Plan name + desc */}
+            <div style={{ padding:'48px 48px', borderRight:'1px solid rgba(255,255,255,0.04)' }}>
+              {plan.featured && <div style={{ height:1, background:'rgba(255,255,255,0.18)', marginBottom:32 }} />}
+              <p style={{ fontSize:10, letterSpacing:'0.2em', textTransform:'uppercase', color:'rgba(255,255,255,0.3)', fontFamily:'monospace', marginBottom:12 }}>{plan.name}</p>
+              <p style={{ fontSize:13, fontWeight:300, color:'rgba(255,255,255,0.4)', lineHeight:1.7 }}>{plan.desc}</p>
+            </div>
+
+            {/* Price — enormous */}
+            <div style={{ padding:'48px 48px', borderRight:'1px solid rgba(255,255,255,0.04)', display:'flex', flexDirection:'column', justifyContent:'center' }}>
+              <div style={{ display:'flex', alignItems:'baseline', gap:8 }}>
+                <span style={{ fontSize:'clamp(44px,6vw,80px)', fontWeight:200, color:'white', lineHeight:1, letterSpacing:'-0.03em' }}>{plan.price}</span>
+                {plan.unit && <span style={{ fontSize:12, color:'rgba(255,255,255,0.25)', fontWeight:300 }}>{plan.unit}</span>}
               </div>
-              <p className="text-white/40 text-sm font-light max-w-xs text-right">
-                All plans include a 30-day full-access trial. No credit card required to initialise.
-              </p>
-            </motion.div>
+            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {pricingPlans.map((plan, i) => (
-                <motion.div key={plan.name}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                  className={`relative rounded-[2rem] overflow-hidden border transition-colors ${
-                    plan.featured
-                      ? 'bg-white/5 border-white/10'
-                      : 'bg-white/[0.02] border-white/5 hover:bg-white/[0.04] hover:border-white/10'
-                  }`}
-                >
-                  {plan.featured && (
-                    <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(to right, transparent, ${plan.color}, transparent)` }} />
-                  )}
-                  <div className="absolute top-0 right-0 w-48 h-48 rounded-full blur-[70px] pointer-events-none" style={{ background: plan.color + (plan.featured ? '12' : '08') }} />
-
-                  <div className="p-8 relative z-10">
-                    <div className="flex items-start justify-between mb-8">
-                      <div>
-                        <p className="text-[9px] uppercase tracking-widest font-mono mb-1" style={{ color: plan.color }}>
-                          {plan.featured ? '★ Most Popular' : plan.name}
-                        </p>
-                        <h3 className="text-xl font-light text-white">{plan.featured ? plan.name : plan.name}</h3>
-                        <p className="text-white/30 text-xs font-light mt-1">{plan.desc}</p>
-                      </div>
-                    </div>
-
-                    <div className="mb-8">
-                      <span className="text-4xl font-light text-white">{plan.price}</span>
-                      {plan.unit && <span className="text-white/30 text-sm font-light ml-1">{plan.unit}</span>}
-                    </div>
-
-                    <div className="space-y-3 mb-8">
-                      {plan.features.map(f => (
-                        <div key={f} className="flex items-center gap-3">
-                          <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: plan.color }} />
-                          <span className="text-xs text-white/50 font-light">{f}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    <button
-                      onClick={() => setAuthMode(plan.cta)}
-                      className="w-full py-3 rounded-2xl border text-sm font-light transition-all flex items-center justify-center gap-2"
-                      style={plan.featured
-                        ? { borderColor: plan.color + '40', background: plan.color + '12', color: 'white' }
-                        : {}}
-                      data-cursor="Deploy"
-                    >
-                      {plan.price === 'Custom' ? 'Contact Sales' : 'Deploy Now'}
-                      <ArrowUpRight size={13} />
-                    </button>
+            {/* Features + CTA */}
+            <div style={{ padding:'48px 48px', display:'flex', flexDirection:'column', justifyContent:'space-between' }}>
+              <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+                {plan.features.map(f => (
+                  <div key={f} style={{ display:'flex', gap:12, alignItems:'center' }}>
+                    <div style={{ width:1, height:12, background:'rgba(255,255,255,0.18)', flexShrink:0 }} />
+                    <span style={{ fontSize:12, color:'rgba(255,255,255,0.38)', fontWeight:300 }}>{f}</span>
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ════════════════════════════════════════════
-            FINAL CTA
-        ════════════════════════════════════════════ */}
-        <section className="py-40 px-6 md:px-12 border-t border-white/5">
-          <div className="w-full max-w-[1400px] mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <div className="flex justify-center mb-10">
-                <PrismMark size={28} />
+                ))}
               </div>
-              <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center justify-center gap-2">
-                <Heart size={12} className="text-rose-400" /> Ready to Amplify Your Signal
-              </p>
-              <h2 className="text-[clamp(3rem,8vw,7rem)] font-light tracking-tighter text-white leading-[0.9] mb-8">
-                Your people deserve<br />
-                <span className="text-white/30 italic font-serif">better intelligence.</span>
-              </h2>
-              <p className="text-white/40 text-sm font-light max-w-lg mx-auto mb-12 leading-relaxed">
-                Join 2,400+ organisations using Prism to turn HR data into competitive advantage. 
-                30-day trial. No card required. Full-access from day one.
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-4">
-                <button
-                  onClick={() => setAuthMode('signup')}
-                  className="group relative overflow-hidden px-10 py-5 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/[0.04] hover:border-white/20 transition-all flex items-center gap-3"
-                  data-cursor="Deploy Node">
-                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  <span className="relative text-white text-sm font-light">Deploy Your Organisation</span>
-                  <ArrowUpRight size={14} className="relative text-white/40 group-hover:text-cyan-400 transition-colors" />
-                </button>
-                <button
-                  onClick={() => setAuthMode('invite')}
-                  className="px-10 py-5 rounded-2xl border border-white/5 text-white/40 text-sm font-light hover:text-white hover:border-white/10 transition-all flex items-center gap-2"
-                  data-cursor="Invite Team">
-                  <UserPlus size={14} /> Invite Your Team
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ════════════════════════════════════════════
-            FOOTER
-        ════════════════════════════════════════════ */}
-        <footer className="border-t border-white/5 px-6 md:px-12 py-12">
-          <div className="w-full max-w-[1400px] mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-            <div className="flex items-center gap-3">
-              <PrismMark size={14} compact={true} />
-              <span className="text-white/40 text-xs font-light tracking-widest uppercase">Prism Intelligence</span>
-              <span className="text-white/20 text-[8px] font-mono uppercase tracking-widest">v2.4.1</span>
-            </div>
-
-            <div className="flex flex-wrap gap-6">
-              {['Privacy Matrix', 'Security Protocol', 'Compliance', 'API Reference', 'Status'].map(link => (
-                <a key={link} href="#"
-                  className="text-white/25 text-[9px] uppercase tracking-widest font-mono hover:text-white/60 transition-colors"
-                  data-cursor={link}>
-                  {link}
-                </a>
-              ))}
-            </div>
-
-            <div className="flex items-center gap-3">
-              <button onClick={() => setAuthMode('login')}
-                className="text-[9px] uppercase tracking-widest font-mono text-white/25 hover:text-white/60 transition-colors"
-                data-cursor="Sign In">
-                Sign In
-              </button>
-              <span className="text-white/10">·</span>
-              <button onClick={() => setAuthMode('signup')}
-                className="text-[9px] uppercase tracking-widest font-mono text-cyan-400/50 hover:text-cyan-400 transition-colors"
-                data-cursor="Deploy">
-                Deploy
+              <button onClick={() => setAuthMode(plan.cta)} data-cursor="Deploy"
+                style={{ marginTop:32, fontSize:10, letterSpacing:'0.16em', textTransform:'uppercase',
+                  color:'rgba(255,255,255,0.35)', background:'none',
+                  border:'1px solid rgba(255,255,255,0.1)', padding:'12px 0',
+                  cursor:'none', textAlign:'left', paddingLeft:16, display:'flex', alignItems:'center', justifyContent:'space-between',
+                  paddingRight:16, transition:'all 0.3s' }}
+                onMouseEnter={e => { e.currentTarget.style.color='rgba(255,255,255,0.75)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.3)'; }}
+                onMouseLeave={e => { e.currentTarget.style.color='rgba(255,255,255,0.35)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.1)'; }}
+              >
+                {plan.price === 'Custom' ? 'Contact Sales' : 'Deploy Now'}
+                <ChevronRight size={11} />
               </button>
             </div>
           </div>
+        ))}
+        <p style={{ padding:'24px 48px', fontSize:9, letterSpacing:'0.16em', textTransform:'uppercase', color:'rgba(255,255,255,0.15)', fontFamily:'monospace', borderTop:'1px solid rgba(255,255,255,0.04)' }}>
+          30-day trial · No card required · Full access from day one
+        </p>
+      </section>
 
-          <div className="w-full max-w-[1400px] mx-auto mt-8 pt-6 border-t border-white/[0.03] flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-[8px] font-mono uppercase tracking-widest text-white/15">
-              © 2025 Prism Intelligence Ltd. All signals reserved.
-            </p>
-            <p className="text-[8px] font-mono uppercase tracking-widest text-white/15">
-              Built with peer-reviewed methodology · SOC 2 Type II · ISO 27001
-            </p>
-          </div>
-        </footer>
-      </div>
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          07 — FINAL CTA
+          One idea. The mark as the graphic.
+          White space earns it.
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section ref={ctaRef} style={{
+        borderTop:'1px solid rgba(255,255,255,0.04)',
+        minHeight:'80vh', display:'flex', flexDirection:'column',
+        justifyContent:'center', alignItems:'center',
+        padding:'120px 48px', position:'relative', overflow:'hidden',
+        textAlign:'center', gap:56,
+      }}>
+        {/* Ghost mark — enormous behind everything */}
+        <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center', pointerEvents:'none', opacity:0.04 }}>
+          <PrismMark size={560} />
+        </div>
 
-      {/* ── Auth Modal ── */}
+        <motion.h2
+          initial={{ opacity:0, y:24 }}
+          animate={ctaV ? { opacity:1, y:0 } : {}}
+          transition={{ duration:0.9, ease:[0.16,1,0.3,1] }}
+          style={{ fontSize:'clamp(44px,7vw,100px)', fontWeight:300, letterSpacing:'-0.04em',
+            lineHeight:0.9, color:'white', position:'relative', zIndex:2 }}>
+          See your people<br/>
+          <em style={{ color:'rgba(255,255,255,0.22)', fontFamily:'Playfair Display,Georgia,serif', fontStyle:'italic' }}>clearly.</em>
+        </motion.h2>
+
+        <motion.div initial={{ opacity:0 }} animate={ctaV ? { opacity:1 } : {}} transition={{ delay:0.35, duration:0.8 }}
+          style={{ display:'flex', gap:32, alignItems:'center', position:'relative', zIndex:2 }}>
+          <button onClick={() => setAuthMode('signup')} data-cursor="Deploy"
+            style={{ display:'flex', alignItems:'center', gap:10, fontSize:14, fontWeight:300,
+              color:'white', background:'none', border:'none', cursor:'none',
+              borderBottom:'1px solid rgba(255,255,255,0.25)', paddingBottom:3, transition:'border-color 0.3s' }}
+            onMouseEnter={e => (e.currentTarget.style.borderColor='rgba(255,255,255,0.8)')}
+            onMouseLeave={e => (e.currentTarget.style.borderColor='rgba(255,255,255,0.25)')}
+          >
+            Deploy Prism <ArrowUpRight size={15} style={{ color:'rgba(255,255,255,0.4)' }} />
+          </button>
+          <button onClick={() => setAuthMode('invite')} data-cursor="Invite"
+            style={{ fontSize:14, fontWeight:300, color:'rgba(255,255,255,0.22)',
+              background:'none', border:'none', cursor:'none',
+              display:'flex', alignItems:'center', gap:6, transition:'color 0.3s' }}
+            onMouseEnter={e => (e.currentTarget.style.color='rgba(255,255,255,0.55)')}
+            onMouseLeave={e => (e.currentTarget.style.color='rgba(255,255,255,0.22)')}
+          >
+            <UserPlus size={14} /> Invite your team
+          </button>
+        </motion.div>
+      </section>
+
+      {/* Footer */}
+      <footer style={{ borderTop:'1px solid rgba(255,255,255,0.04)', padding:'20px 48px',
+        display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+          <PrismMark size={10} compact />
+          <span style={{ fontSize:9, letterSpacing:'0.18em', textTransform:'uppercase', color:'rgba(255,255,255,0.18)', fontFamily:'monospace' }}>
+            Prism Intelligence · 2025
+          </span>
+        </div>
+        <div style={{ display:'flex', gap:24 }}>
+          {['Privacy','Security','SOC 2 Type II'].map(l => (
+            <a key={l} href="#" data-cursor={l}
+              style={{ fontSize:9, letterSpacing:'0.14em', textTransform:'uppercase', color:'rgba(255,255,255,0.14)',
+                textDecoration:'none', fontFamily:'monospace', transition:'color 0.3s' }}
+              onMouseEnter={e => (e.currentTarget.style.color='rgba(255,255,255,0.4)')}
+              onMouseLeave={e => (e.currentTarget.style.color='rgba(255,255,255,0.14)')}
+            >{l}</a>
+          ))}
+        </div>
+      </footer>
+
       <AnimatePresence>
         {authMode && <AuthModal mode={authMode} onClose={() => setAuthMode(null)} />}
       </AnimatePresence>

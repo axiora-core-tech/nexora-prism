@@ -160,3 +160,18 @@
 @media (min-width: 640px)  { .grid-responsive-4 { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1024px) { .grid-responsive-4 { grid-template-columns: repeat(4, 1fr); } }
 @media (min-width: 1920px) { .grid-responsive-4 { gap: 1.5rem; } }
+
+/* ── iOS home indicator / TV overscan safe areas ─────────────────────────── */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .dock-root {
+    bottom: max(2rem, calc(1rem + env(safe-area-inset-bottom)));
+  }
+  .page-wrap {
+    padding-bottom: max(
+      clamp(6rem, 12vh, 10rem),
+      calc(clamp(6rem, 12vh, 10rem) + env(safe-area-inset-bottom))
+    );
+    padding-left:  max(clamp(1rem, 4vw, 5rem), env(safe-area-inset-left));
+    padding-right: max(clamp(1rem, 4vw, 5rem), env(safe-area-inset-right));
+  }
+}

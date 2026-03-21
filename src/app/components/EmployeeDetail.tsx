@@ -92,7 +92,7 @@ export function EmployeeDetail() {
           className="absolute inset-0 w-full h-full object-cover z-0 grayscale opacity-90"
         />
         
-        {/* Dynamic Gradient Overlays */}
+        {/* Dynamic Gradient Overlays — intentionally #030303: this panel is always dark (photo card) */}
         <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#030303] via-[#030303]/60 to-transparent" />
         <div className="absolute inset-0 z-10 bg-gradient-to-b from-[#030303] via-[#030303]/30 to-transparent" style={{ height: '35%' }} />
         <div className="absolute inset-0 z-10 bg-gradient-to-r from-transparent to-[#030303]" />

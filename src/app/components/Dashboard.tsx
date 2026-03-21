@@ -113,7 +113,7 @@ export function Dashboard() {
 
         {/* Right-edge fade signals scrollability on desktop */}
         <div className="relative">
-          <div className="pointer-events-none absolute top-0 right-0 w-24 h-full z-10 bg-gradient-to-l from-[#030303] to-transparent" />
+          <div className="pointer-events-none absolute top-0 right-0 w-24 h-full z-10 bg-gradient-to-l to-transparent" style={{ background: 'linear-gradient(to left, var(--p-bg), transparent)' }} />
           <div className="constellation-track flex overflow-x-auto gap-6 pb-8 pt-2 snap-x snap-mandatory" style={{ scrollbarWidth: 'none' }}>
             {employees.map((emp, index) => (
               <NavLink to={`/app/employee/${emp.id}`} key={emp.id} data-cursor="View Node">

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { EmptyState } from './ui/EmptyState';
 import { Network, Star, MessageSquare, ChevronDown, ChevronUp, ArrowUpRight,
          Target, Brain, Heart, Users, Zap, CheckCircle2, ChevronRight,
          ArrowLeft, Crosshair, PenLine } from 'lucide-react';

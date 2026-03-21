@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { EmptyState } from './ui/EmptyState';
 import {
   Layers, Plus, X, ChevronRight, Calendar, ArrowLeft,
   Clock, Play, Square, Paperclip, Link2, MessageSquare,
@@ -979,8 +980,8 @@ export function Tasks() {
                   ))}
                 </AnimatePresence>
                 {colTasks.length === 0 && (
-                  <div className="border border-dashed border-white/[0.07] rounded-[2rem] p-8 text-center">
-                    <p className="text-xs uppercase tracking-widest p-text-ghost font-mono">Empty</p>
+                  <div className="border border-dashed border-white/[0.07] rounded-[2rem] overflow-hidden">
+                    <EmptyState variant="tasks" />
                   </div>
                 )}
               </motion.div>

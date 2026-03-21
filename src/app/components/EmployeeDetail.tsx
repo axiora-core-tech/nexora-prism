@@ -1,3 +1,4 @@
+import { EmptyState } from './ui/EmptyState';
 import React, { useState, useEffect } from 'react';
 import { useParams, NavLink } from 'react-router';
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
@@ -82,7 +83,7 @@ export function EmployeeDetail() {
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full xl:w-[40%] h-[60vh] xl:h-screen sticky top-0 overflow-hidden hidden xl:block" style={{ backgroundColor: '#111' }}
+        className="w-full xl:w-[40%] h-[50vw] md:h-[40vw] xl:h-screen xl:sticky top-0 overflow-hidden xl:block" style={{ backgroundColor: '#111' }}
       >
         <motion.img
           style={{ scale, y }}
@@ -145,8 +146,27 @@ export function EmployeeDetail() {
         ))}
       </div>
 
+
+      {/* Mobile section nav — pill strip, visible below xl */}
+      <div className="xl:hidden flex overflow-x-auto gap-2 px-4 py-3 border-b p-border sticky top-0 z-30 backdrop-blur-md" style={{ backgroundColor: 'rgba(3,3,3,0.85)', scrollbarWidth: 'none' }}>
+        {sections.map(section => (
+          <button
+            key={section.id}
+            onClick={() => scrollTo(section.id)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-mono uppercase tracking-widest whitespace-nowrap flex-shrink-0 transition-all ${
+              activeSection === section.id
+                ? 'border-cyan-400/50 bg-cyan-400/10 text-cyan-400'
+                : 'p-border p-text-ghost hover:p-border-mid hover:p-text-dim'
+            }`}
+          >
+            <section.icon size={10} />
+            {section.label}
+          </button>
+        ))}
+      </div>
+
       {/* Deep Dive Content Area (Right Column) */}
-      <div className="w-full xl:w-[60%] p-4 sm:p-6 md:p-12 lg:p-24 relative z-20">
+      <div className="w-full xl:w-[60%] p-4 sm:p-6 md:p-10 lg:p-20 relative z-20">
         
         {/* Mobile Header (Hidden on Desktop) */}
         <div className="xl:hidden mb-12 pt-12">
@@ -694,7 +714,7 @@ export function EmployeeDetail() {
               {(!employee.reviews360 || employee.reviews360.length === 0) && (
                 <div className="text-center py-12 p-text-dim">
                   <Network size={28} className="mx-auto mb-3 opacity-30" />
-                  <p className="text-sm">No reviews submitted yet</p>
+                  <EmptyState variant="reviews" className="py-6" />
                 </div>
               )}
             </div>

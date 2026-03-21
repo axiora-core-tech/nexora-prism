@@ -1,3 +1,4 @@
+import { EmptyState } from './ui/EmptyState';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Target, TrendingUp, TrendingDown, Minus, ChevronRight, Filter, CheckCircle2, AlertCircle, XCircle, Crosshair, ArrowLeft } from 'lucide-react';
@@ -298,7 +299,7 @@ export function KPIGoals() {
                   : (emp.okrs || []).map((okr: any, i: number) => <ObjectiveNode key={i} okr={okr} />)
                 }
                 {(activeTab === 'kpis' ? (!emp.kpis || emp.kpis.length === 0) : (!emp.okrs || emp.okrs.length === 0)) && (
-                  <p className="p-text-ghost text-xs text-center py-4 font-mono uppercase tracking-widest">No signals defined</p>
+                  <EmptyState variant="kpis" className="py-8" />
                 )}
               </div>
             </motion.div>

@@ -69,7 +69,7 @@ export function Dashboard() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b p-border pb-12"
+        className="mb-12 md:mb-24 flex flex-col md:flex-row justify-between items-end gap-6 md:gap-12 border-b p-border pb-8 md:pb-12"
       >
         <div>
           <p className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">{firstName}'s Overview</p>
@@ -77,7 +77,7 @@ export function Dashboard() {
             People <span className="p-text-dim italic font-serif">Intelligence</span>
           </h1>
         </div>
-        <div className="flex gap-16 text-right">
+        <div className="flex gap-6 md:gap-16 text-right flex-wrap justify-end">
           <div>
             <span className="p-text-dim text-sm uppercase tracking-[0.15em] block mb-2">Live Feed</span>
             <LiveClock />
@@ -102,7 +102,7 @@ export function Dashboard() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4, duration: 1 }}
-        className="mb-12"
+        className="mb-6 md:mb-12"
       >
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl font-light p-text-body">Team <span className="font-serif italic p-text-mid">Constellation</span></h2>
@@ -187,7 +187,7 @@ export function Dashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 * i }}
-            className="relative bg-white/[0.02] border p-border rounded-[1.5rem] p-6 overflow-hidden group hover:p-border-mid transition-colors hover-lift"
+            className="relative bg-white/[0.02] border p-border rounded-[1.5rem] p-6 overflow-hidden group hover:p-border-mid transition-colors hover-lift hover-card"
           >
             <div className="flex items-start justify-between mb-4">
               <div>

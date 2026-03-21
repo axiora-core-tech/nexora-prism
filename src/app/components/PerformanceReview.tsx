@@ -78,15 +78,15 @@ export function PerformanceReview() {
               <CheckCircle2 size={32} className="text-emerald-400" />
             </div>
           </div>
-          <p className="text-[10px] uppercase tracking-[0.3em] text-white/30 mb-6 font-mono">Signal Transmitted</p>
+          <p className="text-[10px] uppercase tracking-[0.3em] text-white/30 mb-6 font-mono">Review Submitted</p>
           <h2 className="text-5xl md:text-7xl font-light tracking-tighter text-white leading-[0.9] mb-4">
-            Review <span className="text-white/30 font-serif italic">Encoded</span>
+            Review <span className="text-white/30 font-serif italic">Recorded</span>
           </h2>
           <p className="text-white/40 text-sm mb-2 font-light">
-            360° resonance data for <span className="text-white/80">{emp.name}</span> has been logged.
+            Your review for <span className="text-white/80">{emp.name}</span> has been saved.
           </p>
           <p className="text-white/20 text-xs font-mono uppercase tracking-widest mb-16">
-            Composite Signal: <span style={{ color: composite >= 85 ? '#10b981' : composite >= 70 ? '#f59e0b' : '#f43f5e' }}>{composite}</span>
+            Composite Score: <span style={{ color: composite >= 85 ? '#10b981' : composite >= 70 ? '#f59e0b' : '#f43f5e' }}>{composite}</span>
           </p>
           <div className="flex gap-4">
             <button
@@ -94,10 +94,10 @@ export function PerformanceReview() {
               className="px-8 py-3 rounded-full bg-white/5 border border-white/10 text-white/50 text-sm hover:bg-white/10 hover:text-white transition-all"
               data-cursor="New Review"
             >
-              Transmit Another
+              Submit Another
             </button>
             <NavLink to="/app" className="px-8 py-3 rounded-full bg-white/5 border border-white/10 text-white/50 text-sm hover:bg-white/10 hover:text-white transition-all" data-cursor="Home">
-              Return to Pulse
+              Back to Dashboard
             </NavLink>
           </div>
         </motion.div>
@@ -126,7 +126,7 @@ export function PerformanceReview() {
         {/* Phase trail */}
         <div className="flex items-center gap-3 text-right">
           {(['orbit','calibrate','transmit','confirm'] as Phase[]).map((p, i) => {
-            const labels: Record<Phase, string> = { orbit: 'Target', calibrate: 'Calibrate', transmit: 'Transmit', confirm: 'Confirm' };
+            const labels: Record<Phase, string> = { orbit: 'Select', calibrate: 'Score', transmit: 'Write', confirm: 'Review' };
             const done = (['orbit','calibrate','transmit','confirm'] as Phase[]).indexOf(phase) > i;
             const active = phase === p;
             return (
@@ -333,7 +333,7 @@ export function PerformanceReview() {
 
               <div className="space-y-8 mb-12">
                 {[
-                  { key: 'strengths', label: 'Strength Vectors', sub: `What does ${emp.name.split(' ')[0]} transmit at peak power?`, color: '#10b981', icon: Star },
+                  { key: 'strengths', label: 'Key Strengths', sub: `What does ${emp.name.split(' ')[0]} do better than anyone on the team?`, color: '#10b981', icon: Star },
                   { key: 'improvements', label: 'Growth Nodes', sub: 'Which vectors, if amplified, yield highest system gain?', color: '#f59e0b', icon: Zap },
                 ].map(({ key, label, sub, color, icon: Icon }) => (
                   <div key={key} className={`relative bg-white/5 border border-white/5 rounded-[2rem] p-8 overflow-hidden group transition-all duration-500 ${

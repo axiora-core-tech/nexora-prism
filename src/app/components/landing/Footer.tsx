@@ -15,7 +15,7 @@ export function Footer() {
             <span className="text-xl font-bold tracking-widest text-white uppercase">Prism</span>
           </div>
           <p className="text-lg text-zinc-400 font-light leading-relaxed">
-            Predictive 360° performance tracking that maps employee growth directly to revenue forecasts.
+            Every person on your team contains more than their job title. Prism helps you see the whole picture — and act on it.
           </p>
           <div className="flex items-center gap-4 mt-4">
             <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)] animate-pulse" />

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
+import { NavLink } from 'react-router';
 import { Cpu, TrendingUp, ArrowUpRight, ArrowDownRight, Coins } from 'lucide-react';
 import { ResponsiveContainer, ComposedChart, Area, Line, Bar, XAxis, YAxis, Tooltip, CartesianGrid, BarChart } from 'recharts';
 import { employees, orgROIData, departmentROI } from '../mockData';
@@ -27,6 +28,13 @@ export function ROIInvestment() {
   const totalInvestment = employees.reduce((s, e) => s + e.costInvestment, 0);
   const totalRevenue = employees.reduce((s, e) => s + e.revenueContribution, 0);
   const orgROI = Math.round((totalRevenue / totalInvestment) * 100);
+
+  // Employees whose ROI is below org average — the actionable signal
+  const belowAvgROI = [...employees]
+    .filter(e => e.roi < orgROI)
+    .sort((a, b) => a.roi - b.roi)
+    .slice(0, 2);
+  const topROI = [...employees].sort((a, b) => b.roi - a.roi)[0];
 
   return (
     <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 py-24 md:py-32">
@@ -57,6 +65,49 @@ export function ROIInvestment() {
           </div>
         </div>
       </motion.div>
+
+      {/* ROI Insight Strip — what needs action */}
+      {belowAvgROI.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12"
+        >
+          {/* Highest ROI — reinforce */}
+          {topROI && (
+            <NavLink
+              to={`/app/employee/${topROI.id}`}
+              className="flex items-center gap-4 p-5 rounded-[1.5rem] border border-emerald-500/20 bg-emerald-500/[0.04] hover:bg-emerald-500/[0.08] transition-all group"
+            >
+              <img src={topROI.avatar} alt={topROI.name} className="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-[9px] uppercase tracking-widest text-emerald-400 mb-1 font-mono">Top ROI — Reinforce</p>
+                <p className="text-white/80 text-sm font-light truncate">{topROI.name}</p>
+                <p className="text-emerald-400 text-xs font-mono">{topROI.roi}% ROI</p>
+              </div>
+              <ArrowUpRight size={14} className="text-emerald-400/40 group-hover:text-emerald-400 transition-colors flex-shrink-0" />
+            </NavLink>
+          )}
+
+          {/* Below-average ROI employees — intervene */}
+          {belowAvgROI.map(e => (
+            <NavLink
+              key={e.id}
+              to={`/app/employee/${e.id}`}
+              className="flex items-center gap-4 p-5 rounded-[1.5rem] border border-amber-500/20 bg-amber-500/[0.04] hover:bg-amber-500/[0.08] transition-all group"
+            >
+              <img src={e.avatar} alt={e.name} className="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-[9px] uppercase tracking-widest text-amber-400 mb-1 font-mono">Below Average — Review</p>
+                <p className="text-white/80 text-sm font-light truncate">{e.name}</p>
+                <p className="text-amber-400 text-xs font-mono">{e.roi}% ROI vs {orgROI}% avg</p>
+              </div>
+              <ArrowUpRight size={14} className="text-amber-400/40 group-hover:text-amber-400 transition-colors flex-shrink-0" />
+            </NavLink>
+          ))}
+        </motion.div>
+      )}
 
       {/* Trajectory + Department */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">

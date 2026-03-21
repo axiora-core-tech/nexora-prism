@@ -162,62 +162,66 @@ export function Dashboard() {
           </div>
         </div>
 
-        <div className="flex overflow-x-auto gap-6 pb-8 pt-2 snap-x snap-mandatory" style={{ scrollbarWidth: 'none' }}>
-          {employees.map((emp, index) => (
-            <NavLink to={`/app/employee/${emp.id}`} key={emp.id} data-cursor="View Node">
-              <motion.div
-                initial={{ opacity: 0, x: 50, rotateY: -10 }}
-                animate={{ opacity: 1, x: 0, rotateY: 0 }}
-                transition={{ delay: 0.2 + (index * 0.1), duration: 0.8, ease: "easeOut" }}
-                whileHover={{ y: -20, scale: 1.02 }}
-                className="group relative w-[260px] h-[370px] shrink-0 rounded-[2rem] overflow-hidden bg-[#111] snap-center cursor-crosshair border border-white/5 hover:border-white/20 transition-all duration-500"
-              >
-                <img
-                  src={emp.avatar}
-                  alt={emp.name}
-                  loading="lazy"
-                  decoding="async"
-                  className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000 grayscale group-hover:grayscale-0"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none" />
+        {/* Right-edge fade signals scrollability on desktop */}
+        <div className="relative">
+          <div className="pointer-events-none absolute top-0 right-0 w-24 h-full z-10 bg-gradient-to-l from-[#030303] to-transparent" />
+          <div className="flex overflow-x-auto gap-6 pb-8 pt-2 snap-x snap-mandatory" style={{ scrollbarWidth: 'none' }}>
+            {employees.map((emp, index) => (
+              <NavLink to={`/app/employee/${emp.id}`} key={emp.id} data-cursor="View Node">
+                <motion.div
+                  initial={{ opacity: 0, x: 50, rotateY: -10 }}
+                  animate={{ opacity: 1, x: 0, rotateY: 0 }}
+                  transition={{ delay: 0.2 + (index * 0.1), duration: 0.8, ease: "easeOut" }}
+                  whileHover={{ y: -20, scale: 1.02 }}
+                  className="group relative w-[260px] h-[370px] shrink-0 rounded-[2rem] overflow-hidden bg-[#111] snap-center cursor-crosshair border border-white/5 hover:border-white/20 transition-all duration-500"
+                >
+                  <img
+                    src={emp.avatar}
+                    alt={emp.name}
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000 grayscale group-hover:grayscale-0"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none" />
 
-                {/* Risk dot */}
-                <div className="absolute top-5 left-5 flex items-center gap-2 pointer-events-none">
-                  <div className={`w-1.5 h-1.5 rounded-full shadow-[0_0_10px_currentColor] ${emp.attritionRisk === 'High' ? 'bg-rose-500 text-rose-500' :
-                      emp.attritionRisk === 'Medium' ? 'bg-amber-500 text-amber-500' : 'bg-emerald-500 text-emerald-500'
-                    }`} />
-                  <span className="text-[9px] uppercase tracking-widest text-white/60 font-semibold">{emp.stage}</span>
-                </div>
-
-                {/* ROI badge */}
-                <div className="absolute top-5 right-5 pointer-events-none">
-                  <div className="px-2 py-0.5 rounded-full bg-black/40 border border-white/10 text-[9px] font-mono text-white/60">
-                    ROI {emp.roi}%
+                  {/* Risk dot */}
+                  <div className="absolute top-5 left-5 flex items-center gap-2 pointer-events-none">
+                    <div className={`w-1.5 h-1.5 rounded-full shadow-[0_0_10px_currentColor] ${emp.attritionRisk === 'High' ? 'bg-rose-500 text-rose-500' :
+                        emp.attritionRisk === 'Medium' ? 'bg-amber-500 text-amber-500' : 'bg-emerald-500 text-emerald-500'
+                      }`} />
+                    <span className="text-[9px] uppercase tracking-widest text-white/60 font-semibold">{emp.stage}</span>
                   </div>
-                </div>
 
-                <div className="absolute bottom-5 left-5 right-5 pointer-events-none">
-                  <h3 className="text-2xl font-light text-white leading-none mb-0.5 group-hover:text-cyan-400 transition-colors">{emp.name.split(' ')[0]}</h3>
-                  <h3 className="text-2xl font-serif italic text-white/50 leading-none mb-4">{emp.name.split(' ')[1]}</h3>
-
-                  <div className="flex justify-between items-end border-t border-white/10 pt-3">
-                    <div>
-                      <span className="block text-[8px] uppercase tracking-[0.2em] text-white/40 mb-0.5">Performance</span>
-                      <span className="text-xl font-light text-white">{emp.performanceScore}<span className="text-sm text-white/30">pt</span></span>
-                    </div>
-                    <div>
-                      <span className="block text-[8px] uppercase tracking-[0.2em] text-white/40 mb-0.5">Learning</span>
-                      <span className="text-xl font-light text-white">{emp.learningProgress}<span className="text-sm text-white/30">%</span></span>
-                    </div>
-                    <div>
-                      <span className="block text-[8px] uppercase tracking-[0.2em] text-white/40 mb-0.5">Welfare</span>
-                      <span className="text-xl font-light text-white">{emp.welfareScore}<span className="text-sm text-white/30">pt</span></span>
+                  {/* ROI badge */}
+                  <div className="absolute top-5 right-5 pointer-events-none">
+                    <div className="px-2 py-0.5 rounded-full bg-black/40 border border-white/10 text-[9px] font-mono text-white/60">
+                      ROI {emp.roi}%
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            </NavLink>
-          ))}
+
+                  <div className="absolute bottom-5 left-5 right-5 pointer-events-none">
+                    <h3 className="text-2xl font-light text-white leading-none mb-0.5 group-hover:text-cyan-400 transition-colors">{emp.name.split(' ')[0]}</h3>
+                    <h3 className="text-2xl font-serif italic text-white/50 leading-none mb-4">{emp.name.split(' ')[1]}</h3>
+
+                    <div className="flex justify-between items-end border-t border-white/10 pt-3">
+                      <div>
+                        <span className="block text-[8px] uppercase tracking-[0.2em] text-white/40 mb-0.5">Performance</span>
+                        <span className="text-xl font-light text-white">{emp.performanceScore}<span className="text-sm text-white/30">pt</span></span>
+                      </div>
+                      <div>
+                        <span className="block text-[8px] uppercase tracking-[0.2em] text-white/40 mb-0.5">Learning</span>
+                        <span className="text-xl font-light text-white">{emp.learningProgress}<span className="text-sm text-white/30">%</span></span>
+                      </div>
+                      <div>
+                        <span className="block text-[8px] uppercase tracking-[0.2em] text-white/40 mb-0.5">Welfare</span>
+                        <span className="text-xl font-light text-white">{emp.welfareScore}<span className="text-sm text-white/30">pt</span></span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </NavLink>
+            ))}
+          </div>
         </div>
       </motion.div>
 
@@ -320,7 +324,6 @@ export function Dashboard() {
                   className="flex items-center gap-4 group hover:bg-rose-500/5 -mx-2 px-2 py-2 rounded-xl transition-colors"
                 >
                   <img src={emp.avatar} alt={emp.name} loading="lazy" decoding="async" className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
-
                   <div className="text-right flex-shrink-0">
                     <p className="text-rose-400 text-sm font-mono">{emp.attritionRiskPercentage}%</p>
                     <p className="text-[8px] uppercase tracking-widest text-white/30">risk</p>

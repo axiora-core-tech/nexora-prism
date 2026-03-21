@@ -105,6 +105,19 @@ export function KPIGoals() {
   const totalOKRs = employees.flatMap(e => e.okrs || []).length;
   const completedOKRs = employees.flatMap(e => (e.okrs || []).filter((o: any) => o.status === 'completed')).length;
 
+  // Surface the items that need immediate attention
+  const criticalKPIs = employees.flatMap(e =>
+    (e.kpis || [])
+      .filter((k: any) => k.trend === 'down')
+      .map((k: any) => ({ emp: e, kpi: k }))
+  ).slice(0, 3);
+
+  const atRiskOKRs = employees.flatMap(e =>
+    (e.okrs || [])
+      .filter((o: any) => o.status === 'off_track' || (o.status === 'at_risk' && o.progress < 30))
+      .map((o: any) => ({ emp: e, okr: o }))
+  ).slice(0, 3);
+
   return (
     <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 py-24 md:py-32">
 
@@ -134,6 +147,60 @@ export function KPIGoals() {
           </div>
         </div>
       </motion.div>
+
+      {/* Needs Attention — surfaced priority signals */}
+      {(criticalKPIs.length > 0 || atRiskOKRs.length > 0) && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mb-12 p-6 rounded-[2rem] border border-rose-500/20 bg-rose-500/[0.04] relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 w-64 h-32 bg-rose-500/10 blur-[80px] rounded-full pointer-events-none" />
+          <div className="flex items-center gap-3 mb-5 relative z-10">
+            <AlertCircle size={14} className="text-rose-400" />
+            <h3 className="text-[10px] uppercase tracking-widest text-rose-400 font-semibold">
+              Needs Attention — {criticalKPIs.length + atRiskOKRs.length} item{criticalKPIs.length + atRiskOKRs.length !== 1 ? 's' : ''} flagged
+            </h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 relative z-10">
+            {criticalKPIs.map(({ emp, kpi }, i) => (
+              <NavLink
+                key={`kpi-${i}`}
+                to={`/app/employee/${emp.id}`}
+                className="flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-rose-500/20 hover:bg-rose-500/5 transition-all group"
+              >
+                <div className="flex items-center gap-3">
+                  <img src={emp.avatar} alt={emp.name} className="w-7 h-7 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all" />
+                  <div>
+                    <p className="text-white/80 text-xs font-light">{emp.name.split(' ')[0]} · {kpi.name}</p>
+                    <p className="text-rose-400 text-[9px] font-mono uppercase tracking-widest">
+                      {kpi.current}{kpi.unit} vs {kpi.target}{kpi.unit} target
+                    </p>
+                  </div>
+                </div>
+                <TrendingDown size={12} className="text-rose-400 flex-shrink-0" />
+              </NavLink>
+            ))}
+            {atRiskOKRs.map(({ emp, okr }, i) => (
+              <NavLink
+                key={`okr-${i}`}
+                to={`/app/employee/${emp.id}`}
+                className="flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-amber-500/20 hover:bg-amber-500/5 transition-all group"
+              >
+                <div className="flex items-center gap-3">
+                  <img src={emp.avatar} alt={emp.name} className="w-7 h-7 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all" />
+                  <div>
+                    <p className="text-white/80 text-xs font-light">{emp.name.split(' ')[0]} · {okr.objective.slice(0, 35)}{okr.objective.length > 35 ? '…' : ''}</p>
+                    <p className="text-amber-400 text-[9px] font-mono uppercase tracking-widest">{okr.progress}% complete · {okr.status.replace('_', ' ')}</p>
+                  </div>
+                </div>
+                <AlertCircle size={12} className="text-amber-400 flex-shrink-0" />
+              </NavLink>
+            ))}
+          </div>
+        </motion.div>
+      )}
 
       {/* Controls */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-16">

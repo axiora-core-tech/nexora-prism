@@ -14,6 +14,8 @@ export function EmployeeDetail() {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
 
   const [activeSection, setActiveSection] = useState('telemetry');
+  const [syncOpen, setSyncOpen] = useState(false);
+  const [syncComplete, setSyncComplete] = useState('');
 
   useEffect(() => {
     const SECTION_IDS = ['telemetry', 'kpis', 'capital', 'neural', 'temporal', 'nodes', 'biorhythm', 'resonance'];
@@ -143,7 +145,7 @@ export function EmployeeDetail() {
       <div className="w-full xl:w-[60%] p-6 md:p-12 lg:p-24 relative z-20">
         
         {/* Mobile Header (Hidden on Desktop) */}
-        <div className="xl:hidden mb-16 pt-12">
+        <div className="xl:hidden mb-12 pt-12">
           <NavLink to="/app" className="inline-flex text-white/40 hover:text-white transition-colors mb-8" data-cursor="Return">
             <ArrowLeft size={20} />
           </NavLink>
@@ -154,7 +156,25 @@ export function EmployeeDetail() {
           </div>
           <h1 className="text-5xl font-light tracking-tighter text-white leading-none">{employee.name.split(' ')[0]}</h1>
           <h1 className="text-5xl font-serif italic text-white/50 leading-none mb-4">{employee.name.split(' ')[1]}</h1>
-          <p className="text-lg text-white/80 font-light mb-8">{employee.role}</p>
+          <p className="text-lg text-white/80 font-light mb-6">{employee.role}</p>
+
+          {/* Mobile horizontal section nav — scrollable pill strip */}
+          <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
+            {sections.map(section => (
+              <button
+                key={section.id}
+                onClick={() => scrollTo(section.id)}
+                className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-[9px] uppercase tracking-widest font-mono transition-all ${
+                  activeSection === section.id
+                    ? 'border-cyan-400/50 bg-cyan-400/10 text-cyan-400'
+                    : 'border-white/10 text-white/40 hover:text-white hover:border-white/20'
+                }`}
+              >
+                <section.icon size={9} />
+                {section.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <motion.div
@@ -558,14 +578,19 @@ export function EmployeeDetail() {
                 
                 <div className="relative w-32 h-32 flex-shrink-0" data-cursor="Scan Bio">
                   <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
-                    <motion.circle 
-                      cx="50" cy="50" r="45" 
-                      stroke={employee.bioRhythm.burnoutProbability > 50 ? '#fb7185' : '#10b981'} 
+                    <circle
+                      cx="50" cy="50" r="45"
+                      stroke={employee.bioRhythm.burnoutProbability > 50 ? '#fb7185' : '#10b981'}
                       strokeWidth="2" fill="none" strokeDasharray="4 4"
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                      style={{ transformOrigin: 'center' }}
+                      style={{
+                        transformOrigin: 'center',
+                        animation: 'spin-slow 20s linear infinite',
+                      }}
                     />
+                    <style>{`
+                      @keyframes spin-slow { to { transform: rotate(360deg); } }
+                      @media (prefers-reduced-motion: reduce) { [style*="spin-slow"] { animation: none !important; } }
+                    `}</style>
                     <circle cx="50" cy="50" r="35" stroke="currentColor" strokeWidth="1" fill="none" className="text-white/10" />
                     <motion.circle 
                       cx="50" cy="50" r="35" 
@@ -673,7 +698,11 @@ export function EmployeeDetail() {
 
           {/* Action Module */}
           <section className="pt-12 border-t border-white/5">
-            <button className="w-full relative group overflow-hidden rounded-[2rem] p-1" data-cursor="Sync">
+            <button
+              onClick={() => setSyncOpen(true)}
+              className="w-full relative group overflow-hidden rounded-[2rem] p-1"
+              data-cursor="Sync"
+            >
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-purple-500 to-cyan-500 opacity-20 group-hover:opacity-100 blur transition-opacity duration-1000" />
               <div className="relative bg-[#050505] rounded-[1.8rem] px-8 py-6 flex items-center justify-between border border-white/10 group-hover:bg-white/[0.02] transition-colors">
                 <div className="flex items-center gap-6 text-left">
@@ -681,13 +710,80 @@ export function EmployeeDetail() {
                     <BarChart2 size={24} />
                   </div>
                   <div>
-                    <h4 className="text-white text-lg font-light tracking-wide">Initiate Complete System Sync</h4>
-                    <p className="text-white/40 text-xs uppercase tracking-widest mt-1">Compile comprehensive data matrix for HR & 1:1</p>
+                    <h4 className="text-white text-lg font-light tracking-wide">Generate Profile Report</h4>
+                    <p className="text-white/40 text-xs uppercase tracking-widest mt-1">Export full data matrix for HR review or 1:1 prep</p>
                   </div>
                 </div>
                 <ArrowUpRight className="text-white/40 group-hover:text-cyan-400 transition-colors" size={24} />
               </div>
             </button>
+
+            {/* Sync / Export Modal */}
+            <AnimatePresence>
+              {syncOpen && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md"
+                  onClick={() => setSyncOpen(false)}
+                >
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    onClick={e => e.stopPropagation()}
+                    className="w-full max-w-md bg-[#0a0a0a] border border-white/10 rounded-[2rem] p-8 relative overflow-hidden"
+                  >
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 blur-[80px] rounded-full pointer-events-none" />
+
+                    <div className="flex items-center justify-between mb-8">
+                      <div>
+                        <p className="text-[9px] uppercase tracking-widest text-white/30 font-mono mb-2">Profile Export</p>
+                        <h3 className="text-xl font-light text-white">{employee.name}</h3>
+                        <p className="text-white/40 text-sm">{employee.role}</p>
+                      </div>
+                      <button onClick={() => setSyncOpen(false)} className="p-2 rounded-full bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-all">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+                      </button>
+                    </div>
+
+                    <div className="space-y-3 mb-8">
+                      {[
+                        { label: 'Full Performance Report', desc: 'All KPIs, OKRs, scores and trends', icon: '📊' },
+                        { label: '1:1 Prep Summary', desc: 'Key talking points and risk flags', icon: '💬' },
+                        { label: 'HR Compliance Pack', desc: 'Compensation, leave and audit data', icon: '📋' },
+                        { label: 'Copy Profile Link', desc: 'Share a read-only view', icon: '🔗' },
+                      ].map(({ label, desc, icon }) => (
+                        <button
+                          key={label}
+                          onClick={() => {
+                            setSyncComplete(label);
+                            setTimeout(() => { setSyncComplete(''); setSyncOpen(false); }, 2000);
+                          }}
+                          className="w-full flex items-center gap-4 p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.06] hover:border-white/10 transition-all text-left group"
+                        >
+                          <span className="text-xl">{icon}</span>
+                          <div className="flex-1">
+                            <p className="text-white/80 text-sm font-light group-hover:text-white transition-colors">{label}</p>
+                            <p className="text-white/30 text-[11px] mt-0.5">{desc}</p>
+                          </div>
+                          {syncComplete === label
+                            ? <span className="text-emerald-400 text-xs font-mono">✓ Done</span>
+                            : <ArrowUpRight size={14} className="text-white/20 group-hover:text-white/60 transition-colors" />
+                          }
+                        </button>
+                      ))}
+                    </div>
+
+                    <p className="text-[9px] text-white/20 font-mono uppercase tracking-widest text-center">
+                      End-to-end encrypted · Access logged
+                    </p>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </section>
 
         </motion.div>

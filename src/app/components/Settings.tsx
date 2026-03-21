@@ -48,6 +48,7 @@ export function Settings() {
   const { logout, user } = useAuth();
   const [activeSection, setActiveSection] = useState<Section>('performance');
   const [saved, setSaved] = useState(false);
+  const [terminalLog, setTerminalLog] = useState<{cmd: string; out: string}[]>([]);
 
   const handleLogout = () => {
     logout();
@@ -405,20 +406,24 @@ export function Settings() {
                     <p className="text-white/60">  ● Burnout detector      <span className="text-amber-400">degraded</span> — model refresh pending</p>
                     <p className="text-white/60">  ● Slack integration     <span className="text-white/30">disconnected</span></p>
                     <p className="text-emerald-400 mt-2">apex&gt; db:stats</p>
-                    <p className="text-white/60">  Records: 4 employees · 28 KPIs · 12 OKRs · 40 reviews</p>
+                    <p className="text-white/60">  Records: 8 employees · 52 KPIs · 24 OKRs · 8 reviews</p>
                     <p className="text-white/60">  Storage: 2.1 GB / 50 GB</p>
                     <p className="text-emerald-400 mt-2">apex&gt; <span className="animate-pulse">_</span></p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     {[
-                      { label: 'Flush Cache', icon: RefreshCw, color: '#38bdf8' },
-                      { label: 'Export All Data', icon: Globe, color: '#c084fc' },
-                      { label: 'Re-run ML Models', icon: Zap, color: '#f59e0b' },
-                      { label: 'Purge Audit Log', icon: Lock, color: '#f43f5e' },
-                    ].map(({ label, icon: Icon, color }) => (
+                      { label: 'Flush Cache',       icon: RefreshCw, color: '#38bdf8', response: '● Cache cleared. 142 MB freed. Next sync in 60s.' },
+                      { label: 'Export All Data',   icon: Globe,     color: '#c084fc', response: '● Export queued. Download link sent to admin email.' },
+                      { label: 'Re-run ML Models',  icon: Zap,       color: '#f59e0b', response: '● Attrition & burnout models refreshing. ETA: 3 min.' },
+                      { label: 'Purge Audit Log',   icon: Lock,      color: '#f43f5e', response: '⚠ Requires Director confirmation. Request logged.' },
+                    ].map(({ label, icon: Icon, color, response }) => (
                       <button
                         key={label}
+                        onClick={() => setTerminalLog(prev => [
+                          ...prev,
+                          { cmd: label.toLowerCase().replace(/ /g, '-'), out: response }
+                        ])}
                         className="flex items-center gap-3 px-5 py-4 bg-white/[0.02] border border-white/5 rounded-[2rem] text-sm font-light text-white/50 hover:text-white hover:border-white/15 hover:bg-white/[0.04] transition-all text-left"
                       >
                         <Icon size={14} style={{ color }} />
@@ -426,6 +431,16 @@ export function Settings() {
                       </button>
                     ))}
                   </div>
+                  {terminalLog.length > 0 && (
+                    <div className="mt-4 bg-black/60 border border-white/10 rounded-2xl p-4 font-mono text-xs space-y-2">
+                      {terminalLog.map((entry, i) => (
+                        <div key={i}>
+                          <p className="text-emerald-400">apex&gt; {entry.cmd}</p>
+                          <p className="text-white/60 ml-2">{entry.out}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </motion.div>

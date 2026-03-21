@@ -75,7 +75,7 @@ export function EmployeeDetail() {
   };
 
   return (
-    <div className="flex flex-col xl:flex-row min-h-screen relative bg-[#030303]">
+    <div className="flex flex-col xl:flex-row min-h-screen relative" style={{ backgroundColor: 'var(--p-bg)' }}>
       
       {/* Abstract Immersive Profile Hero (Left Column) */}
       <motion.div 
@@ -94,6 +94,7 @@ export function EmployeeDetail() {
         
         {/* Dynamic Gradient Overlays */}
         <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#030303] via-[#030303]/60 to-transparent" />
+        <div className="absolute inset-0 z-10 bg-gradient-to-b from-[#030303] via-[#030303]/30 to-transparent" style={{ height: '35%' }} />
         <div className="absolute inset-0 z-10 bg-gradient-to-r from-transparent to-[#030303]" />
         
         <NavLink to="/app" className="absolute top-12 left-12 z-50 p-text-lo hover:p-text-hi transition-colors p-4 rounded-full p-bg-card backdrop-blur-md border p-border-mid hover:bg-white/10" data-cursor="Return">
@@ -541,7 +542,7 @@ export function EmployeeDetail() {
             {/* Abstract Journey Path (Promotions) */}
             <div className="relative pl-12 border-l p-border space-y-16 before:absolute before:inset-0 before:bg-gradient-to-b before:from-rose-500/0 before:via-rose-500/20 before:to-purple-500/0 before:-left-[1px] before:w-[2px] before:h-full">
               <div className="relative">
-                <div className="absolute -left-[3.25rem] w-6 h-6 rounded-full bg-[#030303] border border-rose-400 flex items-center justify-center shadow-[0_0_15px_rgba(251,113,133,0.3)]">
+                <div className="absolute -left-[3.25rem] w-6 h-6 rounded-full border border-rose-400 flex items-center justify-center shadow-[0_0_15px_rgba(251,113,133,0.3)]" style={{ backgroundColor: 'var(--p-bg)' }}>
                   <div className="w-2 h-2 rounded-full bg-rose-400 animate-pulse" />
                 </div>
                 <h3 className="text-xl font-light text-white mb-2 tracking-wide">Current State</h3>
@@ -550,7 +551,7 @@ export function EmployeeDetail() {
 
               {employee.projectedPromotions.map((promo, i) => (
                 <div key={i} className="relative opacity-60 hover:opacity-100 transition-opacity duration-500 cursor-crosshair" data-cursor="Forecast">
-                  <div className="absolute -left-[3.25rem] w-6 h-6 rounded-full bg-[#030303] border p-border-hi flex items-center justify-center">
+                  <div className="absolute -left-[3.25rem] w-6 h-6 rounded-full border p-border-hi flex items-center justify-center" style={{ backgroundColor: 'var(--p-bg)' }}>
                     <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
                   </div>
                   <h3 className="text-xl font-light text-white mb-2 tracking-wide">Projected Evolution: {promo.role}</h3>

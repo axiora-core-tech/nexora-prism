@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo, memo } from 'react';
 import { NavLink } from 'react-router';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { ArrowUpRight, TrendingUp, ShieldAlert, Zap, Target, Star, ChevronRight, DollarSign, Activity, Trophy, FileText, BarChart2 } from 'lucide-react';
@@ -6,14 +6,14 @@ import { ResponsiveContainer, AreaChart, Area, Tooltip } from 'recharts';
 import { employees, alerts, performanceData } from '../mockData';
 
 const quickActions = [
-  { icon: FileText, label: 'Start Review', path: '/review', color: '#38bdf8', desc: '360° cycle' },
-  { icon: Target,   label: 'View KPIs',   path: '/kpis',   color: '#f59e0b', desc: 'Goals tracker' },
-  { icon: Trophy,   label: 'Leaderboard', path: '/leaderboard', color: '#c084fc', desc: 'Rankings' },
-  { icon: BarChart2,label: 'Analytics',   path: '/analytics',   color: '#10b981', desc: 'Deep dive' },
+  { icon: FileText, label: 'Start Review', path: '/app/review', color: '#38bdf8', desc: '360° cycle' },
+  { icon: Target,   label: 'View KPIs',   path: '/app/kpis',   color: '#f59e0b', desc: 'Goals tracker' },
+  { icon: Trophy,   label: 'Leaderboard', path: '/app/leaderboard', color: '#c084fc', desc: 'Rankings' },
+  { icon: BarChart2,label: 'Analytics',   path: '/app/analytics',   color: '#10b981', desc: 'Deep dive' },
 ];
 
-function SparkLine({ data, color }: { data: number[]; color: string }) {
-  const chartData = data.map((v, i) => ({ i, v }));
+const SparkLine = memo(function SparkLine({ data, color }: { data: number[]; color: string }) {
+  const chartData = useMemo(() => data.map((v, i) => ({ i, v })), [data]);
   return (
     <div style={{ width: 64, height: 28 }}>
       <ResponsiveContainer width="100%" height="100%">
@@ -29,7 +29,7 @@ function SparkLine({ data, color }: { data: number[]; color: string }) {
       </ResponsiveContainer>
     </div>
   );
-}
+});
 
 const orgMetrics = [
   { label: 'Avg Performance', val: '84.2', suffix: '', sparkData: [79, 81, 83, 82, 85, 84, 87, 84], color: '#c084fc', trend: '+2.3%', icon: Activity },
@@ -47,8 +47,8 @@ export function Dashboard() {
     return () => clearInterval(t);
   }, []);
 
-  const atRisk = employees.filter(e => e.attritionRisk === 'High');
-  const topPerformers = [...employees].sort((a, b) => b.performanceScore - a.performanceScore).slice(0, 2);
+  const atRisk = useMemo(() => employees.filter(e => e.attritionRisk === 'High'), []);
+  const topPerformers = useMemo(() => [...employees].sort((a, b) => b.performanceScore - a.performanceScore).slice(0, 2), []);
 
   return (
     <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 py-24 md:py-32" ref={scrollRef}>
@@ -164,7 +164,7 @@ export function Dashboard() {
 
         <div className="flex overflow-x-auto gap-6 pb-8 pt-2 snap-x snap-mandatory" style={{ scrollbarWidth: 'none' }}>
           {employees.map((emp, index) => (
-            <NavLink to={`/employee/${emp.id}`} key={emp.id} data-cursor="View Node">
+            <NavLink to={`/app/employee/${emp.id}`} key={emp.id} data-cursor="View Node">
               <motion.div
                 initial={{ opacity: 0, x: 50, rotateY: -10 }}
                 animate={{ opacity: 1, x: 0, rotateY: 0 }}
@@ -175,6 +175,8 @@ export function Dashboard() {
                 <img
                   src={emp.avatar}
                   alt={emp.name}
+                  loading="lazy"
+                  decoding="async"
                   className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000 grayscale group-hover:grayscale-0"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none" />
@@ -316,14 +318,10 @@ export function Dashboard() {
             </div>
             <div className="space-y-4">
               {atRisk.map(emp => (
-                <NavLink to={`/employee/${emp.id}`} key={emp.id}
+                <NavLink to={`/app/employee/${emp.id}`} key={emp.id}
                   className="flex items-center gap-4 group hover:bg-rose-500/5 -mx-2 px-2 py-2 rounded-xl transition-colors"
                 >
-                  <img src={emp.avatar} alt={emp.name} className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
-                  <div className="flex-1">
-                    <p className="text-white text-sm font-light">{emp.name}</p>
-                    <p className="text-white/40 text-xs">{emp.recentFeedback}</p>
-                  </div>
+                  <img src={emp.avatar} alt={emp.name} loading="lazy" decoding="async" className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                   <div className="text-right flex-shrink-0">
                     <p className="text-rose-400 text-sm font-mono">{emp.attritionRiskPercentage}%</p>
                     <p className="text-[8px] uppercase tracking-widest text-white/30">risk</p>
@@ -349,11 +347,11 @@ export function Dashboard() {
           </div>
           <div className="space-y-4">
             {topPerformers.map((emp, i) => (
-              <NavLink to={`/employee/${emp.id}`} key={emp.id}
+              <NavLink to={`/app/employee/${emp.id}`} key={emp.id}
                 className="flex items-center gap-4 group hover:bg-amber-500/5 -mx-2 px-2 py-2 rounded-xl transition-colors"
               >
                 <div className="w-6 text-center flex-shrink-0 text-xs font-mono text-white/30">{i === 0 ? '01' : '02'}</div>
-                <img src={emp.avatar} alt={emp.name} className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
+                <img src={emp.avatar} alt={emp.name} loading="lazy" decoding="async" className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                 <div className="flex-1">
                   <p className="text-white text-sm font-light">{emp.name}</p>
                   <p className="text-white/40 text-xs">{emp.role}</p>

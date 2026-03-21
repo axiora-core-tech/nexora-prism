@@ -85,7 +85,7 @@ export function PerformanceReview() {
             >
               Transmit Another
             </button>
-            <NavLink to="/" className="px-8 py-3 rounded-full bg-white/5 border border-white/10 text-white/50 text-sm hover:bg-white/10 hover:text-white transition-all" data-cursor="Home">
+            <NavLink to="/app" className="px-8 py-3 rounded-full bg-white/5 border border-white/10 text-white/50 text-sm hover:bg-white/10 hover:text-white transition-all" data-cursor="Home">
               Return to Pulse
             </NavLink>
           </div>

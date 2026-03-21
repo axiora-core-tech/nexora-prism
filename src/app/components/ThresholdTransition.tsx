@@ -30,10 +30,7 @@ import { useNavigate } from 'react-router';
 //        Not breaking. Opening.
 // 4.8s  Fragments dissolve. Spectrum lines remain,
 //        floating in the air where the name was.
-// 5.3s  Lines converge inward. Darkness takes the page.
-// 5.8s  The mark assembles on obsidian, slowly.
-// 6.8s  "Prism" appears. Hold.
-// 7.2s  Fade. App loads.
+// 5.3s  Fade out. App loads.
 // ─────────────────────────────────────────────────────────────
 
 type Phase =
@@ -42,9 +39,6 @@ type Phase =
   | 'cracking'
   | 'drifting'
   | 'dissolve'
-  | 'converge'
-  | 'mark'
-  | 'wordmark'
   | 'out';
 
 interface Props {
@@ -114,14 +108,6 @@ const FRAGMENTS = [
 ];
 
 // Spectrum lines that emerge and converge to mark
-const LINES = [
-  { x1: 8,  y1: 15, x2: 50, y2: 90 },
-  { x1: 25, y1: 5,  x2: 50, y2: 90 },
-  { x1: 44, y1: 2,  x2: 50, y2: 90 },
-  { x1: 56, y1: 2,  x2: 50, y2: 90 },
-  { x1: 75, y1: 5,  x2: 50, y2: 90 },
-  { x1: 92, y1: 15, x2: 50, y2: 90 },
-];
 
 export function ThresholdTransition({ name = 'Alex Mercer' }: Props) {
   const navigate = useNavigate();
@@ -139,10 +125,7 @@ export function ThresholdTransition({ name = 'Alex Mercer' }: Props) {
       ['cracking', 1700 ],
       ['drifting', 3800 ],
       ['dissolve', 4900 ],
-      ['converge', 5500 ],
-      ['mark',     6000 ],
-      ['wordmark', 6900 ],
-      ['out',      7400 ],
+      ['out',      5600 ],
     ];
 
     const timers = phases.map(([p, t]) =>
@@ -160,7 +143,7 @@ export function ThresholdTransition({ name = 'Alex Mercer' }: Props) {
       }, 1700 + i * 350)
     );
 
-    const nav = setTimeout(() => navigate('/app'), 7900);
+    const nav = setTimeout(() => navigate('/app'), 6200);
 
     return () => {
       timers.forEach(clearTimeout);
@@ -169,15 +152,11 @@ export function ThresholdTransition({ name = 'Alex Mercer' }: Props) {
     };
   }, [navigate]);
 
-  // Background — hard cuts only, one slow transition
-  const bg =
-    ['white','name','cracking','drifting'].includes(phase) ? '#f4f2ed' : '#030303';
+  const bg = '#f4f2ed'; // always light — black prism section removed
 
   const showName    = ['name','cracking','drifting'].includes(phase);
   const showCracks  = ['cracking','drifting'].includes(phase);
   const showDrift   = phase === 'drifting';
-  const showLines   = ['dissolve','converge'].includes(phase);
-  const showMark    = ['mark','wordmark','out'].includes(phase);
   const isOut       = phase === 'out';
 
   return (
@@ -344,142 +323,6 @@ export function ThresholdTransition({ name = 'Alex Mercer' }: Props) {
                   {s.label}
                 </motion.p>
               ) : null
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ══════════════════════════════════════════════════════
-          SPECTRUM LINES — emerge from where name was, converge
-      ══════════════════════════════════════════════════════ */}
-      {showLines && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          style={{
-            position: 'absolute', inset: 0,
-            display:  'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 15,
-          }}
-        >
-          <svg width="240" height="340"
-            viewBox="0 0 100 140"
-            fill="none"
-            style={{ overflow: 'visible' }}
-          >
-            {LINES.map((line, i) => {
-              const isConverging = phase === 'converge';
-              return (
-                <motion.line key={i}
-                  x1={line.x1} y1={line.y1}
-                  x2={isConverging ? 50 : line.x1}
-                  y2={isConverging ? 90 : line.y1}
-                  stroke={SPECTRUM[i].dark}
-                  strokeWidth="1.2" strokeLinecap="round"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.65 }}
-                  transition={{
-                    opacity:    { duration: 0.4, delay: i * 0.06 },
-                    x2: { duration: 0.6, delay: i * 0.04, ease: [0.4, 0, 0.2, 1] },
-                    y2: { duration: 0.6, delay: i * 0.04, ease: [0.4, 0, 0.2, 1] },
-                  }}
-                />
-              );
-            })}
-          </svg>
-        </motion.div>
-      )}
-
-      {/* ══════════════════════════════════════════════════════
-          THE MARK — assembles on obsidian, slowly
-          Tempo inversion: everything before was fast or drifting.
-          This is still. Deliberate. One line at a time.
-      ══════════════════════════════════════════════════════ */}
-      <AnimatePresence>
-        {showMark && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isOut ? 0 : 1 }}
-            transition={{ duration: isOut ? 0.9 : 0.5 }}
-            style={{ position: 'relative', zIndex: 20 }}
-          >
-            <svg width="72" height="100"
-              viewBox="0 0 100 140"
-              fill="none"
-              style={{ overflow: 'visible' }}
-            >
-              {/* Entry ray */}
-              <motion.line
-                x1="50" y1="0" x2="50" y2="55"
-                stroke="rgba(255,255,255,0.35)"
-                strokeWidth="1.5" strokeLinecap="round"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 1.1, ease: 'easeInOut' }}
-              />
-
-              {/* Node */}
-              <motion.circle cx="50" cy="55" r="2.8"
-                fill="rgba(255,255,255,0.6)"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{
-                  delay:    1.0,
-                  duration: 0.5,
-                  ease:     [0.16, 1, 0.3, 1],
-                }}
-                style={{ transformOrigin: '50px 55px' }}
-              />
-
-              {/* Spectrum lines — staggered, slow */}
-              {[18,30,42,50,62,80].map((x2, i) => (
-                <motion.line key={i}
-                  x1="50" y1="55"
-                  x2={x2} y2="135"
-                  stroke={SPECTRUM[i].dark}
-                  strokeWidth="1.4" strokeLinecap="round"
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  animate={{ pathLength: 1, opacity: 0.5 }}
-                  transition={{
-                    pathLength: {
-                      duration: 0.65,
-                      delay:    1.1 + i * 0.11,
-                      ease:     'easeInOut',
-                    },
-                    opacity: {
-                      duration: 0.35,
-                      delay:    1.1 + i * 0.11,
-                    },
-                  }}
-                />
-              ))}
-            </svg>
-
-            {/* Wordmark */}
-            {(phase === 'wordmark' || isOut) && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: isOut ? 0 : 0.32 }}
-                transition={{ duration: 0.9 }}
-                style={{
-                  position:      'absolute',
-                  top:           'calc(100% + 18px)',
-                  left:          '50%',
-                  transform:     'translateX(-50%)',
-                  fontFamily:    '"DM Sans", system-ui, sans-serif',
-                  fontWeight:    200,
-                  fontSize:      '10px',
-                  letterSpacing: '0.42em',
-                  textTransform: 'uppercase',
-                  color:         'rgba(255,255,255,0.32)',
-                  whiteSpace:    'nowrap',
-                }}
-              >
-                PRISM
-              </motion.p>
             )}
           </motion.div>
         )}

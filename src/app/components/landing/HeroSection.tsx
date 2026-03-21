@@ -2,69 +2,72 @@ import { motion, useScroll, useTransform, useSpring } from "motion/react";
 import { ArrowRight, Play } from "lucide-react";
 import { useRef } from "react";
 
+// CSS keyframe blobs: same visual, zero JS animation overhead.
+// The browser compositor handles transform/opacity entirely on the GPU thread.
+const blobStyles = `
+  @keyframes hero-blob-a {
+    0%,100% { transform: scale(1)   rotate(0deg);   opacity: 0.4; }
+    50%      { transform: scale(1.2) rotate(45deg);  opacity: 0.7; }
+  }
+  @keyframes hero-blob-b {
+    0%,100% { transform: scale(1)   rotate(0deg);   opacity: 0.3; }
+    50%      { transform: scale(1.5) rotate(-45deg); opacity: 0.6; }
+  }
+  @keyframes hero-blob-c {
+    0%,100% { transform: translateX(0px)   scale(1);   opacity: 0.4; }
+    50%      { transform: translateX(80px) scale(1.3); opacity: 0.7; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-blob { animation: none !important; }
+  }
+`;
+
 export function HeroSection() {
   const containerRef = useRef<HTMLElement>(null);
-  
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
 
-  // Spring physics for awe-factor smoothness
-  const smoothY = useSpring(scrollYProgress, { stiffness: 50, damping: 20 });
-  const videoScale = useTransform(smoothY, [0, 1], [1, 1.25]);
+  const smoothY      = useSpring(scrollYProgress, { stiffness: 50, damping: 20 });
+  const videoScale   = useTransform(smoothY, [0, 1], [1, 1.25]);
   const videoOpacity = useTransform(smoothY, [0, 1], [0.8, 0]);
-  
-  // Parallax for content
-  const textY = useTransform(smoothY, [0, 1], [0, 150]);
-  const textOpacity = useTransform(smoothY, [0, 0.5], [1, 0]);
+  const textY        = useTransform(smoothY, [0, 1], [0, 150]);
+  const textOpacity  = useTransform(smoothY, [0, 0.5], [1, 0]);
 
   return (
-    <section 
-      ref={containerRef} 
+    <section
+      ref={containerRef}
       className="relative w-full min-h-screen bg-[#010101] flex flex-col items-center justify-center pt-32 pb-20 [perspective:1000px]"
     >
-      {/* Background Living Media */}
+      <style>{blobStyles}</style>
+
+      {/* Background */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <motion.div 
-          style={{ scale: videoScale, opacity: videoOpacity }}
-          className="w-full h-full relative"
-        >
-          {/* Lighter overlay to let the image POP */}
+        <motion.div style={{ scale: videoScale, opacity: videoOpacity }} className="w-full h-full relative">
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/80 z-10" />
-          <img 
-            src="https://images.unsplash.com/photo-1649182784901-48f5f2d40ecc?q=80&w=2000&auto=format&fit=crop" 
-            alt="Abstract Architecture" 
+          <img
+            src="https://images.unsplash.com/photo-1649182784901-48f5f2d40ecc?q=80&w=2000&auto=format&fit=crop"
+            alt=""
+            aria-hidden="true"
+            loading="eager"
+            fetchPriority="high"
             className="w-full h-full object-cover object-center opacity-70 brightness-125 saturate-[1.3] contrast-110 mix-blend-lighten"
           />
-          
-          {/* Dynamic Light Leaks for Vividness - More intense colors */}
-          <motion.div 
-            animate={{ 
-              scale: [1, 1.2, 1],
-              opacity: [0.4, 0.7, 0.4],
-              rotate: [0, 90, 0]
-            }}
-            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-            className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-indigo-500/40 rounded-full blur-[120px] mix-blend-screen" 
+
+          {/* CSS-animated blobs — compositor-only, zero JS frames */}
+          <div
+            className="hero-blob absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-indigo-500/40 rounded-full blur-[120px] mix-blend-screen"
+            style={{ animation: "hero-blob-a 15s linear infinite", willChange: "transform, opacity" }}
           />
-          <motion.div 
-            animate={{ 
-              scale: [1, 1.5, 1],
-              opacity: [0.3, 0.6, 0.3],
-              rotate: [0, -90, 0]
-            }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-rose-500/30 rounded-full blur-[150px] mix-blend-screen" 
+          <div
+            className="hero-blob absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-rose-500/30 rounded-full blur-[150px] mix-blend-screen"
+            style={{ animation: "hero-blob-b 20s linear infinite", willChange: "transform, opacity" }}
           />
-          <motion.div 
-            animate={{ 
-              scale: [1, 1.3, 1],
-              opacity: [0.4, 0.7, 0.4],
-              x: [0, 100, 0]
-            }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[20%] right-[20%] w-[40%] h-[40%] bg-purple-500/30 rounded-full blur-[100px] mix-blend-screen" 
+          <div
+            className="hero-blob absolute top-[20%] right-[20%] w-[40%] h-[40%] bg-purple-500/30 rounded-full blur-[100px] mix-blend-screen"
+            style={{ animation: "hero-blob-c 10s ease-in-out infinite", willChange: "transform, opacity" }}
           />
         </motion.div>
       </div>
@@ -75,8 +78,8 @@ export function HeroSection() {
       <div className="absolute bottom-8 left-8 w-4 h-4 border-b-2 border-l-2 border-white/50 z-20 pointer-events-none" />
       <div className="absolute bottom-8 right-8 w-4 h-4 border-b-2 border-r-2 border-white/50 z-20 pointer-events-none" />
 
-      {/* Hero Content - With scroll Parallax */}
-      <motion.div 
+      {/* Hero Content */}
+      <motion.div
         style={{ y: textY, opacity: textOpacity }}
         className="relative z-10 w-full px-6 md:px-12 lg:px-24 flex flex-col items-start justify-center flex-1"
       >
@@ -94,8 +97,7 @@ export function HeroSection() {
           </span>
         </motion.div>
 
-        {/* 3D Floating Typography */}
-        <motion.h1 
+        <motion.h1
           initial={{ opacity: 0, y: 40, rotateX: 20 }}
           animate={{ opacity: 1, y: 0, rotateX: 0 }}
           transition={{ duration: 1, delay: 0.1, type: "spring", stiffness: 50 }}
@@ -111,7 +113,7 @@ export function HeroSection() {
         </motion.h1>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 w-full items-end mt-4">
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
@@ -120,7 +122,7 @@ export function HeroSection() {
             Traditional HR tools look backward. Prism looks forward. Unify evaluations with predictive modeling to forecast revenue per individual.
           </motion.p>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}

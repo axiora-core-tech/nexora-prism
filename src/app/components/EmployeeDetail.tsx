@@ -16,26 +16,36 @@ export function EmployeeDetail() {
   const [activeSection, setActiveSection] = useState('telemetry');
 
   useEffect(() => {
+    const SECTION_IDS = ['telemetry', 'kpis', 'capital', 'neural', 'temporal', 'nodes', 'biorhythm', 'resonance'];
+
+    // Cache element references once — avoids repeated getElementById on every scroll
+    const sectionEls = SECTION_IDS.map(id => document.getElementById(id));
+
+    let rafPending = false;
     const handleScroll = () => {
-      const sections = ['telemetry', 'kpis', 'capital', 'neural', 'temporal', 'nodes', 'biorhythm', 'resonance'];
-      const scrollPosition = window.scrollY + window.innerHeight / 2;
-
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const { top, bottom } = element.getBoundingClientRect();
-          const offsetTop = top + window.scrollY;
-          const offsetBottom = bottom + window.scrollY;
-
-          if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
-            setActiveSection(section);
-            break;
+      // rAF throttle: only run one detection pass per animation frame
+      if (rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(() => {
+        rafPending = false;
+        const scrollPosition = window.scrollY + window.innerHeight / 2;
+        for (let i = 0; i < sectionEls.length; i++) {
+          const el = sectionEls[i];
+          if (el) {
+            // offsetTop is static — no forced reflow, unlike getBoundingClientRect()
+            const offsetTop    = el.offsetTop;
+            const offsetBottom = offsetTop + el.offsetHeight;
+            if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
+              setActiveSection(SECTION_IDS[i]);
+              break;
+            }
           }
         }
-      }
+      });
     };
 
-    window.addEventListener('scroll', handleScroll);
+    // passive: true tells the browser we won't call preventDefault() → no scroll jank
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -69,10 +79,11 @@ export function EmployeeDetail() {
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         className="w-full xl:w-[40%] h-[60vh] xl:h-screen sticky top-0 overflow-hidden hidden xl:block"
       >
-        <motion.img 
+        <motion.img
           style={{ scale, y }}
-          src={employee.avatar} 
-          alt={employee.name} 
+          src={employee.avatar}
+          alt={employee.name}
+          fetchPriority="high"
           className="absolute inset-0 w-full h-full object-cover z-0 grayscale opacity-80 mix-blend-screen"
         />
         

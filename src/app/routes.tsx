@@ -1,40 +1,56 @@
 import { createBrowserRouter } from "react-router";
-import { Layout }            from "./components/Layout";
-import { LandingPage }       from "./components/landing/LandingPage";
-import { SignIn }            from "./components/SignIn";
-import { Demo }              from "./components/Demo";
-import { EnterApp }          from "./components/EnterApp";
-import { Dashboard }         from "./components/Dashboard";
-import { EmployeeDetail }    from "./components/EmployeeDetail";
-import { Analytics }         from "./components/Analytics";
-import { Tasks }             from "./components/Tasks";
-import { Settings }          from "./components/Settings";
-import { KPIGoals }          from "./components/KPIGoals";
-import { Reviews360 }        from "./components/Reviews360";
-import { Attendance }        from "./components/Attendance";
-import { ROIInvestment }     from "./components/ROIInvestment";
-import { Leaderboard }       from "./components/Leaderboard";
-import { PerformanceReview } from "./components/PerformanceReview";
-import { ProtectedRoute }    from "./auth/ProtectedRoute";
-import React                 from "react";
+import { Layout }         from "./components/Layout";
+import { ProtectedRoute } from "./auth/ProtectedRoute";
+import React, { lazy, Suspense } from "react";
+
+// ─── Lazy-loaded pages (each gets its own JS chunk) ──────────────────────────
+const LandingPage       = lazy(() => import("./components/landing/LandingPage").then(m => ({ default: m.LandingPage })));
+const SignIn            = lazy(() => import("./components/SignIn").then(m => ({ default: m.SignIn })));
+const Demo              = lazy(() => import("./components/Demo").then(m => ({ default: m.Demo })));
+const EnterApp          = lazy(() => import("./components/EnterApp").then(m => ({ default: m.EnterApp })));
+const Dashboard         = lazy(() => import("./components/Dashboard").then(m => ({ default: m.Dashboard })));
+const EmployeeDetail    = lazy(() => import("./components/EmployeeDetail").then(m => ({ default: m.EmployeeDetail })));
+const Analytics         = lazy(() => import("./components/Analytics").then(m => ({ default: m.Analytics })));
+const Tasks             = lazy(() => import("./components/Tasks").then(m => ({ default: m.Tasks })));
+const Settings          = lazy(() => import("./components/Settings").then(m => ({ default: m.Settings })));
+const KPIGoals          = lazy(() => import("./components/KPIGoals").then(m => ({ default: m.KPIGoals })));
+const Reviews360        = lazy(() => import("./components/Reviews360").then(m => ({ default: m.Reviews360 })));
+const Attendance        = lazy(() => import("./components/Attendance").then(m => ({ default: m.Attendance })));
+const ROIInvestment     = lazy(() => import("./components/ROIInvestment").then(m => ({ default: m.ROIInvestment })));
+const Leaderboard       = lazy(() => import("./components/Leaderboard").then(m => ({ default: m.Leaderboard })));
+const PerformanceReview = lazy(() => import("./components/PerformanceReview").then(m => ({ default: m.PerformanceReview })));
+
+// ─── Minimal fallback shown during chunk load ─────────────────────────────────
+function PageFallback() {
+  return (
+    <div className="h-screen w-full flex items-center justify-center">
+      <div className="w-6 h-6 rounded-full border border-white/20 border-t-white/60 animate-spin" />
+    </div>
+  );
+}
+
+function withSuspense(Component: React.ComponentType) {
+  return (
+    <Suspense fallback={<PageFallback />}>
+      <Component />
+    </Suspense>
+  );
+}
 
 export const router = createBrowserRouter([
-  // ── Public ──────────────────────────────────────────────────
-  { path: "/",        Component: LandingPage },
-  { path: "/sign-in", Component: SignIn      },
-  { path: "/demo",    Component: Demo        },
-
-  // ── The threshold — paper into void ─────────────────────────
+  { path: "/",        element: withSuspense(LandingPage) },
+  { path: "/sign-in", element: withSuspense(SignIn) },
+  { path: "/demo",    element: withSuspense(Demo) },
   {
     path: "/enter",
     element: (
       <ProtectedRoute>
-        <EnterApp />
+        <Suspense fallback={<PageFallback />}>
+          <EnterApp />
+        </Suspense>
       </ProtectedRoute>
     ),
   },
-
-  // ── App shell ───────────────────────────────────────────────
   {
     path: "/app",
     element: (
@@ -43,21 +59,21 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { index: true,              Component: Dashboard         },
-      { path: "team",             Component: Dashboard         },
-      { path: "employee/:id",     Component: EmployeeDetail    },
-      { path: "analytics",        Component: Analytics         },
-      { path: "kpis",             Component: KPIGoals          },
-      { path: "reviews",          Component: Reviews360        },
-      { path: "attendance",       Component: Attendance        },
-      { path: "roi",              Component: ROIInvestment     },
-      { path: "leaderboard",      Component: Leaderboard       },
-      { path: "review",           Component: PerformanceReview },
-      { path: "tasks",            Component: Tasks             },
-      { path: "settings",         Component: Settings          },
+      { index: true,          element: withSuspense(Dashboard) },
+      { path: "team",         element: withSuspense(Dashboard) },
+      { path: "employee/:id", element: withSuspense(EmployeeDetail) },
+      { path: "analytics",    element: withSuspense(Analytics) },
+      { path: "kpis",         element: withSuspense(KPIGoals) },
+      { path: "reviews",      element: withSuspense(Reviews360) },
+      { path: "attendance",   element: withSuspense(Attendance) },
+      { path: "roi",          element: withSuspense(ROIInvestment) },
+      { path: "leaderboard",  element: withSuspense(Leaderboard) },
+      { path: "review",       element: withSuspense(PerformanceReview) },
+      { path: "tasks",        element: withSuspense(Tasks) },
+      { path: "settings",     element: withSuspense(Settings) },
       {
         path: "*",
-        Component: () => (
+        element: (
           <div className="h-screen w-full flex items-center justify-center font-mono text-white/30 tracking-[0.5em] text-xs uppercase">
             404 // Signal Lost
           </div>

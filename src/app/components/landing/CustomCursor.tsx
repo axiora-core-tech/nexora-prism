@@ -1,5 +1,5 @@
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export function CustomCursor() {
   const cursorX = useMotionValue(-100);
@@ -12,39 +12,41 @@ export function CustomCursor() {
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
+  // Use a ref to track visibility in the event handler without capturing stale state.
+  // This means setIsVisible(true) is only ever called once (on first move), not on
+  // every single mousemove event — preventing a React re-render at 60+ fps.
+  const isVisibleRef = React.useRef(false);
+
   useEffect(() => {
-    // Hide default cursor on body
     document.body.style.cursor = 'none';
-    
+
     const moveCursor = (e: MouseEvent) => {
-      cursorX.set(e.clientX - 16); // Center the 32x32 cursor
+      cursorX.set(e.clientX - 16);
       cursorY.set(e.clientY - 16);
-      if (!isVisible) setIsVisible(true);
-    };
-    
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      // Check if hovering over interactive elements
-      if (
-        target.tagName.toLowerCase() === 'button' || 
-        target.tagName.toLowerCase() === 'a' || 
-        target.closest('button') || 
-        target.closest('a')
-      ) {
-        setIsHovered(true);
-      } else {
-        setIsHovered(false);
+      if (!isVisibleRef.current) {
+        isVisibleRef.current = true;
+        setIsVisible(true);
       }
     };
 
-    const handleMouseLeave = () => setIsVisible(false);
-    const handleMouseEnter = () => setIsVisible(true);
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const isInteractive =
+        target.tagName.toLowerCase() === 'button' ||
+        target.tagName.toLowerCase() === 'a' ||
+        !!target.closest('button') ||
+        !!target.closest('a');
+      setIsHovered(isInteractive);
+    };
 
-    window.addEventListener('mousemove', moveCursor);
-    window.addEventListener('mouseover', handleMouseOver);
+    const handleMouseLeave = () => { isVisibleRef.current = false; setIsVisible(false); };
+    const handleMouseEnter = () => { isVisibleRef.current = true;  setIsVisible(true);  };
+
+    window.addEventListener('mousemove', moveCursor, { passive: true });
+    window.addEventListener('mouseover', handleMouseOver, { passive: true });
     document.body.addEventListener('mouseleave', handleMouseLeave);
     document.body.addEventListener('mouseenter', handleMouseEnter);
-    
+
     return () => {
       window.removeEventListener('mousemove', moveCursor);
       window.removeEventListener('mouseover', handleMouseOver);
@@ -52,7 +54,8 @@ export function CustomCursor() {
       document.body.removeEventListener('mouseenter', handleMouseEnter);
       document.body.style.cursor = 'auto';
     };
-  }, [cursorX, cursorY, isVisible]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cursorX, cursorY]); // isVisible intentionally removed — tracked via ref
 
   const backgroundX = useSpring(useTransform(cursorX, x => x - 192 + 16), { damping: 40, stiffness: 200 });
   const backgroundY = useSpring(useTransform(cursorY, y => y - 192 + 16), { damping: 40, stiffness: 200 });

@@ -187,3 +187,65 @@
     line-height: 1.5;
   }
 }
+
+/* ─── Prism Light Theme ──────────────────────────────────────────────────── */
+.prism-light {
+  --prism-bg:         #f4f3ef;
+  --prism-bg-card:    #edecea;
+  --prism-bg-card2:   #e6e4e0;
+  --prism-border:     rgba(0,0,0,0.08);
+  --prism-border-mid: rgba(0,0,0,0.12);
+  --prism-text-hi:    #0f0e0d;
+  --prism-text-mid:   rgba(15,14,13,0.65);
+  --prism-text-lo:    rgba(15,14,13,0.38);
+  --prism-glow-a:     rgba(99,102,241,0.06);
+  --prism-glow-b:     rgba(6,182,212,0.04);
+  --prism-accent:     #4f46e5;
+  --prism-accent-lo:  rgba(79,70,229,0.08);
+  --prism-emerald:    #059669;
+  --prism-rose:       #e11d48;
+  --prism-amber:      #d97706;
+  --prism-cyan:       #0284c7;
+  --prism-purple:     #7c3aed;
+}
+
+/* ─── Prism Dark Theme (explicit, same as current hardcoded values) ──────── */
+.prism-dark {
+  --prism-bg:         #030303;
+  --prism-bg-card:    rgba(255,255,255,0.03);
+  --prism-bg-card2:   rgba(255,255,255,0.05);
+  --prism-border:     rgba(255,255,255,0.05);
+  --prism-border-mid: rgba(255,255,255,0.10);
+  --prism-text-hi:    #ffffff;
+  --prism-text-mid:   rgba(255,255,255,0.60);
+  --prism-text-lo:    rgba(255,255,255,0.30);
+  --prism-glow-a:     rgba(139,92,246,0.15);
+  --prism-glow-b:     rgba(6,182,212,0.07);
+  --prism-accent:     #38bdf8;
+  --prism-accent-lo:  rgba(56,189,248,0.10);
+  --prism-emerald:    #10b981;
+  --prism-rose:       #f43f5e;
+  --prism-amber:      #f59e0b;
+  --prism-cyan:       #22d3ee;
+  --prism-purple:     #c084fc;
+}
+
+/* ─── Layout shell — theme-aware backgrounds ─────────────────────────────── */
+.prism-light .prism-shell {
+  background-color: var(--prism-bg);
+  color: var(--prism-text-hi);
+}
+.prism-dark .prism-shell {
+  background-color: var(--prism-bg);
+  color: var(--prism-text-hi);
+}
+
+/* Light mode — override hardcoded dark Tailwind classes on common patterns  */
+.prism-light .prism-card {
+  background: var(--prism-bg-card);
+  border-color: var(--prism-border);
+}
+.prism-light .prism-card2 {
+  background: var(--prism-bg-card2);
+  border-color: var(--prism-border-mid);
+}

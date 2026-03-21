@@ -55,12 +55,12 @@ function ResonanceCard({ review, expanded, onToggle }: { review: any; expanded: 
           </div>
           <div>
             <p className="text-white/90 text-sm font-light">{review.reviewer}</p>
-            <p className="text-xs uppercase tracking-widest text-white/30 mt-0.5 font-mono">{review.relation} // {review.date}</p>
+            <p className="text-sm uppercase tracking-[0.12em] text-white/30 mt-0.5 font-mono">{review.relation} // {review.date}</p>
           </div>
         </div>
         <div className="flex items-center gap-8">
           <div className="text-right">
-            <p className="text-xs uppercase tracking-widest text-white/30 mb-1">Resonance</p>
+            <p className="text-sm uppercase tracking-[0.12em] text-white/30 mb-1">Resonance</p>
             <p className="text-2xl font-light text-white">{review.overall}</p>
           </div>
           {expanded ? <ChevronUp size={13} className="text-white/30" /> : <ChevronDown size={13} className="text-white/30" />}
@@ -84,11 +84,11 @@ function ResonanceCard({ review, expanded, onToggle }: { review: any; expanded: 
                     {scoreLabels.map(k => (
                       <div key={k} className="flex items-center gap-3">
                         <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: scoreColors[k] }} />
-                        <span className="text-xs uppercase tracking-widest w-20 capitalize text-white/40">{k}</span>
+                        <span className="text-sm uppercase tracking-[0.12em] w-20 capitalize text-white/40">{k}</span>
                         <div className="flex-1 h-px bg-white/5">
                           <div className="h-full" style={{ width: `${review.scores[k]}%`, background: scoreColors[k] }} />
                         </div>
-                        <span className="text-xs font-mono text-white/40">{review.scores[k]}</span>
+                        <span className="text-sm font-mono text-white/40">{review.scores[k]}</span>
                       </div>
                     ))}
                   </div>
@@ -98,14 +98,14 @@ function ResonanceCard({ review, expanded, onToggle }: { review: any; expanded: 
                   <div>
                     <div className="flex items-center gap-2 mb-3">
                       <Star size={9} className="text-emerald-400" />
-                      <span className="text-xs uppercase tracking-widest text-emerald-400 font-mono">Signal — Strengths</span>
+                      <span className="text-sm uppercase tracking-[0.12em] text-emerald-400 font-mono">Signal — Strengths</span>
                     </div>
                     <p className="text-white/60 text-sm font-light font-serif italic leading-relaxed">"{review.strengths}"</p>
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-3">
                       <MessageSquare size={9} className="text-amber-400" />
-                      <span className="text-xs uppercase tracking-widest text-amber-400 font-mono">Signal — Growth Vectors</span>
+                      <span className="text-sm uppercase tracking-[0.12em] text-amber-400 font-mono">Signal — Growth Vectors</span>
                     </div>
                     <p className="text-white/60 text-sm font-light font-serif italic leading-relaxed">"{review.improvements}"</p>
                   </div>
@@ -169,7 +169,7 @@ export function Reviews360() {
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Node selector */}
         <div className="lg:w-72 flex-shrink-0">
-          <p className="text-xs uppercase tracking-widest text-white/20 mb-4 font-mono">Select Node</p>
+          <p className="text-sm uppercase tracking-[0.12em] text-white/20 mb-4 font-mono">Select Node</p>
           <div className="space-y-2">
             {employees.map(e => {
               const revs = e.reviews360 || [];
@@ -188,7 +188,7 @@ export function Reviews360() {
                   <img src={e.avatar} alt={e.name} className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                   <div className="flex-1 min-w-0">
                     <p className="text-white/80 text-sm font-light truncate">{e.name}</p>
-                    <p className="text-xs uppercase tracking-widest text-white/30 mt-0.5 truncate font-mono">{e.department}</p>
+                    <p className="text-sm uppercase tracking-[0.12em] text-white/30 mt-0.5 truncate font-mono">{e.department}</p>
                   </div>
                   {avg > 0 && (
                     <span className={`text-sm font-mono flex-shrink-0 ${avg >= 85 ? 'text-emerald-400' : avg >= 70 ? 'text-amber-400' : 'text-rose-400'}`}>
@@ -225,13 +225,13 @@ export function Reviews360() {
                           <h2 className="text-white/30 font-serif italic text-sm leading-none mt-0.5">{emp.name.split(' ')[1]}</h2>
                           <NavLink
                             to={`/app/employee/${emp.id}`}
-                            className="inline-flex items-center gap-1 mt-3 text-xs uppercase tracking-widest text-white/30 hover:text-cyan-400 transition-colors font-mono"
+                            className="inline-flex items-center gap-1 mt-3 text-sm uppercase tracking-[0.12em] text-white/30 hover:text-cyan-400 transition-colors font-mono"
                           >
                             View full profile <ArrowUpRight size={9} />
                           </NavLink>
                         </div>
                         <div className="ml-auto text-right">
-                          <p className="text-xs uppercase tracking-widest text-white/30 mb-1">Composite Resonance</p>
+                          <p className="text-sm uppercase tracking-[0.12em] text-white/30 mb-1">Composite Resonance</p>
                           <p className="text-4xl font-light text-white">{overallAvg}</p>
                         </div>
                       </div>
@@ -241,8 +241,8 @@ export function Reviews360() {
                             <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: scoreColors[k] }} />
                             <div className="flex-1">
                               <div className="flex justify-between items-center mb-1">
-                                <span className="text-xs uppercase tracking-widest capitalize text-white/30">{k}</span>
-                                <span className="text-xs font-mono" style={{ color: scoreColors[k] }}>{avgScores[k]}</span>
+                                <span className="text-sm uppercase tracking-[0.12em] capitalize text-white/30">{k}</span>
+                                <span className="text-sm font-mono" style={{ color: scoreColors[k] }}>{avgScores[k]}</span>
                               </div>
                               <div className="h-px bg-white/5">
                                 <div className="h-full" style={{ width: `${avgScores[k]}%`, background: scoreColors[k] }} />
@@ -258,7 +258,7 @@ export function Reviews360() {
 
               {/* Individual nodes */}
               <div className="space-y-3">
-                <p className="text-xs uppercase tracking-widest text-white/20 mb-4 font-mono">{reviews.length} Reviewer Node{reviews.length !== 1 ? 's' : ''}</p>
+                <p className="text-sm uppercase tracking-[0.12em] text-white/20 mb-4 font-mono">{reviews.length} Reviewer Node{reviews.length !== 1 ? 's' : ''}</p>
                 {reviews.map((review, i) => (
                   <ResonanceCard
                     key={i}
@@ -270,7 +270,7 @@ export function Reviews360() {
                 {reviews.length === 0 && (
                   <div className="text-center py-20 text-white/20">
                     <Network size={28} className="mx-auto mb-4 opacity-30" />
-                    <p className="text-xs font-mono uppercase tracking-widest">No resonance nodes detected</p>
+                    <p className="text-sm font-mono uppercase tracking-widest">No resonance nodes detected</p>
                   </div>
                 )}
               </div>

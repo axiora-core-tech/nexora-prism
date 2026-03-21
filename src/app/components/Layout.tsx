@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '../auth/ThemeContext';
 import { Outlet, useLocation } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { Dock } from './ui/Dock';
@@ -6,9 +7,14 @@ import { CustomCursor } from './ui/CustomCursor';
 
 export function Layout() {
   const location = useLocation();
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
 
   return (
-    <div className="min-h-screen bg-[#030303] text-[#e5e5e5] font-sans selection:bg-purple-500/30 overflow-hidden relative selection:text-white cursor-none">
+    <div
+      className={`prism-shell min-h-screen font-sans overflow-hidden relative cursor-none ${isLight ? 'prism-light selection:bg-indigo-500/20 selection:text-indigo-900' : 'prism-dark selection:bg-purple-500/30 selection:text-white'}`}
+      style={{ backgroundColor: 'var(--prism-bg)', color: 'var(--prism-text-hi)' }}
+    >
       <CustomCursor />
       
       {/* Avant-Garde Ambient Background — CSS-only, compositor thread */}
@@ -25,14 +31,14 @@ export function Layout() {
           .app-blob { animation: none !important; }
         }
       `}} />
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen">
+      <div className={`fixed inset-0 z-0 pointer-events-none ${isLight ? 'opacity-20' : 'opacity-40 mix-blend-screen'}`}>
         <div
-          className="app-blob absolute -top-[20%] -left-[10%] w-[60vw] h-[60vw] rounded-full bg-purple-900/20 blur-[120px]"
-          style={{ animation: 'app-blob-a 40s linear infinite', willChange: 'transform' }}
+          className="app-blob absolute -top-[20%] -left-[10%] w-[60vw] h-[60vw] rounded-full blur-[120px]"
+          style={{ animation: 'app-blob-a 40s linear infinite', willChange: 'transform', backgroundColor: isLight ? 'rgba(99,102,241,0.12)' : 'rgba(88,28,135,0.20)' }}
         />
         <div
-          className="app-blob absolute -bottom-[20%] -right-[10%] w-[60vw] h-[60vw] rounded-full bg-cyan-900/10 blur-[120px]"
-          style={{ animation: 'app-blob-b 50s linear infinite', willChange: 'transform' }}
+          className="app-blob absolute -bottom-[20%] -right-[10%] w-[60vw] h-[60vw] rounded-full blur-[120px]"
+          style={{ animation: 'app-blob-b 50s linear infinite', willChange: 'transform', backgroundColor: isLight ? 'rgba(6,182,212,0.08)' : 'rgba(6,182,212,0.10)' }}
         />
       </div>
 

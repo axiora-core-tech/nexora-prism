@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useTheme } from '../auth/ThemeContext';
 import { useAuth } from '../auth/AuthContext';
 import { motion, AnimatePresence } from 'motion/react';
-import { Settings as SettingsIcon, Terminal, Bell, Shield, Users, BarChart2, RefreshCw, ChevronRight, Check, AlertTriangle, Zap, Moon, Globe, Lock, Eye, Sliders, LogOut } from 'lucide-react';
+import { Settings as SettingsIcon, Terminal, Bell, Shield, Users, BarChart2, RefreshCw, ChevronRight, Check, AlertTriangle, Zap, Moon, Sun, Globe, Lock, Eye, Sliders, LogOut } from 'lucide-react';
 
 function Toggle({ on, onChange }: { on: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -46,6 +47,7 @@ type Section = 'performance' | 'notifications' | 'team' | 'security' | 'integrat
 export function Settings() {
   const navigate = useNavigate();
   const { logout, user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [activeSection, setActiveSection] = useState<Section>('performance');
   const [saved, setSaved] = useState(false);
   const [terminalLog, setTerminalLog] = useState<{cmd: string; out: string}[]>([]);
@@ -119,8 +121,8 @@ export function Settings() {
   const settingRow = (label: string, desc: string, control: React.ReactNode) => (
     <div className="flex items-center justify-between py-5 border-b border-white/[0.04] last:border-0">
       <div>
-        <p className="text-white/80 text-sm font-light">{label}</p>
-        <p className="text-white/30 text-xs mt-0.5">{desc}</p>
+        <p className="text-white/80 text-base font-light">{label}</p>
+        <p className="text-white/30 text-sm mt-0.5">{desc}</p>
       </div>
       <div className="flex-shrink-0 ml-6">{control}</div>
     </div>
@@ -190,7 +192,7 @@ export function Settings() {
           {/* Account info + logout — always visible at bottom of sidebar */}
           <div className="mt-8 pt-6 border-t border-white/[0.06]">
             {user && (
-              <p className="text-xs font-mono text-white/25 uppercase tracking-widest px-4 mb-3 truncate">
+              <p className="text-sm font-mono text-white/25 uppercase tracking-widest px-4 mb-3 truncate">
                 {user.email}
               </p>
             )}
@@ -219,7 +221,7 @@ export function Settings() {
               {/* PERFORMANCE */}
               {activeSection === 'performance' && (
                 <div>
-                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Telemetry Engine</h2>
+                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Telemetry Engine</h2>
 
                   <div className="space-y-0 mb-8">
                     {settingRow('Live Data Streaming', 'Continuous real-time update of employee vectors', <Toggle on={perf.liveStreaming} onChange={v => setPerf(p => ({ ...p, liveStreaming: v }))} />)}
@@ -236,7 +238,7 @@ export function Settings() {
                       { label: 'Benchmark Mode', key: 'benchmarkMode', opts: ['Internal', 'Industry', 'Custom Cohort'] },
                     ].map(({ label, key, opts }) => (
                       <div key={key}>
-                        <p className="text-white/50 text-xs uppercase tracking-widest mb-2">{label}</p>
+                        <p className="text-white/50 text-sm uppercase tracking-[0.12em] mb-2">{label}</p>
                         <SelectInput
                           value={(perf as any)[key]}
                           options={opts}
@@ -251,7 +253,7 @@ export function Settings() {
               {/* NOTIFICATIONS */}
               {activeSection === 'notifications' && (
                 <div>
-                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Alert Feed</h2>
+                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Alert Feed</h2>
 
                   <div className="grid grid-cols-2 gap-4 mb-8">
                     {[
@@ -259,7 +261,7 @@ export function Settings() {
                       { label: 'Burnout Alert Threshold', key: 'burnoutThreshold', unit: '%', min: 30, max: 95 },
                     ].map(({ label, key, unit, min, max }) => (
                       <div key={key} className="bg-white/[0.02] border border-white/5 rounded-[2rem] p-5">
-                        <p className="text-white/40 text-xs uppercase tracking-widest mb-3">{label}</p>
+                        <p className="text-white/40 text-sm uppercase tracking-[0.12em] mb-3">{label}</p>
                         <div className="flex items-center gap-3 mb-3">
                           <span className="text-3xl font-light text-white">{(notifs as any)[key]}<span className="text-lg text-white/30">{unit}</span></span>
                         </div>
@@ -269,7 +271,7 @@ export function Settings() {
                           onChange={e => setNotifs(n => ({ ...n, [key]: parseInt(e.target.value) }))}
                           className="w-full accent-amber-400"
                         />
-                        <div className="flex justify-between text-xs font-mono text-white/20 mt-1">
+                        <div className="flex justify-between text-sm font-mono text-white/20 mt-1">
                           <span>{min}%</span><span>{max}%</span>
                         </div>
                       </div>
@@ -290,7 +292,7 @@ export function Settings() {
               {/* TEAM */}
               {activeSection === 'team' && (
                 <div>
-                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Team Protocol</h2>
+                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Team Protocol</h2>
 
                   <div className="space-y-0 mb-8">
                     {settingRow('Self-Reviews', 'Allow employees to submit self-assessments in 360° cycles', <Toggle on={team.selfReviewEnabled} onChange={v => setTeam(t => ({ ...t, selfReviewEnabled: v }))} />)}
@@ -306,7 +308,7 @@ export function Settings() {
                       { label: 'Max OKRs / Employee', key: 'maxOKRsPerEmployee', opts: ['3', '4', '5', '6', '7', '10'] },
                     ].map(({ label, key, opts }) => (
                       <div key={key}>
-                        <p className="text-white/50 text-xs uppercase tracking-widest mb-2">{label}</p>
+                        <p className="text-white/50 text-sm uppercase tracking-[0.12em] mb-2">{label}</p>
                         <SelectInput value={(team as any)[key]} options={opts} onChange={v => setTeam(t => ({ ...t, [key]: v }))} />
                       </div>
                     ))}
@@ -317,7 +319,7 @@ export function Settings() {
               {/* SECURITY */}
               {activeSection === 'security' && (
                 <div>
-                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Security Matrix</h2>
+                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Security Matrix</h2>
 
                   <div className="space-y-0 mb-8">
                     {settingRow('Two-Factor Authentication', 'Require 2FA for all HR and manager accounts', <Toggle on={sec.twoFA} onChange={v => setSec(s => ({ ...s, twoFA: v }))} />)}
@@ -332,7 +334,7 @@ export function Settings() {
                       { label: 'Data Retention', key: 'dataRetention', opts: ['12 months', '24 months', '36 months', 'Indefinite'] },
                     ].map(({ label, key, opts }) => (
                       <div key={key}>
-                        <p className="text-white/50 text-xs uppercase tracking-widest mb-2">{label}</p>
+                        <p className="text-white/50 text-sm uppercase tracking-[0.12em] mb-2">{label}</p>
                         <SelectInput value={(sec as any)[key]} options={opts} onChange={v => setSec(s => ({ ...s, [key]: v }))} />
                       </div>
                     ))}
@@ -351,7 +353,7 @@ export function Settings() {
               {/* INTEGRATIONS */}
               {activeSection === 'integrations' && (
                 <div>
-                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Node Links</h2>
+                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Node Links</h2>
 
                   <div className="space-y-4">
                     {[
@@ -394,7 +396,7 @@ export function Settings() {
               {/* TERMINAL */}
               {activeSection === 'terminal' && (
                 <div>
-                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-xs font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">System Override</h2>
+                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">System Override</h2>
 
                   <div className="bg-black/60 border border-white/10 rounded-2xl p-6 font-mono text-xs space-y-2 mb-6">
                     <p className="text-white/20">// APEX Performance Intelligence v2.4.1</p>

@@ -108,7 +108,7 @@ export function Leaderboard() {
                     </div>
                   </div>
                   <p className="text-white/80 text-sm font-light text-center">{emp.name.split(' ')[0]}</p>
-                  <p className="text-xs uppercase tracking-widest text-center mt-0.5 font-mono" style={{ color: cfg.color }}>
+                  <p className="text-sm uppercase tracking-[0.12em] text-center mt-0.5 font-mono" style={{ color: cfg.color }}>
                     {score}{cfg.suffix}
                   </p>
                 </motion.div>
@@ -131,8 +131,8 @@ export function Leaderboard() {
           style={{ background: cfg.color + '05' }} />
 
         <div className="px-8 py-5 border-b border-white/5 flex items-center justify-between relative z-10">
-          <p className="text-xs uppercase tracking-widest text-white/30 font-mono">Full Ranking · {cfg.label}</p>
-          <p className="text-xs uppercase tracking-widest text-white/20 font-mono">{employees.length} nodes</p>
+          <p className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono">Full Ranking · {cfg.label}</p>
+          <p className="text-sm uppercase tracking-[0.12em] text-white/20 font-mono">{employees.length} nodes</p>
         </div>
 
         <AnimatePresence mode="wait">
@@ -217,7 +217,7 @@ export function Leaderboard() {
           <div key={s.label} className="relative bg-white/5 border border-white/5 rounded-[2rem] p-5 overflow-hidden group hover:border-white/10 transition-colors" data-cursor="Stat">
             <div className="absolute -bottom-4 -right-4 w-20 h-20 rounded-full blur-[30px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
               style={{ background: s.color + '20' }} />
-            <p className="text-xs uppercase tracking-widest text-white/20 mb-2 font-mono">{s.label}</p>
+            <p className="text-sm uppercase tracking-[0.12em] text-white/20 mb-2 font-mono">{s.label}</p>
             <p className="text-2xl font-light relative z-10" style={{ color: s.color }}>{s.val}</p>
           </div>
         ))}

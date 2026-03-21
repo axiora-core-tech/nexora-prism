@@ -205,22 +205,22 @@ export function Dashboard() {
                     </div>
                   </div>
 
-                  <div className="absolute bottom-5 left-5 right-5 pointer-events-none">
-                    <h3 className="text-xl font-light text-white leading-none mb-0.5 group-hover:text-cyan-400 transition-colors truncate">{emp.name.split(' ')[0]}</h3>
-                    <h3 className="text-xl font-serif italic text-white/50 leading-none mb-3 truncate">{emp.name.split(' ')[1]}</h3>
+                  <div className="absolute bottom-4 left-5 right-5 pointer-events-none">
+                    <h3 className="text-lg font-light text-white leading-tight group-hover:text-cyan-400 transition-colors truncate">{emp.name.split(' ')[0]}</h3>
+                    <h3 className="text-lg font-serif italic text-white/50 leading-tight mb-2 truncate">{emp.name.split(' ')[1]}</h3>
 
-                    <div className="flex justify-between items-end border-t border-white/10 pt-3">
+                    <div className="flex justify-between items-end border-t border-white/10 pt-2">
                       <div>
-                        <span className="block text-sm uppercase tracking-[0.15em] text-white/40 mb-0.5">Performance</span>
-                        <span className="text-lg font-light text-white">{emp.performanceScore}<span className="text-xs text-white/30">pt</span></span>
+                        <span className="block text-[10px] uppercase tracking-widest text-white/40 mb-0.5">Perf</span>
+                        <span className="text-base font-light text-white">{emp.performanceScore}<span className="text-[10px] text-white/30">pt</span></span>
                       </div>
                       <div>
-                        <span className="block text-sm uppercase tracking-[0.15em] text-white/40 mb-0.5">Learning</span>
-                        <span className="text-lg font-light text-white">{emp.learningProgress}<span className="text-xs text-white/30">%</span></span>
+                        <span className="block text-[10px] uppercase tracking-widest text-white/40 mb-0.5">Learn</span>
+                        <span className="text-base font-light text-white">{emp.learningProgress}<span className="text-[10px] text-white/30">%</span></span>
                       </div>
                       <div>
-                        <span className="block text-sm uppercase tracking-[0.15em] text-white/40 mb-0.5">Welfare</span>
-                        <span className="text-lg font-light text-white">{emp.welfareScore}<span className="text-xs text-white/30">pt</span></span>
+                        <span className="block text-[10px] uppercase tracking-widest text-white/40 mb-0.5">Welfare</span>
+                        <span className="text-base font-light text-white">{emp.welfareScore}<span className="text-[10px] text-white/30">pt</span></span>
                       </div>
                     </div>
                   </div>

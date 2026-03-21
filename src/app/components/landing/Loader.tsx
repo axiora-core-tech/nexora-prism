@@ -6,10 +6,9 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
   const [isExploding, setIsExploding] = useState(false);
 
   useEffect(() => {
-    // Lock scroll while loading
     document.body.style.overflow = 'hidden';
     
-    const duration = 2000; // 2 seconds to load
+    const duration = 2000;
     const interval = 20;
     const steps = duration / interval;
     let currentStep = 0;
@@ -20,11 +19,10 @@ export function Loader({ onComplete }: { onComplete: () => void }) {
       if (currentStep >= steps) {
         clearInterval(timer);
         setIsExploding(true);
-        // Wait for the explosion animation to finish before removing loader
         setTimeout(() => {
           document.body.style.overflow = '';
           onComplete();
-        }, 1200); 
+        }, 1200);
       }
     }, interval);
 

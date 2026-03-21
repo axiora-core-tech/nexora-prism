@@ -40,7 +40,7 @@ function LandingCursor() {
         className="absolute rounded-full border border-white/50 flex items-center justify-center mix-blend-difference"
       >
         <motion.span animate={{ opacity: hoverText ? 1 : 0, scale: hoverText ? 1 : 0.5 }}
-          className="text-[10px] font-mono uppercase tracking-widest text-white whitespace-nowrap">{hoverText}</motion.span>
+          className="text-xs font-mono uppercase tracking-widest text-white whitespace-nowrap">{hoverText}</motion.span>
       </motion.div>
       <motion.div animate={{ scale: hovering && !hoverText ? 0 : 1, opacity: hovering && hoverText ? 0 : 1 }}
         transition={{ type: 'spring', stiffness: 400, damping: 25 }}
@@ -207,7 +207,7 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
         <div className="flex gap-1 mx-8 mt-6 p-1 bg-white/5 border border-white/5 rounded-xl relative z-10">
           {tabs.map(tab => (
             <button key={tab.id} onClick={() => setMode(tab.id)}
-              className={`flex-1 py-2 rounded-lg text-[10px] uppercase tracking-widest font-medium transition-all ${
+              className={`flex-1 py-2 rounded-lg text-xs uppercase tracking-widest font-medium transition-all ${
                 mode === tab.id ? 'bg-white/10 text-white' : 'text-white/30 hover:text-white/60'
               }`} data-cursor={tab.label}>
               {tab.label}
@@ -225,7 +225,7 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
             {/* LOGIN */}
             {mode === 'login' && (<>
               <div>
-                <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Email Address</label>
+                <label className="text-xs uppercase tracking-widest text-white/30 font-mono block mb-2">Email Address</label>
                 <div className="relative">
                   <Mail size={13} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
                   <input value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="you@company.com"
@@ -233,7 +233,7 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
                 </div>
               </div>
               <div>
-                <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Passphrase</label>
+                <label className="text-xs uppercase tracking-widest text-white/30 font-mono block mb-2">Passphrase</label>
                 <div className="relative">
                   <Lock size={13} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
                   <input value={pass} onChange={e => setPass(e.target.value)} type={showPass ? 'text' : 'password'} placeholder="••••••••••••"
@@ -244,8 +244,8 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
                 </div>
               </div>
               <div className="flex items-center justify-between pt-1">
-                <span className="text-[9px] uppercase tracking-widest text-white/30 font-mono">Forgot passphrase?</span>
-                <button onClick={() => setMode('signup')} className="text-[9px] uppercase tracking-widest text-cyan-400/70 hover:text-cyan-400 transition-colors font-mono" data-cursor="Create">
+                <span className="text-xs uppercase tracking-widest text-white/30 font-mono">Forgot passphrase?</span>
+                <button onClick={() => setMode('signup')} className="text-xs uppercase tracking-widest text-cyan-400/70 hover:text-cyan-400 transition-colors font-mono" data-cursor="Create">
                   New account →
                 </button>
               </div>
@@ -254,7 +254,7 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
             {/* SIGNUP */}
             {mode === 'signup' && (<>
               <div>
-                <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Full Name</label>
+                <label className="text-xs uppercase tracking-widest text-white/30 font-mono block mb-2">Full Name</label>
                 <div className="relative">
                   <Users size={13} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
                   <input value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Your full name"
@@ -262,7 +262,7 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
                 </div>
               </div>
               <div>
-                <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Email Address</label>
+                <label className="text-xs uppercase tracking-widest text-white/30 font-mono block mb-2">Email Address</label>
                 <div className="relative">
                   <Mail size={13} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
                   <input value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="you@company.com"
@@ -270,7 +270,7 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
                 </div>
               </div>
               <div>
-                <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Passphrase</label>
+                <label className="text-xs uppercase tracking-widest text-white/30 font-mono block mb-2">Passphrase</label>
                 <div className="relative">
                   <Lock size={13} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
                   <input value={pass} onChange={e => setPass(e.target.value)} type={showPass ? 'text' : 'password'} placeholder="Min 12 characters"
@@ -280,7 +280,7 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
                   </button>
                 </div>
               </div>
-              <button onClick={() => setMode('org')} className="text-[9px] uppercase tracking-widest text-amber-400/70 hover:text-amber-400 transition-colors font-mono" data-cursor="Continue">
+              <button onClick={() => setMode('org')} className="text-xs uppercase tracking-widest text-amber-400/70 hover:text-amber-400 transition-colors font-mono" data-cursor="Continue">
                 Continue to organisation setup →
               </button>
             </>)}
@@ -288,7 +288,7 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
             {/* ORG SETUP */}
             {mode === 'org' && (<>
               <div>
-                <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Organisation Name</label>
+                <label className="text-xs uppercase tracking-widest text-white/30 font-mono block mb-2">Organisation Name</label>
                 <div className="relative">
                   <Building2 size={13} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
                   <input value={org} onChange={e => setOrg(e.target.value)} type="text" placeholder="Acme Corp"
@@ -296,7 +296,7 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
                 </div>
               </div>
               <div>
-                <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Organisation Domain</label>
+                <label className="text-xs uppercase tracking-widest text-white/30 font-mono block mb-2">Organisation Domain</label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 text-xs font-mono">@</span>
                   <input type="text" placeholder="acme.com"
@@ -304,7 +304,7 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
                 </div>
               </div>
               <div>
-                <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Team Size</label>
+                <label className="text-xs uppercase tracking-widest text-white/30 font-mono block mb-2">Team Size</label>
                 <select className="w-full bg-white/5 border border-white/5 rounded-2xl px-4 py-3 text-white text-sm outline-none focus:border-white/20">
                   {['1–10 nodes', '11–50 nodes', '51–200 nodes', '201–500 nodes', '500+ nodes'].map(s => (
                     <option key={s} className="bg-[#0a0a0b]">{s}</option>
@@ -329,7 +329,7 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
               </div>
               {invites.map((inv, i) => (
                 <div key={i}>
-                  <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">
+                  <label className="text-xs uppercase tracking-widest text-white/30 font-mono block mb-2">
                     Node {String(i + 1).padStart(2, '0')} — Email
                   </label>
                   <div className="relative">
@@ -341,7 +341,7 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
                 </div>
               ))}
               <button onClick={() => setInvites([...invites, ''])}
-                className="text-[9px] uppercase tracking-widest text-white/30 hover:text-white/60 font-mono transition-colors flex items-center gap-1"
+                className="text-xs uppercase tracking-widest text-white/30 hover:text-white/60 font-mono transition-colors flex items-center gap-1"
                 data-cursor="Add Node">
                 + Add another node
               </button>
@@ -363,7 +363,7 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
               </div>
             </button>
 
-            <p className="text-[8px] text-white/20 text-center font-mono uppercase tracking-widest">
+            <p className="text-xs text-white/20 text-center font-mono uppercase tracking-widest">
               End-to-end encrypted · SOC 2 Type II · GDPR compliant
             </p>
           </motion.div>

@@ -1,85 +1,107 @@
 import { motion, useMotionValue, useSpring } from "motion/react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 export function CustomCursor() {
-  const cursorX = useMotionValue(-100);
-  const cursorY = useMotionValue(-100);
-  
-  const springConfig = { damping: 30, stiffness: 400, mass: 0.1 };
-  const cursorXSpring = useSpring(cursorX, springConfig);
-  const cursorYSpring = useSpring(cursorY, springConfig);
-  
-  const [isHovered, setIsHovered] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible]   = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const [hoverText, setHoverText]   = useState('');
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Ring lags softly
+  const ringX = useSpring(mouseX, { damping: 26, stiffness: 120, mass: 0.8 });
+  const ringY = useSpring(mouseY, { damping: 26, stiffness: 120, mass: 0.8 });
+
+  // Dot snaps precisely
+  const dotX = useSpring(mouseX, { damping: 28, stiffness: 480, mass: 0.2 });
+  const dotY = useSpring(mouseY, { damping: 28, stiffness: 480, mass: 0.2 });
+
+  const isVisibleRef = useRef(false);
 
   useEffect(() => {
-    // We only want custom cursor on non-touch devices
-    if (window.matchMedia("(pointer: coarse)").matches) return;
-
-    document.body.style.cursor = 'none';
-    
-    const moveCursor = (e: MouseEvent) => {
-      cursorX.set(e.clientX - 4); // Offset half the default 8px cursor size
-      cursorY.set(e.clientY - 4);
-      if (!isVisible) setIsVisible(true);
+    const move = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+      if (!isVisibleRef.current) { isVisibleRef.current = true; setIsVisible(true); }
     };
-    
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (
-        target.tagName.toLowerCase() === 'button' || 
-        target.tagName.toLowerCase() === 'a' || 
-        target.closest('button') || 
-        target.closest('a')
-      ) {
-        setIsHovered(true);
-      } else {
-        setIsHovered(false);
-      }
+    const over = (e: MouseEvent) => {
+      const t = e.target as HTMLElement;
+      const clickable =
+        t.tagName.toLowerCase() === 'button' ||
+        t.tagName.toLowerCase() === 'a' ||
+        !!t.closest('button') ||
+        !!t.closest('a');
+      setIsHovering(!!clickable);
+      const dc = t.getAttribute('data-cursor') ||
+        (t.closest('[data-cursor]') as HTMLElement | null)?.getAttribute('data-cursor') || '';
+      setHoverText(dc);
     };
+    const leave = () => { isVisibleRef.current = false; setIsVisible(false); };
+    const enter = () => { isVisibleRef.current = true;  setIsVisible(true);  };
 
-    const handleMouseLeave = () => setIsVisible(false);
-    const handleMouseEnter = () => setIsVisible(true);
-
-    window.addEventListener('mousemove', moveCursor);
-    window.addEventListener('mouseover', handleMouseOver);
-    document.body.addEventListener('mouseleave', handleMouseLeave);
-    document.body.addEventListener('mouseenter', handleMouseEnter);
-    
+    window.addEventListener('mousemove', move, { passive: true });
+    window.addEventListener('mouseover', over, { passive: true });
+    document.body.addEventListener('mouseleave', leave);
+    document.body.addEventListener('mouseenter', enter);
     return () => {
-      window.removeEventListener('mousemove', moveCursor);
-      window.removeEventListener('mouseover', handleMouseOver);
-      document.body.removeEventListener('mouseleave', handleMouseLeave);
-      document.body.removeEventListener('mouseenter', handleMouseEnter);
-      document.body.style.cursor = 'auto';
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseover', over);
+      document.body.removeEventListener('mouseleave', leave);
+      document.body.removeEventListener('mouseenter', enter);
     };
-  }, [cursorX, cursorY, isVisible]);
+  }, [mouseX, mouseY]);
 
-  if (!isVisible) return null;
+  if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) return null;
+
+  const ringSize = isHovering ? (hoverText ? 76 : 48) : 34;
 
   return (
-    <motion.div
-      className="fixed top-0 left-0 w-2 h-2 pointer-events-none z-[9999] mix-blend-difference flex items-center justify-center"
-      style={{ x: cursorXSpring, y: cursorYSpring }}
-    >
-      <motion.div 
-        className="w-full h-full bg-white rounded-full"
-        animate={{ 
-          scale: isHovered ? 4 : 1,
-          opacity: isHovered ? 0 : 1 
+    <>
+      {/* Static ring — no scale animation */}
+      <motion.div
+        className="fixed top-0 left-0 pointer-events-none z-[9998] rounded-full flex items-center justify-center mix-blend-difference"
+        style={{
+          x: ringX, y: ringY,
+          translateX: '-50%', translateY: '-50%',
+          opacity: isVisible ? 1 : 0,
+          border: '1px solid',
         }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-      />
-      {/* Hollow ring that appears on hover */}
-      <motion.div 
-        className="absolute inset-0 border border-white rounded-full"
-        initial={{ scale: 0.5, opacity: 0 }}
-        animate={{ 
-          scale: isHovered ? 6 : 0.5,
-          opacity: isHovered ? 1 : 0 
+        animate={{
+          width:  ringSize,
+          height: ringSize,
+          borderColor:     isHovering ? 'rgba(129,140,248,0.35)' : 'rgba(255,255,255,0.35)',
+          backgroundColor: isHovering ? 'rgba(99,102,241,0.10)' : 'rgba(255,255,255,0)',
         }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
+        transition={{
+          width:  { type: 'spring', stiffness: 200, damping: 20 },
+          height: { type: 'spring', stiffness: 200, damping: 20 },
+          borderColor:     { duration: 0.25 },
+          backgroundColor: { duration: 0.25 },
+        }}
+      >
+        <motion.span
+          animate={{ opacity: hoverText ? 1 : 0, scale: hoverText ? 1 : 0.5 }}
+          transition={{ duration: 0.15 }}
+          className="text-[10px] font-mono uppercase tracking-widest text-white whitespace-nowrap"
+        >
+          {hoverText}
+        </motion.span>
+      </motion.div>
+
+      {/* Breathing dot — pulses continuously */}
+      <motion.div
+        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full mix-blend-difference bg-white"
+        style={{ x: dotX, y: dotY, translateX: '-50%', translateY: '-50%', width: 6, height: 6 }}
+        animate={{
+          scale:   (isHovering && hoverText) ? 0 : [1, 2.0, 1],
+          opacity: (isHovering && hoverText) ? 0 : (isVisible ? 1 : 0),
+        }}
+        transition={{
+          scale: { duration: 2.6, repeat: Infinity, ease: 'easeInOut' },
+          opacity: { duration: 0.15 },
+        }}
       />
-    </motion.div>
+    </>
   );
 }

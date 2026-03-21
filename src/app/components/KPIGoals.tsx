@@ -27,7 +27,7 @@ function KPIVector({ kpi }: { kpi: any }) {
           <span className="text-sm text-white/70 font-light">{kpi.name}</span>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-[9px] uppercase tracking-widest text-white/20 font-mono">Weight {kpi.weight}%</span>
+          <span className="text-xs uppercase tracking-widest text-white/20 font-mono">Weight {kpi.weight}%</span>
           <span className="text-sm font-mono" style={{ color }}>
             {kpi.current}{kpi.unit}
             <span className="text-white/20"> / {kpi.target}{kpi.unit}</span>
@@ -65,13 +65,13 @@ function ObjectiveNode({ okr }: { okr: any }) {
       <div className="flex items-start justify-between gap-4 mb-5 relative z-10">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-3">
-            <span className="px-2 py-0.5 rounded text-[8px] uppercase tracking-widest font-mono border"
+            <span className="px-2 py-0.5 rounded text-xs uppercase tracking-widest font-mono border"
               style={{ background: cfg.bg, color: cfg.color, borderColor: cfg.color + '30' }}>
               {cfg.label}
             </span>
-            <span className="text-[9px] uppercase tracking-widest text-white/20 font-mono">{okr.weight}</span>
+            <span className="text-xs uppercase tracking-widest text-white/20 font-mono">{okr.weight}</span>
           </div>
-          <p className="text-white/80 text-sm font-light leading-relaxed">{okr.objective}</p>
+          <p className="text-white/80 text-base font-light leading-relaxed">{okr.objective}</p>
         </div>
         <div className="text-right flex-shrink-0">
           <span className="text-3xl font-light text-white">{okr.progress}</span>
@@ -129,7 +129,7 @@ export function KPIGoals() {
         className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
       >
         <div>
-          <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-2">
+          <p className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
             <Crosshair size={14} className="text-amber-400" /> Performance Intelligence
           </p>
           <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
@@ -138,11 +138,11 @@ export function KPIGoals() {
         </div>
         <div className="flex gap-16 text-right">
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2">On Track</p>
+            <p className="text-white/40 uppercase tracking-[0.2em] text-xs mb-2">On Track</p>
             <p className="text-4xl font-light text-emerald-400">{onTargetKPIs}<span className="text-xl text-white/30">/{totalKPIs}</span></p>
           </div>
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2">Objectives Resolved</p>
+            <p className="text-white/40 uppercase tracking-[0.2em] text-xs mb-2">Objectives Resolved</p>
             <p className="text-4xl font-light text-cyan-400">{completedOKRs}<span className="text-xl text-white/30">/{totalOKRs}</span></p>
           </div>
         </div>
@@ -159,7 +159,7 @@ export function KPIGoals() {
           <div className="absolute top-0 right-0 w-64 h-32 bg-rose-500/10 blur-[80px] rounded-full pointer-events-none" />
           <div className="flex items-center gap-3 mb-5 relative z-10">
             <AlertCircle size={14} className="text-rose-400" />
-            <h3 className="text-[10px] uppercase tracking-widest text-rose-400 font-semibold">
+            <h3 className="text-xs uppercase tracking-widest text-rose-400 font-semibold">
               Needs Attention — {criticalKPIs.length + atRiskOKRs.length} item{criticalKPIs.length + atRiskOKRs.length !== 1 ? 's' : ''} flagged
             </h3>
           </div>
@@ -174,7 +174,7 @@ export function KPIGoals() {
                   <img src={emp.avatar} alt={emp.name} className="w-7 h-7 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all" />
                   <div>
                     <p className="text-white/80 text-xs font-light">{emp.name.split(' ')[0]} · {kpi.name}</p>
-                    <p className="text-rose-400 text-[9px] font-mono uppercase tracking-widest">
+                    <p className="text-rose-400 text-xs font-mono uppercase tracking-widest">
                       {kpi.current}{kpi.unit} vs {kpi.target}{kpi.unit} target
                     </p>
                   </div>
@@ -192,7 +192,7 @@ export function KPIGoals() {
                   <img src={emp.avatar} alt={emp.name} className="w-7 h-7 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all" />
                   <div>
                     <p className="text-white/80 text-xs font-light">{emp.name.split(' ')[0]} · {okr.objective.slice(0, 35)}{okr.objective.length > 35 ? '…' : ''}</p>
-                    <p className="text-amber-400 text-[9px] font-mono uppercase tracking-widest">{okr.progress}% complete · {okr.status.replace('_', ' ')}</p>
+                    <p className="text-amber-400 text-xs font-mono uppercase tracking-widest">{okr.progress}% complete · {okr.status.replace('_', ' ')}</p>
                   </div>
                 </div>
                 <AlertCircle size={12} className="text-amber-400 flex-shrink-0" />
@@ -209,11 +209,11 @@ export function KPIGoals() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-8 py-2.5 rounded-full text-[10px] uppercase tracking-widest font-medium transition-all ${
+              className={`px-8 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium transition-all ${
                 activeTab === tab ? 'bg-white/10 text-white' : 'text-white/30 hover:text-white'
               }`}
             >
-              {tab === 'kpis' ? 'KPI Vectors' : 'Objective Nodes'}
+              {tab === 'kpis' ? 'KPIs' : 'OKRs'}
             </button>
           ))}
         </div>
@@ -225,7 +225,7 @@ export function KPIGoals() {
               <button
                 key={d}
                 onClick={() => setSelectedDept(d)}
-                className={`px-4 py-1.5 rounded-full text-[9px] uppercase tracking-widest transition-all border ${
+                className={`px-4 py-1.5 rounded-full text-xs uppercase tracking-widest transition-all border ${
                   selectedDept === d
                     ? 'bg-white/10 border-white/20 text-white'
                     : 'border-white/5 text-white/30 hover:border-white/10 hover:text-white/60'
@@ -271,7 +271,7 @@ export function KPIGoals() {
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="text-right">
-                    <p className="text-[8px] uppercase tracking-widest text-white/30 mb-1">Efficiency</p>
+                    <p className="text-xs uppercase tracking-widest text-white/30 mb-1">Efficiency</p>
                     <p className="text-2xl font-light text-white">{emp.performanceScore}</p>
                   </div>
                   <NavLink to={`/app/employee/${emp.id}`}

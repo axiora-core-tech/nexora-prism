@@ -37,7 +37,7 @@ export function Demo() {
 
       <NavLink
         to="/"
-        className="fixed top-8 left-8 flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest transition-colors z-10"
+        className="fixed top-8 left-8 flex items-center gap-2 text-xs font-mono uppercase tracking-widest transition-colors z-10"
         style={{ color: 'rgba(245,240,232,0.3)' }}
       >
         <ArrowLeft size={12} /> Back
@@ -65,7 +65,7 @@ export function Demo() {
               <CheckCircle2 size={22} style={{ color: GOLD }} />
             </div>
             <p
-              className="text-[8px] font-mono uppercase tracking-[0.28em] mb-3"
+              className="text-xs font-mono uppercase tracking-[0.28em] mb-3"
               style={{ color: GOLD }}
             >
               Request Received
@@ -122,7 +122,7 @@ export function Demo() {
 
             <div className="p-8 pb-0 relative z-10">
               <p
-                className="text-[8px] font-mono uppercase tracking-[0.28em] mb-3"
+                className="text-xs font-mono uppercase tracking-[0.28em] mb-3"
                 style={{ color: GOLD }}
               >
                 Prism Intelligence
@@ -150,7 +150,7 @@ export function Demo() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <p
-                    className="text-[8px] font-mono uppercase tracking-widest mb-2"
+                    className="text-xs font-mono uppercase tracking-widest mb-2"
                     style={{ color: 'rgba(245,240,232,0.3)' }}
                   >
                     Full name
@@ -172,7 +172,7 @@ export function Demo() {
                 </div>
                 <div>
                   <p
-                    className="text-[8px] font-mono uppercase tracking-widest mb-2"
+                    className="text-xs font-mono uppercase tracking-widest mb-2"
                     style={{ color: 'rgba(245,240,232,0.3)' }}
                   >
                     Work email
@@ -198,7 +198,7 @@ export function Demo() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <p
-                    className="text-[8px] font-mono uppercase tracking-widest mb-2"
+                    className="text-xs font-mono uppercase tracking-widest mb-2"
                     style={{ color: 'rgba(245,240,232,0.3)' }}
                   >
                     Company
@@ -220,7 +220,7 @@ export function Demo() {
                 </div>
                 <div>
                   <p
-                    className="text-[8px] font-mono uppercase tracking-widest mb-2"
+                    className="text-xs font-mono uppercase tracking-widest mb-2"
                     style={{ color: 'rgba(245,240,232,0.3)' }}
                   >
                     Team size
@@ -245,7 +245,7 @@ export function Demo() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <p
-                    className="text-[8px] font-mono uppercase tracking-widest mb-2"
+                    className="text-xs font-mono uppercase tracking-widest mb-2"
                     style={{ color: 'rgba(245,240,232,0.3)' }}
                   >
                     Phone (optional)
@@ -267,7 +267,7 @@ export function Demo() {
                 </div>
                 <div>
                   <p
-                    className="text-[8px] font-mono uppercase tracking-widest mb-2"
+                    className="text-xs font-mono uppercase tracking-widest mb-2"
                     style={{ color: 'rgba(245,240,232,0.3)' }}
                   >
                     Website (optional)
@@ -291,7 +291,7 @@ export function Demo() {
 
               {/* submit */}
               {error && (
-                <p className="text-[9px] font-mono text-rose-400/80 text-center uppercase tracking-widest -mb-1">
+                <p className="text-xs font-mono text-rose-400/80 text-center uppercase tracking-widest -mb-1">
                   {error}
                 </p>
               )}
@@ -317,7 +317,7 @@ export function Demo() {
               </button>
 
               <p
-                className="text-[7px] text-center font-mono uppercase tracking-widest"
+                className="text-xs text-center font-mono uppercase tracking-widest"
                 style={{ color: 'rgba(245,240,232,0.14)' }}
               >
                 No commitment · Personalised walkthrough · Response within 24h

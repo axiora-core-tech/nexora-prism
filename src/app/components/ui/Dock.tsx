@@ -53,7 +53,7 @@ export function Dock() {
                 {({ isActive }) => (
                   <>
                     <item.icon size={17} strokeWidth={isActive ? 2 : 1.5} />
-                    <span className="text-[7px] uppercase tracking-widest opacity-60 whitespace-nowrap" style={{ color: isActive ? item.color : undefined }}>
+                    <span className="text-xs uppercase tracking-widest opacity-60 whitespace-nowrap" style={{ color: isActive ? item.color : undefined }}>
                       {item.label.split(' ')[0]}
                     </span>
                     {isActive && (

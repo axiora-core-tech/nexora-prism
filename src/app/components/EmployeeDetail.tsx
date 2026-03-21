@@ -100,10 +100,10 @@ export function EmployeeDetail() {
         <div className="absolute bottom-12 left-12 right-12 z-20">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8 }}>
             <div className="flex items-center gap-4 mb-4">
-              <span className="text-cyan-400 uppercase tracking-[0.3em] text-[10px] font-bold border-l-2 border-cyan-400 pl-4 py-1">
+              <span className="text-cyan-400 uppercase tracking-[0.3em] text-xs font-bold border-l-2 border-cyan-400 pl-4 py-1">
                 {employee.department}
               </span>
-              <span className={`px-2 py-0.5 text-[9px] uppercase tracking-widest rounded-full border ${employee.attritionRisk === 'High' ? 'border-rose-500/50 text-rose-400 bg-rose-500/10' : employee.attritionRisk === 'Medium' ? 'border-amber-500/50 text-amber-400 bg-amber-500/10' : 'border-emerald-500/50 text-emerald-400 bg-emerald-500/10'}`}>
+              <span className={`px-2 py-0.5 text-xs uppercase tracking-widest rounded-full border ${employee.attritionRisk === 'High' ? 'border-rose-500/50 text-rose-400 bg-rose-500/10' : employee.attritionRisk === 'Medium' ? 'border-amber-500/50 text-amber-400 bg-amber-500/10' : 'border-emerald-500/50 text-emerald-400 bg-emerald-500/10'}`}>
                 Risk: {employee.attritionRiskPercentage}%
               </span>
             </div>
@@ -113,7 +113,7 @@ export function EmployeeDetail() {
             
             <div className="flex flex-wrap gap-2">
               {employee.skills.map(skill => (
-                <span key={skill} className="px-3 py-1 rounded-full border border-white/10 text-[9px] uppercase tracking-widest text-white/60 backdrop-blur-sm bg-white/5">
+                <span key={skill} className="px-3 py-1 rounded-full border border-white/10 text-xs uppercase tracking-widest text-white/60 backdrop-blur-sm bg-white/5">
                   {skill}
                 </span>
               ))}
@@ -131,7 +131,7 @@ export function EmployeeDetail() {
             className="group relative flex items-center justify-end"
             data-cursor={section.label}
           >
-            <span className={`absolute right-12 text-[9px] uppercase tracking-widest whitespace-nowrap transition-all duration-300 ${activeSection === section.id ? 'opacity-100 text-white translate-x-0' : 'opacity-0 text-white/40 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0'}`}>
+            <span className={`absolute right-12 text-xs uppercase tracking-widest whitespace-nowrap transition-all duration-300 ${activeSection === section.id ? 'opacity-100 text-white translate-x-0' : 'opacity-0 text-white/40 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0'}`}>
               {section.label}
             </span>
             <div className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-500 backdrop-blur-md ${activeSection === section.id ? 'border-cyan-400/50 bg-cyan-400/10 text-cyan-400 scale-110' : 'border-white/10 bg-white/5 text-white/40 hover:bg-white/10'}`}>
@@ -150,7 +150,7 @@ export function EmployeeDetail() {
             <ArrowLeft size={20} />
           </NavLink>
           <div className="flex items-center gap-4 mb-4">
-            <span className="text-cyan-400 uppercase tracking-[0.3em] text-[10px] font-bold border-l-2 border-cyan-400 pl-4 py-1">
+            <span className="text-cyan-400 uppercase tracking-[0.3em] text-xs font-bold border-l-2 border-cyan-400 pl-4 py-1">
               {employee.department}
             </span>
           </div>
@@ -164,7 +164,7 @@ export function EmployeeDetail() {
               <button
                 key={section.id}
                 onClick={() => scrollTo(section.id)}
-                className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-[9px] uppercase tracking-widest font-mono transition-all ${
+                className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs uppercase tracking-widest font-mono transition-all ${
                   activeSection === section.id
                     ? 'border-cyan-400/50 bg-cyan-400/10 text-cyan-400'
                     : 'border-white/10 text-white/40 hover:text-white hover:border-white/20'
@@ -223,7 +223,7 @@ export function EmployeeDetail() {
                       <span className="text-2xl md:text-3xl font-light text-white leading-none">{stat.val}</span>
                     </div>
                   </div>
-                  <span className="block text-[9px] uppercase tracking-widest text-white/40 mt-6 flex items-center gap-2">
+                  <span className="block text-xs uppercase tracking-widest text-white/40 mt-6 flex items-center gap-2">
                     <stat.icon size={10} /> {stat.label}
                   </span>
                 </div>
@@ -252,7 +252,7 @@ export function EmployeeDetail() {
                         <span className="text-sm text-white/80 font-light">{kpi.name}</span>
                       </div>
                       <div className="flex items-center gap-4">
-                        <span className="text-[9px] uppercase tracking-widest text-white/30 font-mono">Weight: {kpi.weight}%</span>
+                        <span className="text-xs uppercase tracking-widest text-white/30 font-mono">Weight: {kpi.weight}%</span>
                         <span className="text-sm font-mono" style={{ color }}>
                           {kpi.current}{kpi.unit}
                           <span className="text-white/30"> / {kpi.target}{kpi.unit}</span>
@@ -283,15 +283,15 @@ export function EmployeeDetail() {
               
               <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-12 relative z-10">
                 <div>
-                  <p className="text-[10px] uppercase tracking-widest text-white/40 mb-2">Cost Investment</p>
+                  <p className="text-xs uppercase tracking-widest text-white/40 mb-2">Cost Investment</p>
                   <p className="text-3xl font-light text-white">${(employee.costInvestment / 1000)}k</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-widest text-white/40 mb-2">Revenue Generated</p>
+                  <p className="text-xs uppercase tracking-widest text-white/40 mb-2">Revenue Generated</p>
                   <p className="text-3xl font-light text-emerald-400">${(employee.revenueContribution / 1000)}k</p>
                 </div>
                 <div className="col-span-2 md:col-span-1">
-                  <p className="text-[10px] uppercase tracking-widest text-white/40 mb-2">Human Capital ROI</p>
+                  <p className="text-xs uppercase tracking-widest text-white/40 mb-2">Human Capital ROI</p>
                   <p className="text-3xl font-light text-white">{employee.roi}%</p>
                 </div>
               </div>
@@ -316,7 +316,7 @@ export function EmployeeDetail() {
                   className="h-full bg-gradient-to-r from-emerald-500/50 to-emerald-400 flex-1"
                 />
               </div>
-              <div className="flex justify-between text-[8px] uppercase tracking-widest text-white/30 mt-3 relative z-10">
+              <div className="flex justify-between text-xs uppercase tracking-widest text-white/30 mt-3 relative z-10">
                 <span>Base Cost Vector</span>
                 <span>Surplus Value Generated</span>
               </div>
@@ -325,7 +325,7 @@ export function EmployeeDetail() {
             {/* Total Comp Breakdown */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-                <h3 className="text-[10px] uppercase tracking-widest text-white/40 mb-6">Payroll Ledger (Annual)</h3>
+                <h3 className="text-xs uppercase tracking-widest text-white/40 mb-6">Payroll Ledger (Annual)</h3>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center text-sm border-b border-white/5 pb-3">
                     <span className="text-white/60">Base Salary</span>
@@ -344,18 +344,18 @@ export function EmployeeDetail() {
 
               <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8 relative overflow-hidden group">
                 <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-purple-500/10 blur-[40px] rounded-full" />
-                <h3 className="text-[10px] uppercase tracking-widest text-white/40 mb-6">Equity Vectors</h3>
+                <h3 className="text-xs uppercase tracking-widest text-white/40 mb-6">Equity Vectors</h3>
                 <div className="space-y-6 relative z-10">
                   <div>
-                    <span className="block text-[10px] uppercase tracking-widest text-white/40 mb-1">Vested Value</span>
+                    <span className="block text-xs uppercase tracking-widest text-white/40 mb-1">Vested Value</span>
                     <span className="text-2xl font-light text-white">${employee.compensation.equityVested.toLocaleString()}</span>
                   </div>
                   <div>
-                    <span className="block text-[10px] uppercase tracking-widest text-white/40 mb-1">Unvested (Golden Handcuff)</span>
+                    <span className="block text-xs uppercase tracking-widest text-white/40 mb-1">Unvested (Golden Handcuff)</span>
                     <span className="text-xl font-light text-purple-400">${employee.compensation.equityUnvested.toLocaleString()}</span>
                   </div>
                   <div className="pt-4 border-t border-white/5">
-                    <span className="text-[9px] uppercase tracking-widest text-white/30">Next Vesting Node: {employee.compensation.nextVestDate}</span>
+                    <span className="text-xs uppercase tracking-widest text-white/30">Next Vesting Node: {employee.compensation.nextVestDate}</span>
                   </div>
                 </div>
               </div>
@@ -399,14 +399,14 @@ export function EmployeeDetail() {
                     </div>
                     <div>
                       <h4 className="text-white text-base font-light tracking-wide">{module.title}</h4>
-                      <p className="text-[10px] uppercase tracking-widest text-white/40 mt-1">{module.status.replace('_', ' ')} • {module.date}</p>
+                      <p className="text-xs uppercase tracking-widest text-white/40 mt-1">{module.status.replace('_', ' ')} • {module.date}</p>
                     </div>
                   </div>
                   
                   {module.score && (
                     <div className="text-right">
                       <span className="block text-2xl font-light text-emerald-400">{module.score}%</span>
-                      <span className="text-[8px] uppercase tracking-widest text-white/30">Acquisition Score</span>
+                      <span className="text-xs uppercase tracking-widest text-white/30">Acquisition Score</span>
                     </div>
                   )}
                 </motion.div>
@@ -423,7 +423,7 @@ export function EmployeeDetail() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               {/* Daily Performance Chart */}
               <div className="bg-white/5 border border-white/5 rounded-[2rem] p-6">
-                <h3 className="text-[10px] uppercase tracking-widest text-white/40 mb-6">Daily Output Velocity</h3>
+                <h3 className="text-xs uppercase tracking-widest text-white/40 mb-6">Daily Output Velocity</h3>
                 <div className="h-40 w-full -ml-4" data-cursor="Trace">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={employee.dailyPerformance}>
@@ -439,7 +439,7 @@ export function EmployeeDetail() {
 
               {/* Weekly Timesheets */}
               <div className="bg-white/5 border border-white/5 rounded-[2rem] p-6">
-                <h3 className="text-[10px] uppercase tracking-widest text-white/40 mb-6">Timesheet Matrix (Hours vs Billable)</h3>
+                <h3 className="text-xs uppercase tracking-widest text-white/40 mb-6">Timesheet Matrix (Hours vs Billable)</h3>
                 <div className="h-40 w-full -ml-4" data-cursor="Trace">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={employee.timesheets}>
@@ -459,7 +459,7 @@ export function EmployeeDetail() {
             {/* Leave Balances & Assets */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-                <h3 className="text-[10px] uppercase tracking-widest text-white/40 mb-6 flex items-center gap-2"><CalendarDays size={12}/> Leave Matrix</h3>
+                <h3 className="text-xs uppercase tracking-widest text-white/40 mb-6 flex items-center gap-2"><CalendarDays size={12}/> Leave Matrix</h3>
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between text-xs mb-2">
@@ -480,7 +480,7 @@ export function EmployeeDetail() {
                     </div>
                   </div>
                   {employee.leaveBalance.sabbaticalEligible && (
-                    <div className="pt-4 mt-2 border-t border-white/5 text-[10px] uppercase tracking-widest text-purple-400">
+                    <div className="pt-4 mt-2 border-t border-white/5 text-xs uppercase tracking-widest text-purple-400">
                       · Sabbatical Protocol Available
                     </div>
                   )}
@@ -488,7 +488,7 @@ export function EmployeeDetail() {
               </div>
 
               <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-                <h3 className="text-[10px] uppercase tracking-widest text-white/40 mb-6 flex items-center gap-2"><Monitor size={12}/> Assigned Hardware Assets</h3>
+                <h3 className="text-xs uppercase tracking-widest text-white/40 mb-6 flex items-center gap-2"><Monitor size={12}/> Assigned Hardware Assets</h3>
                 <ul className="space-y-3">
                   {employee.equipment.map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-sm text-white/70">
@@ -514,7 +514,7 @@ export function EmployeeDetail() {
                    
                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                      <div>
-                       <span className="px-2 py-0.5 rounded text-[8px] uppercase tracking-widest bg-white/5 text-white/50 mb-2 inline-block">Weight: {okr.weight}</span>
+                       <span className="px-2 py-0.5 rounded text-xs uppercase tracking-widest bg-white/5 text-white/50 mb-2 inline-block">Weight: {okr.weight}</span>
                        <h4 className="text-white text-lg font-light">{okr.objective}</h4>
                      </div>
                      <div className="text-right">
@@ -553,11 +553,11 @@ export function EmployeeDetail() {
                   <h3 className="text-xl font-light text-white mb-2 tracking-wide">Projected Evolution: {promo.role}</h3>
                   <div className="flex items-center gap-6 mt-4">
                     <div>
-                      <span className="block text-[9px] uppercase tracking-widest text-white/40 mb-1">Timeframe</span>
+                      <span className="block text-xs uppercase tracking-widest text-white/40 mb-1">Timeframe</span>
                       <span className="text-sm text-purple-400 font-mono">{promo.timeframe}</span>
                     </div>
                     <div>
-                      <span className="block text-[9px] uppercase tracking-widest text-white/40 mb-1">Probability</span>
+                      <span className="block text-xs uppercase tracking-widest text-white/40 mb-1">Probability</span>
                       <span className="text-sm text-rose-400 font-mono">{promo.probability}%</span>
                     </div>
                   </div>
@@ -608,7 +608,7 @@ export function EmployeeDetail() {
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <span className="text-2xl font-light text-white">{employee.bioRhythm.stressIndex}</span>
-                    <span className="text-[6px] uppercase tracking-widest text-white/40">Stress</span>
+                    <span className="text-xs uppercase tracking-widest text-white/40">Stress</span>
                   </div>
                 </div>
 
@@ -618,7 +618,7 @@ export function EmployeeDetail() {
                     Based on focus block density ({employee.bioRhythm.focusBlocksAvg} hrs/day) and work log sentiment, systemic burnout probability is at {employee.bioRhythm.burnoutProbability}%.
                   </p>
                   <div className="flex gap-4">
-                    <span className={`px-3 py-1 rounded-full border text-[9px] uppercase tracking-widest ${employee.bioRhythm.burnoutProbability > 50 ? 'border-rose-500/30 text-rose-400 bg-rose-500/10' : 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10'}`}>
+                    <span className={`px-3 py-1 rounded-full border text-xs uppercase tracking-widest ${employee.bioRhythm.burnoutProbability > 50 ? 'border-rose-500/30 text-rose-400 bg-rose-500/10' : 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10'}`}>
                       {employee.bioRhythm.burnoutProbability > 50 ? 'Intervention Recommended' : 'Optimal Zone'}
                     </span>
                   </div>
@@ -626,7 +626,7 @@ export function EmployeeDetail() {
               </div>
 
               <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8 flex flex-col justify-center text-center">
-                <span className="block text-[10px] uppercase tracking-widest text-white/40 mb-4">Sleep & Recovery Quality</span>
+                <span className="block text-xs uppercase tracking-widest text-white/40 mb-4">Sleep & Recovery Quality</span>
                 <span className="text-5xl font-light text-white mb-2">{employee.bioRhythm.sleepQuality}<span className="text-2xl text-white/30">%</span></span>
                 <span className="text-xs text-white/60 font-light">Index Score</span>
               </div>
@@ -648,10 +648,10 @@ export function EmployeeDetail() {
                     <div className="flex items-start justify-between mb-6">
                       <div>
                         <h4 className="text-white font-light">{review.reviewer}</h4>
-                        <p className="text-[10px] uppercase tracking-widest text-white/40 mt-1">{review.relation} • {review.date}</p>
+                        <p className="text-xs uppercase tracking-widest text-white/40 mt-1">{review.relation} • {review.date}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-[9px] uppercase tracking-widest text-white/30 mb-1">Overall</p>
+                        <p className="text-xs uppercase tracking-widest text-white/30 mb-1">Overall</p>
                         <p className="text-3xl font-light text-white">{review.overall}</p>
                       </div>
                     </div>
@@ -659,11 +659,11 @@ export function EmployeeDetail() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
                       {scoreKeys.map(k => (
                         <div key={k} className="flex items-center gap-3">
-                          <span className="text-[9px] uppercase tracking-widest w-24 capitalize flex-shrink-0" style={{ color: scoreColors[k] }}>{k}</span>
+                          <span className="text-xs uppercase tracking-widest w-24 capitalize flex-shrink-0" style={{ color: scoreColors[k] }}>{k}</span>
                           <div className="flex-1 h-[2px] bg-white/5 rounded-full overflow-hidden">
                             <div className="h-full rounded-full" style={{ width: `${review.scores[k]}%`, background: scoreColors[k] }} />
                           </div>
-                          <span className="text-[10px] font-mono text-white/50 w-8 text-right">{review.scores[k]}</span>
+                          <span className="text-xs font-mono text-white/50 w-8 text-right">{review.scores[k]}</span>
                         </div>
                       ))}
                     </div>
@@ -672,14 +672,14 @@ export function EmployeeDetail() {
                       <div>
                         <div className="flex items-center gap-2 mb-1.5">
                           <Star size={9} className="text-emerald-400" />
-                          <span className="text-[9px] uppercase tracking-widest text-emerald-400">Strengths</span>
+                          <span className="text-xs uppercase tracking-widest text-emerald-400">Strengths</span>
                         </div>
                         <p className="text-white/60 text-sm font-light font-serif italic leading-relaxed">"{review.strengths}"</p>
                       </div>
                       <div>
                         <div className="flex items-center gap-2 mb-1.5">
                           <MessageSquare size={9} className="text-amber-400" />
-                          <span className="text-[9px] uppercase tracking-widest text-amber-400">Growth Areas</span>
+                          <span className="text-xs uppercase tracking-widest text-amber-400">Growth Areas</span>
                         </div>
                         <p className="text-white/60 text-sm font-light font-serif italic leading-relaxed">"{review.improvements}"</p>
                       </div>
@@ -740,7 +740,7 @@ export function EmployeeDetail() {
 
                     <div className="flex items-center justify-between mb-8">
                       <div>
-                        <p className="text-[9px] uppercase tracking-widest text-white/30 font-mono mb-2">Profile Export</p>
+                        <p className="text-xs uppercase tracking-widest text-white/30 font-mono mb-2">Profile Export</p>
                         <h3 className="text-xl font-light text-white">{employee.name}</h3>
                         <p className="text-white/40 text-sm">{employee.role}</p>
                       </div>
@@ -767,7 +767,7 @@ export function EmployeeDetail() {
                           <span className="text-xl">{icon}</span>
                           <div className="flex-1">
                             <p className="text-white/80 text-sm font-light group-hover:text-white transition-colors">{label}</p>
-                            <p className="text-white/30 text-[11px] mt-0.5">{desc}</p>
+                            <p className="text-white/30 text-xs mt-0.5">{desc}</p>
                           </div>
                           {syncComplete === label
                             ? <span className="text-emerald-400 text-xs font-mono">✓ Done</span>
@@ -777,7 +777,7 @@ export function EmployeeDetail() {
                       ))}
                     </div>
 
-                    <p className="text-[9px] text-white/20 font-mono uppercase tracking-widest text-center">
+                    <p className="text-xs text-white/20 font-mono uppercase tracking-widest text-center">
                       End-to-end encrypted · Access logged
                     </p>
                   </motion.div>

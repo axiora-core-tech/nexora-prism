@@ -81,7 +81,7 @@ export function SignIn() {
       {/* back to landing */}
       <NavLink
         to="/"
-        className="fixed top-8 left-8 flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest transition-colors z-10"
+        className="fixed top-8 left-8 flex items-center gap-2 text-xs font-mono uppercase tracking-widest transition-colors z-10"
         style={{ color: 'rgba(245,240,232,0.3)' }}
       >
         <ArrowLeft size={12} /> Back
@@ -110,7 +110,7 @@ export function SignIn() {
               <CheckCircle2 size={22} style={{ color: GOLD }} />
             </div>
             <p
-              className="text-[8px] font-mono uppercase tracking-[0.28em] mb-2"
+              className="text-xs font-mono uppercase tracking-[0.28em] mb-2"
               style={{ color: GOLD }}
             >
               Welcome to Prism
@@ -157,7 +157,7 @@ export function SignIn() {
             <div className="flex items-start justify-between p-8 pb-0 relative z-10">
               <div>
                 <p
-                  className="text-[8px] font-mono uppercase tracking-[0.28em] mb-3"
+                  className="text-xs font-mono uppercase tracking-[0.28em] mb-3"
                   style={{ color: GOLD }}
                 >
                   Prism Intelligence
@@ -202,7 +202,7 @@ export function SignIn() {
                   <button
                     key={m}
                     onClick={() => setMode(m)}
-                    className="flex-1 py-2 rounded-lg text-[8px] font-mono uppercase tracking-widest transition-all"
+                    className="flex-1 py-2 rounded-lg text-xs font-mono uppercase tracking-widest transition-all"
                     style={{
                       background: mode === m ? `${GOLD}22` : 'transparent',
                       color: mode === m ? GOLD : 'rgba(245,240,232,0.25)',
@@ -223,7 +223,7 @@ export function SignIn() {
                       className="flex items-center gap-1.5"
                     >
                       <div
-                        className="w-4 h-4 rounded-full flex items-center justify-center text-[7px] font-mono font-bold transition-all"
+                        className="w-4 h-4 rounded-full flex items-center justify-center text-xs font-mono font-bold transition-all"
                         style={{
                           background: i < currentStep ? GOLD : i === currentStep ? `${GOLD}33` : 'rgba(245,240,232,0.05)',
                           border: `1px solid ${i <= currentStep ? GOLD + '60' : 'rgba(245,240,232,0.08)'}`,
@@ -233,7 +233,7 @@ export function SignIn() {
                         {i < currentStep ? '✓' : i + 1}
                       </div>
                       <span
-                        className="text-[7px] font-mono uppercase tracking-widest"
+                        className="text-xs font-mono uppercase tracking-widest"
                         style={{ color: i === currentStep ? 'rgba(245,240,232,0.5)' : 'rgba(245,240,232,0.2)' }}
                       >
                         {step.label}
@@ -262,7 +262,7 @@ export function SignIn() {
                     {mode === 'signup' && (
                       <div>
                         <p
-                          className="text-[8px] font-mono uppercase tracking-widest mb-2"
+                          className="text-xs font-mono uppercase tracking-widest mb-2"
                           style={{ color: 'rgba(245,240,232,0.3)' }}
                         >
                           Name
@@ -285,7 +285,7 @@ export function SignIn() {
                     )}
                     <div>
                       <p
-                        className="text-[8px] font-mono uppercase tracking-widest mb-2"
+                        className="text-xs font-mono uppercase tracking-widest mb-2"
                         style={{ color: 'rgba(245,240,232,0.3)' }}
                       >
                         Email
@@ -307,7 +307,7 @@ export function SignIn() {
                     </div>
                     <div>
                       <p
-                        className="text-[8px] font-mono uppercase tracking-widest mb-2"
+                        className="text-xs font-mono uppercase tracking-widest mb-2"
                         style={{ color: 'rgba(245,240,232,0.3)' }}
                       >
                         Passphrase
@@ -336,7 +336,7 @@ export function SignIn() {
                     </div>
                     <button
                       onClick={() => setMode(mode === 'login' ? 'signup' : 'org')}
-                      className="text-[8px] font-mono uppercase tracking-widest transition-colors"
+                      className="text-xs font-mono uppercase tracking-widest transition-colors"
                       style={{ color: GOLD }}
                     >
                       {mode === 'login' ? 'New account →' : 'Set up your org →'}
@@ -348,7 +348,7 @@ export function SignIn() {
                   <>
                     <div>
                       <p
-                        className="text-[8px] font-mono uppercase tracking-widest mb-2"
+                        className="text-xs font-mono uppercase tracking-widest mb-2"
                         style={{ color: 'rgba(245,240,232,0.3)' }}
                       >
                         Organisation
@@ -370,7 +370,7 @@ export function SignIn() {
                     </div>
                     <div>
                       <p
-                        className="text-[8px] font-mono uppercase tracking-widest mb-2"
+                        className="text-xs font-mono uppercase tracking-widest mb-2"
                         style={{ color: 'rgba(245,240,232,0.3)' }}
                       >
                         Team size
@@ -415,7 +415,7 @@ export function SignIn() {
                     {invites.map((inv, i) => (
                       <div key={i}>
                         <p
-                          className="text-[8px] font-mono uppercase tracking-widest mb-2"
+                          className="text-xs font-mono uppercase tracking-widest mb-2"
                           style={{ color: 'rgba(245,240,232,0.3)' }}
                         >
                           Team member {i + 1}
@@ -442,7 +442,7 @@ export function SignIn() {
                     ))}
                     <button
                       onClick={() => setInvites([...invites, ''])}
-                      className="text-[8px] font-mono uppercase tracking-widest"
+                      className="text-xs font-mono uppercase tracking-widest"
                       style={{ color: GOLD }}
                     >
                       + Add another
@@ -452,7 +452,7 @@ export function SignIn() {
 
                 {/* submit */}
                 {error && (
-                  <p className="text-[9px] font-mono text-rose-400/80 text-center uppercase tracking-widest -mb-1">
+                  <p className="text-xs font-mono text-rose-400/80 text-center uppercase tracking-widest -mb-1">
                     {error}
                   </p>
                 )}
@@ -477,7 +477,7 @@ export function SignIn() {
                 </button>
 
                 <p
-                  className="text-[7px] text-center font-mono uppercase tracking-widest"
+                  className="text-xs text-center font-mono uppercase tracking-widest"
                   style={{ color: 'rgba(245,240,232,0.14)' }}
                 >
                   End-to-end encrypted · SOC 2 Type II

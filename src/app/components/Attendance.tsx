@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { CalendarDays, Clock, MapPin, AlertTriangle } from 'lucide-react';
+import { CalendarDays, Clock, MapPin, AlertTriangle, ArrowUpRight } from 'lucide-react';
 import { employees } from '../mockData';
+import { NavLink } from 'react-router';
 
 type DayType = 'present' | 'wfh' | 'leave' | 'absent' | 'weekend';
 
@@ -23,8 +24,8 @@ function TemporalGrid({ calendar }: { calendar: any[] }) {
           <div key={t} className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-sm" style={{ background: dayConfig[t].color }} />
             <div>
-              <span className="text-[8px] uppercase tracking-widest text-white/30 font-mono">{dayConfig[t].label}</span>
-              <span className="text-[8px] text-white/15 font-light ml-1.5">
+              <span className="text-xs uppercase tracking-widest text-white/30 font-mono">{dayConfig[t].label}</span>
+              <span className="text-xs text-white/15 font-light ml-1.5">
                 {({'In Orbit':'present','Remote':'work from home','Leave':'on leave','Dark':'absent','Standby':'weekend'} as Record<string,string>)[dayConfig[t].label]}
               </span>
             </div>
@@ -34,7 +35,7 @@ function TemporalGrid({ calendar }: { calendar: any[] }) {
 
       <div className="grid grid-cols-7 gap-2">
         {['M','T','W','T','F','S','S'].map((d, i) => (
-          <div key={i} className="text-center text-[8px] uppercase tracking-widest text-white/20 font-mono pb-2">{d}</div>
+          <div key={i} className="text-center text-xs uppercase tracking-widest text-white/20 font-mono pb-2">{d}</div>
         ))}
         {calendar.map((day, i) => {
           const type = (day.type in dayConfig ? day.type : 'weekend') as DayType;
@@ -49,7 +50,7 @@ function TemporalGrid({ calendar }: { calendar: any[] }) {
                 transition={{ delay: i * 0.015, duration: 0.3, ease: [0.16,1,0.3,1] }}
                 onMouseEnter={() => type !== 'weekend' && setHoveredDay(day)}
                 onMouseLeave={() => setHoveredDay(null)}
-                className={`aspect-square rounded-lg flex items-center justify-center text-[10px] font-mono transition-all ${
+                className={`aspect-square rounded-lg flex items-center justify-center text-xs font-mono transition-all ${
                   type === 'weekend' ? 'opacity-20' : 'hover:scale-110 cursor-crosshair'
                 }`}
                 style={{ background: cfg.bg, color: cfg.color }}
@@ -61,13 +62,13 @@ function TemporalGrid({ calendar }: { calendar: any[] }) {
               {hoveredDay === day && type !== 'weekend' && (
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-none">
                   <div className="bg-[#0a0a0c] border border-white/10 rounded-xl p-3 whitespace-nowrap shadow-2xl">
-                    <p className="text-[8px] uppercase tracking-widest font-mono mb-1.5" style={{ color: cfg.color }}>{cfg.label}</p>
+                    <p className="text-xs uppercase tracking-widest font-mono mb-1.5" style={{ color: cfg.color }}>{cfg.label}</p>
                     {day.checkIn && (
-                      <div className="flex items-center gap-2 text-[9px] text-white/50">
+                      <div className="flex items-center gap-2 text-xs text-white/50">
                         <Clock size={8} /><span>{day.checkIn} — {day.checkOut}</span>
                       </div>
                     )}
-                    {day.leaveType && <p className="text-[8px] text-white/30 mt-1 capitalize font-mono">{day.leaveType} protocol</p>}
+                    {day.leaveType && <p className="text-xs text-white/30 mt-1 capitalize font-mono">{day.leaveType} protocol</p>}
                   </div>
                 </div>
               )}
@@ -98,7 +99,7 @@ export function Attendance() {
         className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
       >
         <div>
-          <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-2">
+          <p className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
             <CalendarDays size={14} className="text-cyan-400" /> Workforce Temporal Dynamics
           </p>
           <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
@@ -107,11 +108,11 @@ export function Attendance() {
         </div>
         <div className="flex gap-16 text-right">
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2">Org Presence Rate</p>
+            <p className="text-white/40 uppercase tracking-[0.2em] text-xs mb-2">Org Presence Rate</p>
             <p className="text-4xl font-light text-emerald-400">94.2%</p>
           </div>
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2">Remote Ratio</p>
+            <p className="text-white/40 uppercase tracking-[0.2em] text-xs mb-2">Remote Ratio</p>
             <p className="text-4xl font-light text-cyan-400">31%</p>
           </div>
         </div>
@@ -144,13 +145,13 @@ export function Attendance() {
                 {flag && <AlertTriangle size={10} className="text-rose-400" />}
               </div>
               <p className="text-white/80 text-sm font-light truncate relative z-10">{e.name.split(' ')[0]}</p>
-              <p className="text-[8px] uppercase tracking-widest text-white/20 mt-0.5 truncate font-mono relative z-10">{e.department}</p>
+              <p className="text-xs uppercase tracking-widest text-white/20 mt-0.5 truncate font-mono relative z-10">{e.department}</p>
               <div className="mt-3 flex items-end justify-between relative z-10">
                 <span className={`text-xl font-light ${rate >= 90 ? 'text-emerald-400' : rate >= 80 ? 'text-amber-400' : 'text-rose-400'}`}>
                   {rate}%
                 </span>
                 {a.absent > 0 && (
-                  <span className="text-[8px] text-rose-400 font-mono">{a.absent} dark</span>
+                  <span className="text-xs text-rose-400 font-mono">{a.absent} dark</span>
                 )}
               </div>
               <div className="mt-2 h-px bg-white/5 relative z-10">
@@ -179,12 +180,22 @@ export function Attendance() {
             <div className="absolute top-0 right-0 w-80 h-80 bg-cyan-500/5 blur-[100px] rounded-full pointer-events-none group-hover:bg-cyan-500/8 transition-all duration-1000" />
             <div className="flex items-center justify-between mb-8 relative z-10">
               <div>
-                <h2 className="text-white text-xl font-light leading-none">{emp.name.split(' ')[0]}</h2>
-                <h2 className="text-white/30 font-serif italic text-sm leading-none mt-0.5">{emp.name.split(' ')[1]}</h2>
-                <p className="text-[9px] uppercase tracking-widest text-white/20 mt-2 font-mono">{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })} — Temporal Log</p>
+                <div className="flex items-center gap-3">
+                  <div>
+                    <h2 className="text-white text-xl font-light leading-none">{emp.name.split(' ')[0]}</h2>
+                    <h2 className="text-white/30 font-serif italic text-sm leading-none mt-0.5">{emp.name.split(' ')[1]}</h2>
+                  </div>
+                  <NavLink
+                    to={`/app/employee/${emp.id}`}
+                    className="flex-shrink-0 p-1.5 rounded-full bg-white/5 border border-white/10 text-white/30 hover:text-cyan-400 hover:border-cyan-400/30 transition-all"
+                  >
+                    <ArrowUpRight size={12} />
+                  </NavLink>
+                </div>
+                <p className="text-xs uppercase tracking-widest text-white/20 mt-2 font-mono">{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })} — Temporal Log</p>
               </div>
               <div className="text-right">
-                <p className="text-[8px] uppercase tracking-widest text-white/30 mb-1">Presence Rate</p>
+                <p className="text-xs uppercase tracking-widest text-white/30 mb-1">Presence Rate</p>
                 <p className={`text-3xl font-light ${presenceRate >= 90 ? 'text-emerald-400' : presenceRate >= 80 ? 'text-amber-400' : 'text-rose-400'}`}>
                   {presenceRate}%
                 </p>
@@ -240,12 +251,12 @@ export function Attendance() {
                     <div className="h-px bg-white/5">
                       <div className="h-full" style={{ width: `${(l.used / l.total) * 100}%`, background: l.color }} />
                     </div>
-                    <p className="text-[8px] text-white/20 mt-1 font-mono">{l.total - l.used} units remaining</p>
+                    <p className="text-xs text-white/20 mt-1 font-mono">{l.total - l.used} units remaining</p>
                   </div>
                 ))}
                 {lb.sabbaticalEligible && (
                   <div className="pt-3 border-t border-white/5 flex items-center gap-2">
-                    <span className="text-[8px] uppercase tracking-widest text-purple-400 font-mono flex items-center gap-1.5"><span className="w-1 h-1 rounded-full bg-purple-400 inline-block"/>Sabbatical Protocol Available</span>
+                    <span className="text-xs uppercase tracking-widest text-purple-400 font-mono flex items-center gap-1.5"><span className="w-1 h-1 rounded-full bg-purple-400 inline-block"/>Sabbatical Protocol Available</span>
                   </div>
                 )}
               </div>

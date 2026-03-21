@@ -83,14 +83,14 @@ function TaskCard({ task, onMove }: { task: Task; onMove: (id: string, dir: 'lef
             {task.tags.map(tag => (
               <span
                 key={tag}
-                className="px-2 py-0.5 rounded-full text-[8px] uppercase tracking-widest font-mono bg-white/5 text-white/40 border border-white/5"
+                className="px-2 py-0.5 rounded-full text-xs uppercase tracking-widest font-mono bg-white/5 text-white/40 border border-white/5"
               >
                 {tag}
               </span>
             ))}
           </div>
           <span
-            className="text-[8px] font-mono uppercase tracking-widest flex-shrink-0"
+            className="text-xs font-mono uppercase tracking-widest flex-shrink-0"
             style={{ color: pCfg.color }}
           >
             {pCfg.label}
@@ -110,7 +110,7 @@ function TaskCard({ task, onMove }: { task: Task; onMove: (id: string, dir: 'lef
         {/* Progress bar — only when in flight */}
         {!done && task.status !== 'backlog' && task.estimate > 0 && (
           <div className="mb-5">
-            <div className="flex justify-between text-[9px] font-mono text-white/30 mb-1.5">
+            <div className="flex justify-between text-xs font-mono text-white/30 mb-1.5">
               <span>Effort</span>
               <span>{task.effort}h / {task.estimate}h</span>
             </div>
@@ -136,7 +136,7 @@ function TaskCard({ task, onMove }: { task: Task; onMove: (id: string, dir: 'lef
                 className="w-5 h-5 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 opacity-70"
               />
             )}
-            <span className="text-[10px] text-white/40 font-light">{task.owner}</span>
+            <span className="text-xs text-white/40 font-light">{task.owner}</span>
           </div>
           <div className="flex items-center gap-1.5">
             {!done && task.status !== 'backlog' && (
@@ -157,7 +157,7 @@ function TaskCard({ task, onMove }: { task: Task; onMove: (id: string, dir: 'lef
                 <ChevronRight size={9} />
               </button>
             )}
-            <div className="flex items-center gap-1.5 text-[9px] font-mono text-white/30">
+            <div className="flex items-center gap-1.5 text-xs font-mono text-white/30">
               <Calendar size={8} />
               <span>{task.due}</span>
             </div>
@@ -229,7 +229,7 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
         <div className="space-y-4 relative z-10">
           {/* Title */}
           <div>
-            <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Vector Label</label>
+            <label className="text-xs uppercase tracking-widest text-white/30 font-mono block mb-2">Vector Label</label>
             <input
               autoFocus
               value={form.title}
@@ -242,7 +242,7 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
 
           {/* Description */}
           <div>
-            <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Signal Description</label>
+            <label className="text-xs uppercase tracking-widest text-white/30 font-mono block mb-2">Signal Description</label>
             <textarea
               value={form.desc}
               onChange={e => setForm(f => ({ ...f, desc: e.target.value }))}
@@ -255,7 +255,7 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
           <div className="grid grid-cols-2 gap-3">
             {/* Priority */}
             <div>
-              <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Priority Class</label>
+              <label className="text-xs uppercase tracking-widest text-white/30 font-mono block mb-2">Priority Class</label>
               <select
                 value={form.priority}
                 onChange={e => setForm(f => ({ ...f, priority: e.target.value as Priority }))}
@@ -268,7 +268,7 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
             </div>
             {/* Assign */}
             <div>
-              <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Assign Node</label>
+              <label className="text-xs uppercase tracking-widest text-white/30 font-mono block mb-2">Assign Node</label>
               <select
                 value={form.ownerId}
                 onChange={e => setForm(f => ({ ...f, ownerId: e.target.value }))}
@@ -284,7 +284,7 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
           <div className="grid grid-cols-2 gap-3">
             {/* Due */}
             <div>
-              <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Terminus</label>
+              <label className="text-xs uppercase tracking-widest text-white/30 font-mono block mb-2">Terminus</label>
               <input
                 value={form.due}
                 onChange={e => setForm(f => ({ ...f, due: e.target.value }))}
@@ -294,7 +294,7 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
             </div>
             {/* Tags */}
             <div>
-              <label className="text-[9px] uppercase tracking-widest text-white/30 font-mono block mb-2">Tags</label>
+              <label className="text-xs uppercase tracking-widest text-white/30 font-mono block mb-2">Tags</label>
               <input
                 value={form.tags}
                 onChange={e => setForm(f => ({ ...f, tags: e.target.value }))}
@@ -371,7 +371,7 @@ export function Tasks() {
         className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
       >
         <div>
-          <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-2">
+          <p className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
             <Layers size={14} className="text-emerald-400" /> Operational Matrix
           </p>
           <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
@@ -388,7 +388,7 @@ export function Tasks() {
               { label: 'Transmitted', val: stats.done,   color: '#10b981' },
             ].map(s => (
               <div key={s.label}>
-                <p className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2">{s.label}</p>
+                <p className="text-white/40 uppercase tracking-[0.2em] text-xs mb-2">{s.label}</p>
                 <p className="text-4xl font-light" style={{ color: s.color }}>{s.val}</p>
               </div>
             ))}
@@ -430,12 +430,12 @@ export function Tasks() {
 
         {/* Filters */}
         <div className="flex flex-wrap gap-2 items-center">
-          <span className="text-[9px] uppercase tracking-widest text-white/30 font-mono mr-1">Filter ·</span>
+          <span className="text-xs uppercase tracking-widest text-white/30 font-mono mr-1">Filter ·</span>
           {employees.map(e => (
             <button
               key={e.id}
               onClick={() => setFilterOwner(filterOwner === e.id ? null : e.id)}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] transition-all border ${
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs transition-all border ${
                 filterOwner === e.id
                   ? 'bg-white/10 border-white/20 text-white'
                   : 'border-white/5 text-white/40 hover:border-white/10 hover:text-white/70'
@@ -454,7 +454,7 @@ export function Tasks() {
             <button
               key={p}
               onClick={() => setFilterPriority(filterPriority === p ? null : p)}
-              className={`px-3 py-1.5 rounded-full text-[10px] uppercase tracking-widest transition-all border ${
+              className={`px-3 py-1.5 rounded-full text-xs uppercase tracking-widest transition-all border ${
                 filterPriority === p ? 'text-white' : 'border-white/5 text-white/40 hover:border-white/10'
               }`}
               style={filterPriority === p
@@ -468,7 +468,7 @@ export function Tasks() {
           {(filterOwner || filterPriority) && (
             <button
               onClick={() => { setFilterOwner(null); setFilterPriority(null); }}
-              className="px-3 py-1.5 rounded-full text-[10px] border border-white/5 text-white/30 hover:text-white hover:border-white/20 transition-all flex items-center gap-1"
+              className="px-3 py-1.5 rounded-full text-xs border border-white/5 text-white/30 hover:text-white hover:border-white/20 transition-all flex items-center gap-1"
               data-cursor="Clear"
             >
               <X size={9} /> Clear
@@ -498,7 +498,7 @@ export function Tasks() {
                       {col.label}
                     </h3>
                   </div>
-                  <span className="text-[10px] font-mono text-white/30 bg-white/5 px-2 py-0.5 rounded-full border border-white/5">
+                  <span className="text-xs font-mono text-white/30 bg-white/5 px-2 py-0.5 rounded-full border border-white/5">
                     {colTasks.length}
                   </span>
                 </div>
@@ -513,7 +513,7 @@ export function Tasks() {
                 {/* Empty state */}
                 {colTasks.length === 0 && (
                   <div className="border border-dashed border-white/[0.07] rounded-[2rem] p-8 text-center">
-                    <p className="text-[9px] uppercase tracking-widest text-white/20 font-mono">No signals</p>
+                    <p className="text-xs uppercase tracking-widest text-white/20 font-mono">No signals</p>
                   </div>
                 )}
               </motion.div>
@@ -539,7 +539,7 @@ export function Tasks() {
                 {['Task', 'Owner', 'Priority', 'Status', 'Due', 'Progress'].map(h => (
                   <th
                     key={h}
-                    className="text-left text-[9px] uppercase tracking-widest text-white/30 font-mono py-4 px-6"
+                    className="text-left text-xs uppercase tracking-widest text-white/30 font-mono py-4 px-6"
                   >
                     {h}
                   </th>
@@ -566,7 +566,7 @@ export function Tasks() {
                         <p className={`text-sm font-light ${task.status === 'resolved' ? 'line-through text-white/25' : 'text-white/80'}`}>
                           {task.title}
                         </p>
-                        <p className="text-[9px] text-white/30 mt-0.5 font-mono">{task.tags.join(' · ')}</p>
+                        <p className="text-xs text-white/30 mt-0.5 font-mono">{task.tags.join(' · ')}</p>
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-2">
@@ -575,12 +575,12 @@ export function Tasks() {
                         </div>
                       </td>
                       <td className="py-4 px-6">
-                        <span className="text-[9px] font-mono uppercase tracking-widest" style={{ color: pCfg.color }}>
+                        <span className="text-xs font-mono uppercase tracking-widest" style={{ color: pCfg.color }}>
                           {pCfg.label}
                         </span>
                       </td>
                       <td className="py-4 px-6">
-                        <span className="flex items-center gap-2 text-[9px] uppercase tracking-widest font-mono" style={{ color: col.accent }}>
+                        <span className="flex items-center gap-2 text-xs uppercase tracking-widest font-mono" style={{ color: col.accent }}>
                           <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: col.accent }} />
                           {col.label}
                         </span>
@@ -591,7 +591,7 @@ export function Tasks() {
                           <div className="w-20 h-[2px] bg-white/5 rounded-full overflow-hidden">
                             <div className="h-full rounded-full" style={{ width: `${pct}%`, background: col.accent }} />
                           </div>
-                          <span className="text-[9px] font-mono text-white/30">{pct}%</span>
+                          <span className="text-xs font-mono text-white/30">{pct}%</span>
                         </div>
                       </td>
                     </motion.tr>

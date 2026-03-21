@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router';
+import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { Activity, TrendingUp, AlertTriangle, BrainCircuit, DollarSign, Target, Users, Zap } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, Tooltip, XAxis, YAxis, CartesianGrid, ComposedChart, Line, Bar, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from 'recharts';
@@ -38,6 +40,7 @@ const attritionRiskBars = [12, 15, 18, 14, 25, 32, 28, 22];
 
 export function Analytics() {
   const [activeView, setActiveView] = useState<'overview' | 'roi' | 'health'>('overview');
+  const navigate = useNavigate();
 
   return (
     <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 py-24 md:py-32">
@@ -49,7 +52,7 @@ export function Analytics() {
         className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
       >
         <div>
-          <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-2">
+          <p className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
             <Activity size={14} className="text-cyan-400" /> Economic & System Telemetry
           </p>
           <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
@@ -58,11 +61,11 @@ export function Analytics() {
         </div>
         <div className="text-right flex gap-12">
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2">System Health</p>
+            <p className="text-white/40 uppercase tracking-[0.2em] text-xs mb-2">System Health</p>
             <p className="text-4xl font-light text-white">98.9<span className="text-xl text-white/30">%</span></p>
           </div>
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2">Global ROI</p>
+            <p className="text-white/40 uppercase tracking-[0.2em] text-xs mb-2">Global ROI</p>
             <p className="text-4xl font-light text-white">246<span className="text-xl text-white/30">%</span></p>
           </div>
         </div>
@@ -79,7 +82,7 @@ export function Analytics() {
               activeView === v ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white'
             }`}
           >
-            {v === 'overview' ? 'System Overview' : v === 'roi' ? 'Capital Trajectory' : 'Bio-Resonance'}
+            {v === 'overview' ? 'Overview' : v === 'roi' ? 'ROI' : 'Wellbeing'}
           </button>
         ))}
       </div>
@@ -146,7 +149,7 @@ export function Analytics() {
                     </div>
                   ))}
                 </div>
-                <div className="flex justify-between text-[8px] uppercase tracking-widest text-white/20 mt-3 font-mono">
+                <div className="flex justify-between text-xs uppercase tracking-widest text-white/20 mt-3 font-mono">
                   <span>T-8wk</span><span>Now</span>
                 </div>
               </motion.div>
@@ -187,19 +190,19 @@ export function Analytics() {
                 <thead>
                   <tr className="border-b border-white/5">
                     {['Employee', 'Score', 'ROI', 'Motivation', 'Welfare', 'Attrition Risk', 'Next Promo'].map(h => (
-                      <th key={h} className="text-left text-[9px] uppercase tracking-widest text-white/30 font-mono pb-4 pr-8">{h}</th>
+                      <th key={h} className="text-left text-sm uppercase tracking-widest text-white/30 font-mono pb-4 pr-8">{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {employees.map((emp, i) => (
-                    <tr key={emp.id} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors cursor-crosshair" data-cursor="Deep Dive">
+                    <tr key={emp.id} onClick={() => navigate(`/app/employee/${emp.id}`)} className="border-b border-white/[0.03] hover:bg-white/[0.03] transition-colors cursor-pointer" data-cursor="Deep Dive">
                       <td className="py-4 pr-8">
                         <div className="flex items-center gap-3">
                           <img src={emp.avatar} alt={emp.name} className="w-7 h-7 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                           <div>
                             <p className="text-white text-sm font-light">{emp.name}</p>
-                            <p className="text-white/30 text-[9px] uppercase tracking-widest">{emp.department}</p>
+                            <p className="text-white/30 text-xs uppercase tracking-widest">{emp.department}</p>
                           </div>
                         </div>
                       </td>
@@ -230,7 +233,7 @@ export function Analytics() {
                         </div>
                       </td>
                       <td className="py-4 pr-8">
-                        <span className={`px-2 py-0.5 rounded-full text-[9px] uppercase tracking-widest border ${
+                        <span className={`px-2 py-0.5 rounded-full text-xs uppercase tracking-widest border ${
                           emp.attritionRisk === 'High' ? 'border-rose-500/30 text-rose-400 bg-rose-500/10' :
                           emp.attritionRisk === 'Medium' ? 'border-amber-500/30 text-amber-400 bg-amber-500/10' :
                           'border-emerald-500/30 text-emerald-400 bg-emerald-500/10'
@@ -337,7 +340,7 @@ export function Analytics() {
             <h3 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-4 border-b border-white/10 pb-4">Wellbeing & Burnout Matrix</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {employees.map(emp => (
-                <div key={emp.id} className="relative group">
+                <NavLink key={emp.id} to={`/app/employee/${emp.id}`} className="relative group block">
                   <div
                     className="rounded-2xl p-5 border border-white/5 transition-all hover:border-white/20"
                     style={{
@@ -353,23 +356,23 @@ export function Analytics() {
                       <p className="text-white/70 text-xs font-light">{emp.name.split(' ')[0]}</p>
                     </div>
                     <div className="space-y-2">
-                      <div className="flex justify-between text-[9px]">
+                      <div className="flex justify-between text-xs">
                         <span className="text-white/30">Stress</span>
                         <span className="font-mono" style={{ color: emp.bioRhythm.stressIndex > 60 ? '#f43f5e' : '#10b981' }}>{emp.bioRhythm.stressIndex}</span>
                       </div>
-                      <div className="flex justify-between text-[9px]">
+                      <div className="flex justify-between text-xs">
                         <span className="text-white/30">Burnout risk</span>
                         <span className="font-mono" style={{ color: emp.bioRhythm.burnoutProbability > 60 ? '#f43f5e' : emp.bioRhythm.burnoutProbability > 35 ? '#f59e0b' : '#10b981' }}>
                           {emp.bioRhythm.burnoutProbability}%
                         </span>
                       </div>
-                      <div className="flex justify-between text-[9px]">
+                      <div className="flex justify-between text-xs">
                         <span className="text-white/30">Sleep</span>
                         <span className="font-mono text-white/60">{emp.bioRhythm.sleepQuality}%</span>
                       </div>
                     </div>
                   </div>
-                </div>
+                </NavLink>
               ))}
             </div>
           </div>

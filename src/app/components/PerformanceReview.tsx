@@ -78,7 +78,7 @@ export function PerformanceReview() {
               <CheckCircle2 size={32} className="text-emerald-400" />
             </div>
           </div>
-          <p className="text-[10px] uppercase tracking-[0.3em] text-white/30 mb-6 font-mono">Review Submitted</p>
+          <p className="text-xs uppercase tracking-[0.3em] text-white/30 mb-6 font-mono">Review Submitted</p>
           <h2 className="text-5xl md:text-7xl font-light tracking-tighter text-white leading-[0.9] mb-4">
             Review <span className="text-white/30 font-serif italic">Recorded</span>
           </h2>
@@ -116,7 +116,7 @@ export function PerformanceReview() {
         className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
       >
         <div>
-          <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-2">
+          <p className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
             <Crosshair size={14} className="text-cyan-400" /> Performance Transmission Protocol
           </p>
           <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
@@ -133,7 +133,7 @@ export function PerformanceReview() {
               <React.Fragment key={p}>
                 <div className={`flex flex-col items-center gap-1 ${active ? 'text-white' : done ? 'text-white/40' : 'text-white/15'}`}>
                   <div className={`w-2 h-2 rounded-full transition-all ${active ? 'bg-cyan-400 shadow-[0_0_10px_#22d3ee]' : done ? 'bg-white/40' : 'bg-white/10'}`} />
-                  <span className="text-[8px] uppercase tracking-widest font-mono whitespace-nowrap">{labels[p]}</span>
+                  <span className="text-xs uppercase tracking-widest font-mono whitespace-nowrap">{labels[p]}</span>
                 </div>
                 {i < 3 && <div className={`w-8 h-px ${done ? 'bg-white/30' : 'bg-white/5'}`} />}
               </React.Fragment>
@@ -155,7 +155,7 @@ export function PerformanceReview() {
           {/* PHASE 1: ORBIT — select target node */}
           {phase === 'orbit' && (
             <div>
-              <p className="text-[10px] uppercase tracking-[0.3em] text-white/20 mb-12 font-mono">01 &nbsp;·&nbsp; Select Target Node</p>
+              <p className="text-xs uppercase tracking-[0.3em] text-white/20 mb-12 font-mono">01 &nbsp;·&nbsp; Select Target Node</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                 {employees.map((e, i) => (
                   <motion.button
@@ -190,11 +190,11 @@ export function PerformanceReview() {
                     <div className="flex-1 relative z-10">
                       <h3 className="text-white text-xl font-light leading-none">{e.name.split(' ')[0]}</h3>
                       <h3 className="text-white/30 font-serif italic text-sm leading-none mt-0.5">{e.name.split(' ')[1]}</h3>
-                      <p className="text-[9px] uppercase tracking-widest text-white/30 mt-2 font-mono">{e.role} // {e.department}</p>
+                      <p className="text-xs uppercase tracking-widest text-white/30 mt-2 font-mono">{e.role} // {e.department}</p>
                     </div>
 
                     <div className="text-right flex-shrink-0 relative z-10">
-                      <p className="text-[8px] uppercase tracking-widest text-white/20 mb-1">Efficiency</p>
+                      <p className="text-xs uppercase tracking-widest text-white/20 mb-1">Efficiency</p>
                       <p className={`text-3xl font-light ${e.performanceScore >= 90 ? 'text-emerald-400' : e.performanceScore >= 80 ? 'text-cyan-400' : 'text-amber-400'}`}>
                         {e.performanceScore}
                       </p>
@@ -205,7 +205,7 @@ export function PerformanceReview() {
 
               {/* Relation selector */}
               <div className="mb-12">
-                <p className="text-[9px] uppercase tracking-widest text-white/20 mb-5 font-mono">Transmitter Context</p>
+                <p className="text-xs uppercase tracking-widest text-white/20 mb-5 font-mono">Review Context</p>
                 <div className="flex flex-wrap gap-3">
                   {[
                     { val: 'manager',       label: 'Direct Manager' },
@@ -216,7 +216,7 @@ export function PerformanceReview() {
                     <button
                       key={r.val}
                       onClick={() => setRelation(r.val)}
-                      className={`px-5 py-2.5 rounded-full border text-[9px] uppercase tracking-widest transition-all ${
+                      className={`px-5 py-2.5 rounded-full border text-xs uppercase tracking-widest transition-all ${
                         relation === r.val
                           ? 'bg-white/10 border-white/25 text-white'
                           : 'border-white/5 text-white/30 hover:border-white/10'
@@ -243,7 +243,7 @@ export function PerformanceReview() {
           {/* PHASE 2: CALIBRATE — score sliders as abstract arcs */}
           {phase === 'calibrate' && emp && (
             <div>
-              <p className="text-[10px] uppercase tracking-[0.3em] text-white/20 mb-4 font-mono">02 &nbsp;·&nbsp; Calibrate Signal Vectors</p>
+              <p className="text-xs uppercase tracking-[0.3em] text-white/20 mb-4 font-mono">02 &nbsp;·&nbsp; Calibrate Signal Vectors</p>
               <div className="flex items-center gap-4 mb-16">
                 <img src={emp.avatar} alt={emp.name} className="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"/>
                 <div>
@@ -251,7 +251,7 @@ export function PerformanceReview() {
                   <span className="text-white/30 font-serif italic">{emp.name.split(' ')[1]}</span>
                 </div>
                 <div className="ml-auto flex items-center gap-3">
-                  <p className="text-[8px] uppercase tracking-widest text-white/20 font-mono">Composite</p>
+                  <p className="text-xs uppercase tracking-widest text-white/20 font-mono">Composite</p>
                   <p className={`text-4xl font-light ${composite >= 85 ? 'text-emerald-400' : composite >= 70 ? 'text-amber-400' : 'text-rose-400'}`}>
                     {composite}
                   </p>
@@ -283,10 +283,10 @@ export function PerformanceReview() {
                       <div>
                         <div className="flex items-center gap-2 mb-1">
                           <cat.icon size={12} style={{ color: cat.color }}/>
-                          <span className="text-[9px] uppercase tracking-widest font-mono" style={{ color: cat.color }}>{cat.label}</span>
+                          <span className="text-xs uppercase tracking-widest font-mono" style={{ color: cat.color }}>{cat.label}</span>
                         </div>
                         <p className="text-white/30 text-xs font-light">{cat.desc}</p>
-                        <p className="text-[8px] uppercase tracking-widest text-white/20 mt-2 font-mono">
+                        <p className="text-xs uppercase tracking-widest text-white/20 mt-2 font-mono">
                           {scores[cat.key] >= 90 ? 'Exceptional' : scores[cat.key] >= 75 ? 'Strong' : scores[cat.key] >= 60 ? 'Nominal' : scores[cat.key] >= 40 ? 'Degraded' : 'Critical'}
                         </p>
                       </div>
@@ -299,7 +299,7 @@ export function PerformanceReview() {
                       className="w-full relative z-10"
                       style={{ accentColor: cat.color }}
                     />
-                    <div className="flex justify-between text-[7px] font-mono text-white/15 mt-1 relative z-10">
+                    <div className="flex justify-between text-xs font-mono text-white/15 mt-1 relative z-10">
                       <span>Critical — 1</span><span>Exceptional — 100</span>
                     </div>
                   </motion.div>
@@ -324,11 +324,11 @@ export function PerformanceReview() {
           {/* PHASE 3: TRANSMIT — qualitative narrative */}
           {phase === 'transmit' && emp && (
             <div>
-              <p className="text-[10px] uppercase tracking-[0.3em] text-white/20 mb-4 font-mono">03 &nbsp;·&nbsp; Encode Qualitative Signals</p>
+              <p className="text-xs uppercase tracking-[0.3em] text-white/20 mb-4 font-mono">03 &nbsp;·&nbsp; Encode Qualitative Signals</p>
               <div className="flex items-center gap-4 mb-16">
                 <img src={emp.avatar} alt={emp.name} className="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"/>
                 <span className="text-white/60 font-light">{emp.name}</span>
-                <span className="text-white/20 text-[9px] font-mono ml-auto uppercase tracking-widest">Composite // {composite}</span>
+                <span className="text-white/20 text-xs font-mono ml-auto uppercase tracking-widest">Composite // {composite}</span>
               </div>
 
               <div className="space-y-8 mb-12">
@@ -343,7 +343,7 @@ export function PerformanceReview() {
                       style={{ background: color + '30' }} />
                     <div className="flex items-center gap-3 mb-5 relative z-10">
                       <Icon size={12} style={{ color }}/>
-                      <span className="text-[9px] uppercase tracking-widest font-mono" style={{ color }}>{label}</span>
+                      <span className="text-xs uppercase tracking-widest font-mono" style={{ color }}>{label}</span>
                     </div>
                     <p className="text-white/30 text-xs font-light mb-4 relative z-10 font-serif italic">"{sub}"</p>
                     <textarea
@@ -375,7 +375,7 @@ export function PerformanceReview() {
           {/* PHASE 4: CONFIRM */}
           {phase === 'confirm' && emp && (
             <div>
-              <p className="text-[10px] uppercase tracking-[0.3em] text-white/20 mb-4 font-mono">04 &nbsp;·&nbsp; Confirm Transmission</p>
+              <p className="text-xs uppercase tracking-[0.3em] text-white/20 mb-4 font-mono">04 &nbsp;·&nbsp; Confirm Transmission</p>
               <div className="relative bg-white/5 border border-white/5 rounded-[2rem] p-8 md:p-12 overflow-hidden mb-8 group">
                 <div className="absolute top-0 right-0 w-80 h-80 bg-cyan-500/5 blur-[100px] rounded-full pointer-events-none group-hover:bg-cyan-500/10 transition-all duration-1000" />
 
@@ -385,10 +385,10 @@ export function PerformanceReview() {
                   <div>
                     <h2 className="text-white text-2xl font-light leading-none">{emp.name.split(' ')[0]}</h2>
                     <h2 className="text-white/30 font-serif italic text-xl leading-none mt-0.5">{emp.name.split(' ')[1]}</h2>
-                    <p className="text-[8px] uppercase tracking-widest text-white/20 mt-2 font-mono">{relation} signal // {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                    <p className="text-xs uppercase tracking-widest text-white/20 mt-2 font-mono">{relation} signal // {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
                   </div>
                   <div className="ml-auto text-right relative z-10">
-                    <p className="text-[8px] uppercase tracking-widest text-white/20 mb-2 font-mono">Composite Signal</p>
+                    <p className="text-xs uppercase tracking-widest text-white/20 mb-2 font-mono">Composite Signal</p>
                     <p className={`text-6xl font-light ${composite >= 85 ? 'text-emerald-400' : composite >= 70 ? 'text-amber-400' : 'text-rose-400'}`}>
                       {composite}
                     </p>
@@ -405,7 +405,7 @@ export function PerformanceReview() {
                           <span className="text-sm font-light text-white">{scores[cat.key]}</span>
                         </div>
                       </div>
-                      <span className="text-[7px] uppercase tracking-widest text-white/30 font-mono text-center">{cat.label}</span>
+                      <span className="text-xs uppercase tracking-widest text-white/30 font-mono text-center">{cat.label}</span>
                     </div>
                   ))}
                 </div>
@@ -417,7 +417,7 @@ export function PerformanceReview() {
                       <div>
                         <div className="flex items-center gap-2 mb-3">
                           <Star size={9} className="text-emerald-400"/>
-                          <span className="text-[8px] uppercase tracking-widest text-emerald-400 font-mono">Strength Vectors</span>
+                          <span className="text-xs uppercase tracking-widest text-emerald-400 font-mono">Strength Vectors</span>
                         </div>
                         <p className="text-white/50 text-sm font-light font-serif italic leading-relaxed">"{strengths}"</p>
                       </div>
@@ -426,7 +426,7 @@ export function PerformanceReview() {
                       <div>
                         <div className="flex items-center gap-2 mb-3">
                           <Zap size={9} className="text-amber-400"/>
-                          <span className="text-[8px] uppercase tracking-widest text-amber-400 font-mono">Growth Nodes</span>
+                          <span className="text-xs uppercase tracking-widest text-amber-400 font-mono">Growth Nodes</span>
                         </div>
                         <p className="text-white/50 text-sm font-light font-serif italic leading-relaxed">"{improvements}"</p>
                       </div>
@@ -447,7 +447,7 @@ export function PerformanceReview() {
                   data-cursor="Transmit"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  <span className="relative z-10 text-white/70 group-hover:text-white transition-colors">Transmit Signal</span>
+                  <span className="relative z-10 text-white/70 group-hover:text-white transition-colors">Submit Review</span>
                   <ArrowUpRight size={16} className="relative z-10 text-white/30 group-hover:text-cyan-400 transition-colors"/>
                 </button>
               </div>

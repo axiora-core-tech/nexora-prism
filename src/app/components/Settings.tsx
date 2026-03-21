@@ -136,7 +136,7 @@ export function Settings() {
         className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
       >
         <div>
-          <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-2">
+          <p className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
             <SettingsIcon size={14} className="text-white/40" /> System Configuration
           </p>
           <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
@@ -190,7 +190,7 @@ export function Settings() {
           {/* Account info + logout — always visible at bottom of sidebar */}
           <div className="mt-8 pt-6 border-t border-white/[0.06]">
             {user && (
-              <p className="text-[10px] font-mono text-white/25 uppercase tracking-widest px-4 mb-3 truncate">
+              <p className="text-xs font-mono text-white/25 uppercase tracking-widest px-4 mb-3 truncate">
                 {user.email}
               </p>
             )}
@@ -269,7 +269,7 @@ export function Settings() {
                           onChange={e => setNotifs(n => ({ ...n, [key]: parseInt(e.target.value) }))}
                           className="w-full accent-amber-400"
                         />
-                        <div className="flex justify-between text-[9px] font-mono text-white/20 mt-1">
+                        <div className="flex justify-between text-xs font-mono text-white/20 mt-1">
                           <span>{min}%</span><span>{max}%</span>
                         </div>
                       </div>

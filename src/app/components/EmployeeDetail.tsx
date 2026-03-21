@@ -20,24 +20,27 @@ export function EmployeeDetail() {
   useEffect(() => {
     const SECTION_IDS = ['telemetry', 'kpis', 'capital', 'neural', 'temporal', 'nodes', 'biorhythm', 'resonance'];
 
-    // Cache element references once — avoids repeated getElementById on every scroll
+    // The scroll container is <main> (overflow-y-auto in Layout), not window
+    const scrollContainer = document.querySelector('main') as HTMLElement | null;
+    if (!scrollContainer) return;
+
+    // Cache element references once
     const sectionEls = SECTION_IDS.map(id => document.getElementById(id));
 
     let rafPending = false;
     const handleScroll = () => {
-      // rAF throttle: only run one detection pass per animation frame
       if (rafPending) return;
       rafPending = true;
       requestAnimationFrame(() => {
         rafPending = false;
-        const scrollPosition = window.scrollY + window.innerHeight / 2;
+        const scrollTop      = scrollContainer.scrollTop;
+        const containerMid   = scrollTop + scrollContainer.clientHeight / 2;
         for (let i = 0; i < sectionEls.length; i++) {
           const el = sectionEls[i];
           if (el) {
-            // offsetTop is static — no forced reflow, unlike getBoundingClientRect()
             const offsetTop    = el.offsetTop;
             const offsetBottom = offsetTop + el.offsetHeight;
-            if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
+            if (containerMid >= offsetTop && containerMid < offsetBottom) {
               setActiveSection(SECTION_IDS[i]);
               break;
             }
@@ -46,9 +49,8 @@ export function EmployeeDetail() {
       });
     };
 
-    // passive: true tells the browser we won't call preventDefault() → no scroll jank
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+    return () => scrollContainer.removeEventListener('scroll', handleScroll);
   }, []);
 
   if (!employee) return <div className="p-8 text-center p-text-mid h-screen flex items-center justify-center">Node Not Found</div>;
@@ -66,8 +68,9 @@ export function EmployeeDetail() {
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
-    if (el) {
-      window.scrollTo({ top: el.offsetTop - 50, behavior: 'smooth' });
+    const scrollContainer = document.querySelector('main') as HTMLElement | null;
+    if (el && scrollContainer) {
+      scrollContainer.scrollTo({ top: el.offsetTop - 50, behavior: 'smooth' });
     }
   };
 
@@ -131,10 +134,10 @@ export function EmployeeDetail() {
             className="group relative flex items-center justify-end"
             data-cursor={section.label}
           >
-            <span className={`absolute right-12 text-xs uppercase tracking-widest whitespace-nowrap transition-all duration-300 ${activeSection === section.id ? 'opacity-100 text-white translate-x-0' : 'opacity-0 p-text-lo translate-x-4 group-hover:opacity-100 group-hover:translate-x-0'}`}>
+            <span className={`absolute right-12 text-xs uppercase tracking-widest whitespace-nowrap transition-all duration-300 opacity-0 p-text-lo translate-x-4 group-hover:opacity-100 group-hover:translate-x-0`}>
               {section.label}
             </span>
-            <div className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-500 backdrop-blur-md ${activeSection === section.id ? 'border-cyan-400/50 bg-cyan-400/10 text-cyan-400 scale-110' : 'border-white/10 p-bg-card p-text-lo hover:bg-white/10'}`}>
+            <div className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-500 backdrop-blur-md ${activeSection === section.id ? 'border-cyan-400/50 bg-cyan-400/10 text-cyan-400 scale-110' : 'border-white/20 bg-black/40 p-text-mid hover:border-white/40 hover:text-white'}`}>
               <section.icon size={14} />
             </div>
           </button>
@@ -751,11 +754,70 @@ export function EmployeeDetail() {
 
                     <div className="space-y-3 mb-8">
                       {[
-                        { label: 'Full Performance Report', desc: 'All KPIs, OKRs, scores and trends', icon: '📊' },
-                        { label: '1:1 Prep Summary', desc: 'Key talking points and risk flags', icon: '💬' },
-                        { label: 'HR Compliance Pack', desc: 'Compensation, leave and audit data', icon: '📋' },
-                        { label: 'Copy Profile Link', desc: 'Share a read-only view', icon: '🔗' },
-                      ].map(({ label, desc, icon }) => (
+                        {
+                          label: 'Full Performance Report',
+                          desc: 'All KPIs, OKRs, scores and trends',
+                          color: '#c084fc',
+                          svg: (
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                              {/* Rising bars */}
+                              <rect x="1" y="13" width="3" height="6" rx="0.8" opacity="0.5" />
+                              <rect x="6" y="9"  width="3" height="10" rx="0.8" opacity="0.75" />
+                              <rect x="11" y="5" width="3" height="14" rx="0.8" />
+                              {/* Trend line */}
+                              <polyline points="2.5,12 7.5,8 12.5,4 17,2" opacity="0.6" />
+                              <circle cx="17" cy="2" r="1.2" fill="currentColor" stroke="none" />
+                            </svg>
+                          ),
+                        },
+                        {
+                          label: '1:1 Prep Summary',
+                          desc: 'Key talking points and risk flags',
+                          color: '#38bdf8',
+                          svg: (
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                              {/* Two speech bubbles — the 1:1 metaphor */}
+                              <path d="M2 3 Q2 1.5 3.5 1.5 H11.5 Q13 1.5 13 3 V7.5 Q13 9 11.5 9 H7 L4.5 11 V9 H3.5 Q2 9 2 7.5 Z" />
+                              <path d="M13 6 H15.5 Q17.5 6 17.5 7.5 V11.5 Q17.5 13 15.5 13 H14.5 V15 L12.5 13 H10.5" opacity="0.5" />
+                              {/* Bullet points inside first bubble */}
+                              <line x1="4.5" y1="4.5" x2="10.5" y2="4.5" opacity="0.5" />
+                              <line x1="4.5" y1="6.5" x2="9"    y2="6.5" opacity="0.5" />
+                            </svg>
+                          ),
+                        },
+                        {
+                          label: 'HR Compliance Pack',
+                          desc: 'Compensation, leave and audit data',
+                          color: '#10b981',
+                          svg: (
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                              {/* Document with a shield — compliance metaphor */}
+                              <path d="M4 2.5 Q4 1 5.5 1 H11.5 L15 4.5 V17 Q15 18.5 13.5 18.5 H5.5 Q4 18.5 4 17 Z" />
+                              <polyline points="11,1 11,5 15,5" />
+                              {/* Checkmark on the doc */}
+                              <polyline points="7,10.5 9,12.5 13,8.5" strokeWidth="1.8" />
+                              {/* Footer line */}
+                              <line x1="7" y1="15" x2="12" y2="15" opacity="0.4" />
+                            </svg>
+                          ),
+                        },
+                        {
+                          label: 'Copy Profile Link',
+                          desc: 'Share a read-only view',
+                          color: '#f59e0b',
+                          svg: (
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                              {/* Chain link — share metaphor */}
+                              <path d="M8 12 Q5 15 5 15 A3.5 3.5 0 0 1 5 8 L7 6" opacity="0.5" />
+                              <path d="M12 8 Q15 5 15 5 A3.5 3.5 0 0 1 15 12 L13 14" opacity="0.5" />
+                              <line x1="7.5" y1="12.5" x2="12.5" y2="7.5" />
+                              {/* Arrow out */}
+                              <path d="M14 3 L17 3 L17 6" />
+                              <line x1="17" y1="3" x2="12" y2="8" opacity="0.6" />
+                            </svg>
+                          ),
+                        },
+                      ].map(({ label, desc, svg, color }) => (
                         <button
                           key={label}
                           onClick={() => {
@@ -764,7 +826,10 @@ export function EmployeeDetail() {
                           }}
                           className="w-full flex items-center gap-4 p-4 rounded-2xl bg-white/[0.03] border p-border hover:bg-white/[0.06] hover:p-border-mid transition-all text-left group"
                         >
-                          <span className="text-xl">{icon}</span>
+                          <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors"
+                            style={{ background: color + '15', color }}>
+                            {svg}
+                          </div>
                           <div className="flex-1">
                             <p className="p-text-body text-sm font-light group-hover:text-white transition-colors">{label}</p>
                             <p className="p-text-dim text-sm mt-0.5">{desc}</p>

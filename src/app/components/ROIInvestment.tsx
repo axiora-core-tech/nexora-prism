@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { useNavigate, NavLink } from 'react-router';
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Cpu, TrendingUp, ArrowUpRight, ArrowDownRight, Coins, ArrowLeft } from 'lucide-react';

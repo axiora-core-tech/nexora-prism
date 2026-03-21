@@ -129,18 +129,18 @@ export function ThresholdTransition({ name = 'Arjun Sharma' }: Props) {
 
   useEffect(() => {
     const phases: [Phase, number][] = [
-      ['name',     400  ],
-      ['cracking', 1700 ],
-      ['drifting', 3800 ],
-      ['dissolve', 4900 ],
-      ['out',      5600 ],
+      ['name',     340  ],
+      ['cracking', 1445 ],
+      ['drifting', 3230 ],
+      ['dissolve', 4165 ],
+      ['out',      4760 ],
     ];
 
     const timers = phases.map(([p, t]) =>
       setTimeout(() => { if (mountedRef.current) setPhase(p); }, t)
     );
 
-    // Cracks appear one at a time, 350ms apart
+    // Cracks appear one at a time, ~300ms apart (was 350ms)
     const crackTimers = SPECTRUM.map((_, i) =>
       setTimeout(() => {
         if (!mountedRef.current) return;
@@ -149,14 +149,12 @@ export function ThresholdTransition({ name = 'Arjun Sharma' }: Props) {
           n[i] = true;
           return n;
         });
-      }, 1700 + i * 350)
+      }, 1445 + i * 300)
     );
 
-    // Guard navigate behind mounted check — prevents stale timer firing
-    // if the tab was suspended or user navigated away mid-animation.
     const nav = setTimeout(() => {
       if (mountedRef.current) navigate('/app');
-    }, 6200);
+    }, 5270);
 
     return () => {
       timers.forEach(clearTimeout);

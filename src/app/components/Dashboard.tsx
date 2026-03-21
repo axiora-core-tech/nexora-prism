@@ -97,66 +97,6 @@ export function Dashboard() {
         </div>
       </motion.div>
 
-      {/* ORG METRIC PULSE CARDS */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.8 }}
-        className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
-      >
-        {orgMetrics.map((m, i) => (
-          <motion.div
-            key={m.label}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 * i }}
-            className="relative bg-white/[0.02] border p-border rounded-[1.5rem] p-6 overflow-hidden group hover:p-border-mid transition-colors hover-lift"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <p className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono mb-2">{m.label}</p>
-                <p className="text-3xl font-light text-white leading-none">
-                  {m.val}<span className="text-lg p-text-dim">{m.suffix}</span>
-                </p>
-              </div>
-              <div className="p-2 rounded-xl" style={{ background: m.color + '15' }}>
-                <m.icon size={14} style={{ color: m.color }} />
-              </div>
-            </div>
-            <div className="flex items-end justify-between">
-              <span className="text-sm font-mono" style={{ color: m.color }}>{m.trend}</span>
-              <SparkLine data={m.sparkData} color={m.color} />
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
-
-      {/* QUICK ACTIONS */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.8 }}
-        className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-12"
-      >
-        {quickActions.map((a, i) => (
-          <NavLink
-            key={a.path}
-            to={a.path}
-            className="group flex items-center gap-4 p-4 bg-white/[0.02] border p-border rounded-2xl hover:p-border-mid hover:bg-white/[0.04] transition-all"
-            data-cursor={a.label}
-          >
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: a.color + '15' }}>
-              <a.icon size={16} style={{ color: a.color }} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-white text-sm font-light">{a.label}</p>
-              <p className="text-sm uppercase tracking-[0.12em] p-text-dim">{a.desc}</p>
-            </div>
-            <ChevronRight size={12} className="p-text-ghost group-hover:text-white/60 group-hover:translate-x-1 transition-all flex-shrink-0" />
-          </NavLink>
-        ))}
-      </motion.div>
-
       {/* TEAM CONSTELLATION */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -232,6 +172,66 @@ export function Dashboard() {
             ))}
           </div>
         </div>
+      </motion.div>
+
+      {/* ORG METRIC PULSE CARDS */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.8 }}
+        className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
+      >
+        {orgMetrics.map((m, i) => (
+          <motion.div
+            key={m.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 * i }}
+            className="relative bg-white/[0.02] border p-border rounded-[1.5rem] p-6 overflow-hidden group hover:p-border-mid transition-colors hover-lift"
+          >
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <p className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono mb-2">{m.label}</p>
+                <p className="text-3xl font-light text-white leading-none">
+                  {m.val}<span className="text-lg p-text-dim">{m.suffix}</span>
+                </p>
+              </div>
+              <div className="p-2 rounded-xl" style={{ background: m.color + '15' }}>
+                <m.icon size={14} style={{ color: m.color }} />
+              </div>
+            </div>
+            <div className="flex items-end justify-between">
+              <span className="text-sm font-mono" style={{ color: m.color }}>{m.trend}</span>
+              <SparkLine data={m.sparkData} color={m.color} />
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
+
+      {/* QUICK ACTIONS */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.8 }}
+        className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-12"
+      >
+        {quickActions.map((a, i) => (
+          <NavLink
+            key={a.path}
+            to={a.path}
+            className="group flex items-center gap-4 p-4 bg-white/[0.02] border p-border rounded-2xl hover:p-border-mid hover:bg-white/[0.04] transition-all"
+            data-cursor={a.label}
+          >
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: a.color + '15' }}>
+              <a.icon size={16} style={{ color: a.color }} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-white text-sm font-light">{a.label}</p>
+              <p className="text-sm uppercase tracking-[0.12em] p-text-dim">{a.desc}</p>
+            </div>
+            <ChevronRight size={12} className="p-text-ghost group-hover:text-white/60 group-hover:translate-x-1 transition-all flex-shrink-0" />
+          </NavLink>
+        ))}
       </motion.div>
 
       {/* MAIN GRID */}

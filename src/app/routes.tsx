@@ -14,11 +14,11 @@ const Analytics         = lazy(() => import("./components/Analytics").then(m => 
 const Tasks             = lazy(() => import("./components/Tasks").then(m => ({ default: m.Tasks })));
 const Settings          = lazy(() => import("./components/Settings").then(m => ({ default: m.Settings })));
 const KPIGoals          = lazy(() => import("./components/KPIGoals").then(m => ({ default: m.KPIGoals })));
-const Reviews360        = lazy(() => import("./components/Reviews360").then(m => ({ default: m.Reviews360 })));
 const Attendance        = lazy(() => import("./components/Attendance").then(m => ({ default: m.Attendance })));
 const ROIInvestment     = lazy(() => import("./components/ROIInvestment").then(m => ({ default: m.ROIInvestment })));
 const Leaderboard       = lazy(() => import("./components/Leaderboard").then(m => ({ default: m.Leaderboard })));
 const PerformanceReview = lazy(() => import("./components/PerformanceReview").then(m => ({ default: m.PerformanceReview })));
+const Team               = lazy(() => import("./components/Team").then(m => ({ default: m.Team })));
 
 // ─── Minimal fallback shown during chunk load ─────────────────────────────────
 function PageFallback() {
@@ -60,15 +60,15 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true,          element: withSuspense(Dashboard) },
-      { path: "team",         element: withSuspense(Dashboard) },
+      { path: "team",         element: withSuspense(Team) },
       { path: "employee/:id", element: withSuspense(EmployeeDetail) },
       { path: "analytics",    element: withSuspense(Analytics) },
       { path: "kpis",         element: withSuspense(KPIGoals) },
-      { path: "reviews",      element: withSuspense(Reviews360) },
       { path: "attendance",   element: withSuspense(Attendance) },
       { path: "roi",          element: withSuspense(ROIInvestment) },
       { path: "leaderboard",  element: withSuspense(Leaderboard) },
       { path: "review",       element: withSuspense(PerformanceReview) },
+      { path: "reviews",      element: withSuspense(PerformanceReview) },
       { path: "tasks",        element: withSuspense(Tasks) },
       { path: "settings",     element: withSuspense(Settings) },
       {

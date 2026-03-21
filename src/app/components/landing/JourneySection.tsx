@@ -22,8 +22,8 @@ export function JourneySection() {
       color: "from-indigo-500 to-blue-500",
       colorBorder: "border-indigo-500/40",
       colorGlow: "rgba(99,102,241,0.25)",
-      title: "Aggregate Truth",
-      desc: "Pull quantitative and qualitative feedback from peers, direct reports, and leadership. Eliminate subjective bias instantly.",
+      title: "Gather every signal",
+      desc: "Peer reviews, self-assessments, manager observations, learning progress, and wellbeing data — all in one place, weighted and calibrated.",
     },
     {
       top: "43%",
@@ -31,8 +31,8 @@ export function JourneySection() {
       color: "from-blue-500 to-purple-500",
       colorBorder: "border-purple-500/40",
       colorGlow: "rgba(168,85,247,0.25)",
-      title: "Algorithmically Predict",
-      desc: "Map behaviors to business outcomes. See how individual growth directly impacts your quarterly revenue targets.",
+      title: "See the full picture",
+      desc: "Prism connects individual trajectories to team outcomes. Spot the people who are quietly growing, and the ones who need support before they disengage.",
     },
     {
       top: "77%",
@@ -40,8 +40,8 @@ export function JourneySection() {
       color: "from-purple-500 to-rose-500",
       colorBorder: "border-rose-500/40",
       colorGlow: "rgba(244,63,94,0.25)",
-      title: "Deploy Growth",
-      desc: "Execute targeted interventions. Promote high-velocity talent and course-correct friction points before they become attrition.",
+      title: "Act with confidence",
+      desc: "Decisions backed by evidence, not gut feel. Promote the right people. Have the right conversations. Before it's too late to matter.",
     },
   ];
 
@@ -72,12 +72,12 @@ export function JourneySection() {
       >
         <div className="inline-flex items-center gap-2 px-4 py-2 border border-indigo-500/20 bg-indigo-500/10 backdrop-blur-md mb-6 text-[10px] font-mono tracking-widest text-indigo-300 uppercase rounded-full shadow-[0_0_30px_rgba(99,102,241,0.15)] ring-1 ring-white/5">
           <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(129,140,248,0.8)]" />
-          Evolution Sequence
+          How it works
         </div>
         <h2 className="text-4xl sm:text-6xl md:text-[5rem] font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50 mb-6 leading-[1.1]">
-          The Algorithm of <br />
+          From signal <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-rose-400">
-            Retention.
+            to understanding.
           </span>
         </h2>
       </motion.div>

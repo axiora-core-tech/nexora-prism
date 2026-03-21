@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform, useSpring } from "motion/react";
 import { ArrowRight, Play } from "lucide-react";
 import { useRef } from "react";
+import { useNavigate } from "react-router";
 
 // CSS keyframe blobs: same visual, zero JS animation overhead.
 // The browser compositor handles transform/opacity entirely on the GPU thread.
@@ -23,6 +24,7 @@ const blobStyles = `
 `;
 
 export function HeroSection() {
+  const navigate = useNavigate();
   const containerRef = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -93,7 +95,7 @@ export function HeroSection() {
             <div className="w-2 h-2 bg-indigo-400 rounded-full shadow-[0_0_10px_rgba(129,140,248,1)] animate-pulse" />
           </div>
           <span className="text-xs sm:text-sm font-mono tracking-[0.2em] text-white uppercase font-bold">
-            360° Intelligence Active
+            Every person. Every dimension.
           </span>
         </motion.div>
 
@@ -103,11 +105,11 @@ export function HeroSection() {
           transition={{ duration: 1, delay: 0.1, type: "spring", stiffness: 50 }}
           className="text-[4rem] sm:text-[6.5rem] md:text-[8.5rem] lg:text-[11rem] font-bold tracking-tighter leading-[0.85] text-white mb-10 drop-shadow-2xl"
         >
-          Performance, <br />
+          People,
           <span className="relative inline-block mt-2">
             <span className="absolute -inset-4 bg-gradient-to-r from-indigo-500/30 via-purple-500/30 to-rose-500/30 blur-3xl z-0" />
             <span className="relative z-10 bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-100 to-rose-200 pr-4 drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-              Quantified.
+              understood.
             </span>
           </span>
         </motion.h1>
@@ -119,7 +121,7 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
             className="md:col-span-6 lg:col-span-5 text-xl sm:text-2xl md:text-3xl text-zinc-200 font-medium tracking-wide leading-relaxed drop-shadow-md"
           >
-            Traditional HR tools look backward. Prism looks forward. Unify evaluations with predictive modeling to forecast revenue per individual.
+            Your team carries more than their job titles. Prism brings together every signal — reviews, growth, wellbeing, output — so you can see each person whole, and lead accordingly.
           </motion.p>
 
           <motion.div
@@ -128,16 +130,16 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
             className="md:col-span-6 lg:col-span-7 flex flex-col sm:flex-row items-start md:items-end justify-end gap-6 w-full mt-8 md:mt-0"
           >
-            <button className="group relative px-8 py-6 bg-white text-black font-bold text-sm tracking-widest uppercase overflow-hidden transition-all duration-300 hover:scale-[1.05] hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] active:scale-[0.98] w-full sm:w-auto">
+            <button onClick={() => navigate('/sign-in')} className="group relative px-8 py-6 bg-white text-black font-bold text-sm tracking-widest uppercase overflow-hidden transition-all duration-300 hover:scale-[1.05] hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] active:scale-[0.98] w-full sm:w-auto">
               <span className="relative z-10 flex items-center justify-center gap-3">
-                Forecast Revenue
+                Get started
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-300" />
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-indigo-100 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </button>
-            <button className="group px-8 py-6 font-bold text-sm tracking-widest uppercase text-white hover:text-white transition-all duration-300 flex items-center justify-center gap-3 border-2 border-white/30 hover:border-indigo-400 hover:bg-indigo-500/20 hover:shadow-[0_0_30px_rgba(99,102,241,0.3)] bg-black/40 backdrop-blur-md w-full sm:w-auto">
+            <button onClick={() => navigate('/demo')} className="group px-8 py-6 font-bold text-sm tracking-widest uppercase text-white hover:text-white transition-all duration-300 flex items-center justify-center gap-3 border-2 border-white/30 hover:border-indigo-400 hover:bg-indigo-500/20 hover:shadow-[0_0_30px_rgba(99,102,241,0.3)] bg-black/40 backdrop-blur-md w-full sm:w-auto">
               <Play className="w-5 h-5 fill-current group-hover:scale-110 transition-transform" />
-              Watch Tour
+              See how it works
             </button>
           </motion.div>
         </div>

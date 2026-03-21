@@ -1,11 +1,11 @@
 export const employees = [
   {
     id: "e1",
-    name: "Alex Mercer",
+    name: "Arjun Sharma",
     role: "Senior Frontend Engineer",
     department: "Core Architecture",
     stage: "Established",
-    avatar: "https://images.unsplash.com/photo-1652471943570-f3590a4e52ed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMG1hbnxlbnwxfHx8fDE3NzI5NDAzNjd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    avatar: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=1080&auto=format&fit=crop",
     performanceScore: 92,
     attritionRisk: "Low",
     attritionRiskPercentage: 12,
@@ -57,14 +57,14 @@ export const employees = [
     ],
     reviews360: [
       {
-        reviewer: "Sarah Chen", relation: "Peer", date: "Nov 2025",
+        reviewer: "Neha Gupta", relation: "Peer", date: "Nov 2025",
         scores: { communication: 92, technical: 96, leadership: 85, collaboration: 90, innovation: 95 },
         strengths: "Alex consistently delivers exceptional architecture. His React 19 migration plan was incredibly thorough.",
         improvements: "Could delegate more to junior engineers to free up bandwidth.",
         overall: 92
       },
       {
-        reviewer: "Priya Sharma", relation: "Manager", date: "Nov 2025",
+        reviewer: "Kavya Reddy", relation: "Manager", date: "Nov 2025",
         scores: { communication: 90, technical: 98, leadership: 88, collaboration: 85, innovation: 96 },
         strengths: "Alex is our strongest technical contributor. The bundle optimization saved us $40K/yr in infra costs.",
         improvements: "Mentorship OKR needs attention. Schedule regular 1:1s with juniors.",
@@ -99,19 +99,19 @@ export const employees = [
     leaveBalance: { ptoTotal: 25, ptoUsed: 12, sickTotal: 10, sickUsed: 2, sabbaticalEligible: false },
     bioRhythm: { stressIndex: 28, cognitiveLoad: 65, burnoutProbability: 14, sleepQuality: 88, focusBlocksAvg: 4.2 },
     peerReviews: [
-      { peer: "Sarah Chen", connection: "Strong", sentiment: 92, nodes: 15 },
-      { peer: "Marcus Johnson", connection: "Moderate", sentiment: 78, nodes: 8 },
-      { peer: "Priya Sharma", connection: "Weak", sentiment: 85, nodes: 3 }
+      { peer: "Neha Gupta", connection: "Strong", sentiment: 92, nodes: 15 },
+      { peer: "Vikram Singh", connection: "Moderate", sentiment: 78, nodes: 8 },
+      { peer: "Kavya Reddy", connection: "Weak", sentiment: 85, nodes: 3 }
     ],
     equipment: ["MacBook Pro M3 Max", "Studio Display", "Herman Miller Embody", "Keychron K2"]
   },
   {
     id: "e2",
-    name: "Sarah Chen",
+    name: "Neha Gupta",
     role: "Product Designer",
     department: "User Experience",
     stage: "Onboarding",
-    avatar: "https://images.unsplash.com/photo-1689600944138-da3b150d9cb8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBoZWFkc2hvdCUyMHdvbWFufGVufDF8fHx8MTc3MjkwNTEzMXww&ixlib=rb-4.1.0&q=80&w=1080",
+    avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1080&auto=format&fit=crop",
     performanceScore: 88,
     attritionRisk: "Low",
     attritionRiskPercentage: 18,
@@ -157,7 +157,7 @@ export const employees = [
     ],
     reviews360: [
       {
-        reviewer: "Alex Mercer", relation: "Peer", date: "Nov 2025",
+        reviewer: "Arjun Sharma", relation: "Peer", date: "Nov 2025",
         scores: { communication: 94, technical: 88, leadership: 78, collaboration: 95, innovation: 92 },
         strengths: "Sarah's visual thinking has elevated every product we've shipped. Her onboarding flow redesign increased activation by 23%.",
         improvements: "Should document design decisions more rigorously for future reference.",
@@ -192,18 +192,18 @@ export const employees = [
     leaveBalance: { ptoTotal: 25, ptoUsed: 5, sickTotal: 10, sickUsed: 1, sabbaticalEligible: false },
     bioRhythm: { stressIndex: 42, cognitiveLoad: 78, burnoutProbability: 25, sleepQuality: 75, focusBlocksAvg: 3.5 },
     peerReviews: [
-      { peer: "Alex Mercer", connection: "Strong", sentiment: 94, nodes: 15 },
-      { peer: "Priya Sharma", connection: "Moderate", sentiment: 82, nodes: 9 }
+      { peer: "Arjun Sharma", connection: "Strong", sentiment: 94, nodes: 15 },
+      { peer: "Kavya Reddy", connection: "Moderate", sentiment: 82, nodes: 9 }
     ],
     equipment: ["MacBook Pro M3", "Wacom Cintiq", "iPad Pro"]
   },
   {
     id: "e3",
-    name: "Marcus Johnson",
+    name: "Vikram Singh",
     role: "Backend Developer",
     department: "Data Infrastructure",
     stage: "Established",
-    avatar: "https://images.unsplash.com/photo-1758876204244-930299843f07?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx5b3VuZyUyMHByb2Zlc3Npb25hbCUyMG1hbiUyMHNtaWxpbmd8ZW58MXx8fHwxNzcyOTYxNjMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+    avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1080&auto=format&fit=crop",
     performanceScore: 72,
     attritionRisk: "High",
     attritionRiskPercentage: 78,
@@ -249,7 +249,7 @@ export const employees = [
     ],
     reviews360: [
       {
-        reviewer: "Alex Mercer", relation: "Peer", date: "Nov 2025",
+        reviewer: "Arjun Sharma", relation: "Peer", date: "Nov 2025",
         scores: { communication: 65, technical: 80, leadership: 55, collaboration: 60, innovation: 70 },
         strengths: "Deep knowledge of distributed systems. The database deadlock fix was impressive.",
         improvements: "Needs to improve communication and attend all sprint ceremonies. Documentation is lacking.",
@@ -284,18 +284,18 @@ export const employees = [
     leaveBalance: { ptoTotal: 20, ptoUsed: 19, sickTotal: 10, sickUsed: 8, sabbaticalEligible: false },
     bioRhythm: { stressIndex: 85, cognitiveLoad: 92, burnoutProbability: 88, sleepQuality: 45, focusBlocksAvg: 1.2 },
     peerReviews: [
-      { peer: "Alex Mercer", connection: "Moderate", sentiment: 70, nodes: 8 },
-      { peer: "Priya Sharma", connection: "Weak", sentiment: 60, nodes: 2 }
+      { peer: "Arjun Sharma", connection: "Moderate", sentiment: 70, nodes: 8 },
+      { peer: "Kavya Reddy", connection: "Weak", sentiment: 60, nodes: 2 }
     ],
     equipment: ["Dell XPS 15", "UltraWide Monitor"]
   },
   {
     id: "e4",
-    name: "Priya Sharma",
+    name: "Kavya Reddy",
     role: "Marketing Manager",
     department: "Growth",
     stage: "Transitioning",
-    avatar: "https://images.unsplash.com/photo-1762522921456-cdfe882d36c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx5b3VuZyUyMHByb2Zlc3Npb25hbCUyMHdvbWFuJTIwc21pbGluZ3xlbnwxfHx8fDE3NzI5NjQwODZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    avatar: "https://images.unsplash.com/photo-1614283233556-f35b0c801ef1?q=80&w=1080&auto=format&fit=crop",
     performanceScore: 85,
     attritionRisk: "Medium",
     attritionRiskPercentage: 45,
@@ -341,7 +341,7 @@ export const employees = [
     ],
     reviews360: [
       {
-        reviewer: "Sarah Chen", relation: "Peer", date: "Nov 2025",
+        reviewer: "Neha Gupta", relation: "Peer", date: "Nov 2025",
         scores: { communication: 80, technical: 85, leadership: 82, collaboration: 75, innovation: 88 },
         strengths: "Priya's campaigns consistently exceed revenue targets. The SEO strategy was brilliant.",
         improvements: "Needs to improve collaboration cadence with adjacent teams.",
@@ -376,8 +376,8 @@ export const employees = [
     leaveBalance: { ptoTotal: 25, ptoUsed: 15, sickTotal: 10, sickUsed: 4, sabbaticalEligible: true },
     bioRhythm: { stressIndex: 58, cognitiveLoad: 72, burnoutProbability: 40, sleepQuality: 68, focusBlocksAvg: 2.8 },
     peerReviews: [
-      { peer: "Sarah Chen", connection: "Moderate", sentiment: 88, nodes: 9 },
-      { peer: "Marcus Johnson", connection: "Weak", sentiment: 55, nodes: 2 }
+      { peer: "Neha Gupta", connection: "Moderate", sentiment: 88, nodes: 9 },
+      { peer: "Vikram Singh", connection: "Weak", sentiment: 55, nodes: 2 }
     ],
     equipment: ["MacBook Air M2", "AirPods Pro"]
   },
@@ -385,11 +385,11 @@ export const employees = [
   // ── e5 ─────────────────────────────────────────────────────────────────────
   {
     id: "e5",
-    name: "Jordan Lee",
+    name: "Rohan Mehta",
     role: "Product Manager",
     department: "Product",
     stage: "Rising Star",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1080&auto=format&fit=crop",
     performanceScore: 87,
     attritionRisk: "Low",
     attritionRiskPercentage: 15,
@@ -438,7 +438,7 @@ export const employees = [
     ],
     reviews360: [
       {
-        reviewer: "Alex Mercer", relation: "Peer", date: "Nov 2025",
+        reviewer: "Arjun Sharma", relation: "Peer", date: "Nov 2025",
         scores: { communication: 90, technical: 72, leadership: 85, collaboration: 88, innovation: 82 },
         strengths: "Jordan has a rare ability to align engineering and design toward a shared vision.",
         improvements: "Could deepen technical understanding to reduce back-and-forth on feasibility.",
@@ -473,8 +473,8 @@ export const employees = [
     leaveBalance: { ptoTotal: 20, ptoUsed: 5, sickTotal: 10, sickUsed: 1, sabbaticalEligible: false },
     bioRhythm: { stressIndex: 44, cognitiveLoad: 62, burnoutProbability: 28, sleepQuality: 78, focusBlocksAvg: 3.2 },
     peerReviews: [
-      { peer: "Sarah Chen", connection: "Strong", sentiment: 92, nodes: 14 },
-      { peer: "Priya Sharma", connection: "Moderate", sentiment: 79, nodes: 7 },
+      { peer: "Neha Gupta", connection: "Strong", sentiment: 92, nodes: 14 },
+      { peer: "Kavya Reddy", connection: "Moderate", sentiment: 79, nodes: 7 },
     ],
     equipment: ["MacBook Pro M3", "Dell 4K Monitor", "Logitech MX Keys"]
   },
@@ -482,11 +482,11 @@ export const employees = [
   // ── e6 ─────────────────────────────────────────────────────────────────────
   {
     id: "e6",
-    name: "Ethan Brooks",
+    name: "Aditya Kumar",
     role: "Data Engineer",
     department: "Data Infrastructure",
     stage: "Established",
-    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1080&auto=format&fit=crop",
     performanceScore: 79,
     attritionRisk: "Medium",
     attritionRiskPercentage: 52,
@@ -535,7 +535,7 @@ export const employees = [
     ],
     reviews360: [
       {
-        reviewer: "Marcus Johnson", relation: "Peer", date: "Nov 2025",
+        reviewer: "Vikram Singh", relation: "Peer", date: "Nov 2025",
         scores: { communication: 65, technical: 88, leadership: 60, collaboration: 70, innovation: 75 },
         strengths: "Deep expertise in distributed systems. Consistently solves the hard infra problems.",
         improvements: "Communication cadence with stakeholders needs improvement. Goes dark mid-sprint.",
@@ -570,8 +570,8 @@ export const employees = [
     leaveBalance: { ptoTotal: 20, ptoUsed: 12, sickTotal: 10, sickUsed: 5, sabbaticalEligible: false },
     bioRhythm: { stressIndex: 68, cognitiveLoad: 80, burnoutProbability: 58, sleepQuality: 60, focusBlocksAvg: 2.1 },
     peerReviews: [
-      { peer: "Alex Mercer", connection: "Weak", sentiment: 62, nodes: 3 },
-      { peer: "Jordan Lee",  connection: "Moderate", sentiment: 71, nodes: 6 },
+      { peer: "Arjun Sharma", connection: "Weak", sentiment: 62, nodes: 3 },
+      { peer: "Rohan Mehta",  connection: "Moderate", sentiment: 71, nodes: 6 },
     ],
     equipment: ["MacBook Pro M2", "Samsung 34\" Ultrawide"]
   },
@@ -579,11 +579,11 @@ export const employees = [
   // ── e7 ─────────────────────────────────────────────────────────────────────
   {
     id: "e7",
-    name: "Aisha Patel",
+    name: "Ananya Reddy",
     role: "UX Researcher",
     department: "User Experience",
     stage: "Growing",
-    avatar: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     performanceScore: 83,
     attritionRisk: "Low",
     attritionRiskPercentage: 18,
@@ -632,7 +632,7 @@ export const employees = [
     ],
     reviews360: [
       {
-        reviewer: "Sarah Chen", relation: "Peer", date: "Nov 2025",
+        reviewer: "Neha Gupta", relation: "Peer", date: "Nov 2025",
         scores: { communication: 88, technical: 76, leadership: 78, collaboration: 90, innovation: 84 },
         strengths: "Aisha's research brings the user's voice into every design decision. Invaluable.",
         improvements: "Could present findings more concisely in exec-level readouts.",
@@ -667,8 +667,8 @@ export const employees = [
     leaveBalance: { ptoTotal: 20, ptoUsed: 7, sickTotal: 10, sickUsed: 0, sabbaticalEligible: false },
     bioRhythm: { stressIndex: 38, cognitiveLoad: 55, burnoutProbability: 22, sleepQuality: 82, focusBlocksAvg: 3.8 },
     peerReviews: [
-      { peer: "Sarah Chen",  connection: "Strong",   sentiment: 94, nodes: 15 },
-      { peer: "Jordan Lee",  connection: "Strong",   sentiment: 88, nodes: 12 },
+      { peer: "Neha Gupta",  connection: "Strong",   sentiment: 94, nodes: 15 },
+      { peer: "Rohan Mehta",  connection: "Strong",   sentiment: 88, nodes: 12 },
     ],
     equipment: ["MacBook Air M2", "iPad Pro", "Apple Pencil"]
   },
@@ -676,11 +676,11 @@ export const employees = [
   // ── e8 ─────────────────────────────────────────────────────────────────────
   {
     id: "e8",
-    name: "Ryan Kowalski",
+    name: "Karan Patel",
     role: "DevOps Engineer",
     department: "Core Architecture",
     stage: "Established",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=1080&auto=format&fit=crop",
     performanceScore: 76,
     attritionRisk: "High",
     attritionRiskPercentage: 71,
@@ -729,7 +729,7 @@ export const employees = [
     ],
     reviews360: [
       {
-        reviewer: "Alex Mercer", relation: "Peer", date: "Nov 2025",
+        reviewer: "Arjun Sharma", relation: "Peer", date: "Nov 2025",
         scores: { communication: 58, technical: 90, leadership: 52, collaboration: 60, innovation: 70 },
         strengths: "Undeniably the most skilled infrastructure engineer on the team. Systems are bulletproof.",
         improvements: "Disengagement is visible in meetings. Needs support — this is a retention risk.",
@@ -764,8 +764,8 @@ export const employees = [
     leaveBalance: { ptoTotal: 20, ptoUsed: 3, sickTotal: 10, sickUsed: 2, sabbaticalEligible: false },
     bioRhythm: { stressIndex: 82, cognitiveLoad: 88, burnoutProbability: 74, sleepQuality: 48, focusBlocksAvg: 1.4 },
     peerReviews: [
-      { peer: "Alex Mercer",  connection: "Weak",     sentiment: 58, nodes: 2 },
-      { peer: "Ethan Brooks", connection: "Moderate", sentiment: 65, nodes: 5 },
+      { peer: "Arjun Sharma",  connection: "Weak",     sentiment: 58, nodes: 2 },
+      { peer: "Aditya Kumar", connection: "Moderate", sentiment: 65, nodes: 5 },
     ],
     equipment: ["MacBook Pro M3 Max", "Mechanical Keyboard", "3× External Monitors"]
   }
@@ -804,8 +804,8 @@ export const globalLearningData = [
 ];
 
 export const alerts = [
-  { id: 1, type: "warning", message: "Marcus Johnson has missed 2 consecutive timesheets. Attrition risk increased to 78%.", user: "Marcus Johnson" },
-  { id: 2, type: "success", message: "Sarah Chen completed 'Enterprise Design Systems' LMS module. Promotion probability +5%.", user: "Sarah Chen" },
+  { id: 1, type: "warning", message: "Vikram Singh has missed 2 consecutive timesheets. Attrition risk increased to 78%.", user: "Vikram Singh" },
+  { id: 2, type: "success", message: "Neha Gupta completed 'Enterprise Design Systems' LMS module. Promotion probability +5%.", user: "Neha Gupta" },
   { id: 3, type: "info", message: "Q2 Opinion Survey results are ready for review. Global welfare score: 84%.", user: "System" },
   { id: 4, type: "success", message: "Team ROI exceeded Q1 targets by 14%. Output scaling.", user: "System" },
   { id: 5, type: "warning", message: "Global Burnout Probability detected at 42% in Engineering. Recommend forced PTO.", user: "System" },

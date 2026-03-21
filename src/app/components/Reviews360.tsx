@@ -155,7 +155,7 @@ export function Reviews360() {
         </div>
         <div className="flex gap-16 text-right">
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2">Avg Resonance</p>
+            <p className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2">Avg Score</p>
             <p className="text-4xl font-light text-cyan-400">{overallAvg > 0 ? overallAvg : '—'}</p>
           </div>
           <div>

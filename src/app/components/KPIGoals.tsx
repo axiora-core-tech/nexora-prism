@@ -125,7 +125,7 @@ export function KPIGoals() {
         </div>
         <div className="flex gap-16 text-right">
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2">Vectors Nominal</p>
+            <p className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2">On Track</p>
             <p className="text-4xl font-light text-emerald-400">{onTargetKPIs}<span className="text-xl text-white/30">/{totalKPIs}</span></p>
           </div>
           <div>

@@ -7,9 +7,9 @@ import { employees, alerts, performanceData } from '../mockData';
 
 const quickActions = [
   { icon: FileText, label: 'Start Review', path: '/app/review', color: '#38bdf8', desc: '360° cycle' },
-  { icon: Target,   label: 'View KPIs',   path: '/app/kpis',   color: '#f59e0b', desc: 'Goals tracker' },
-  { icon: Trophy,   label: 'Leaderboard', path: '/app/leaderboard', color: '#c084fc', desc: 'Rankings' },
-  { icon: BarChart2,label: 'Analytics',   path: '/app/analytics',   color: '#10b981', desc: 'Deep dive' },
+  { icon: Target, label: 'View KPIs', path: '/app/kpis', color: '#f59e0b', desc: 'Goals tracker' },
+  { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard', color: '#c084fc', desc: 'Rankings' },
+  { icon: BarChart2, label: 'Analytics', path: '/app/analytics', color: '#10b981', desc: 'Deep dive' },
 ];
 
 const SparkLine = memo(function SparkLine({ data, color }: { data: number[]; color: string }) {
@@ -33,9 +33,9 @@ const SparkLine = memo(function SparkLine({ data, color }: { data: number[]; col
 
 const orgMetrics = [
   { label: 'Avg Performance', val: '84.2', suffix: '', sparkData: [79, 81, 83, 82, 85, 84, 87, 84], color: '#c084fc', trend: '+2.3%', icon: Activity },
-  { label: 'Team ROI',        val: '246',  suffix: '%', sparkData: [211, 222, 237, 255, 261, 270, 265, 280], color: '#10b981', trend: '+33%', icon: DollarSign },
-  { label: 'Engagement',      val: '78',   suffix: '', sparkData: [72, 74, 75, 76, 78, 77, 79, 78], color: '#f59e0b', trend: '+5.4%', icon: Zap },
-  { label: 'Attrition Risk',  val: '12',   suffix: '%', sparkData: [18, 16, 15, 14, 13, 12, 13, 12], color: '#f43f5e', trend: '-6pts', icon: ShieldAlert },
+  { label: 'Team ROI', val: '246', suffix: '%', sparkData: [211, 222, 237, 255, 261, 270, 265, 280], color: '#10b981', trend: '+33%', icon: DollarSign },
+  { label: 'Engagement', val: '78', suffix: '', sparkData: [72, 74, 75, 76, 78, 77, 79, 78], color: '#f59e0b', trend: '+5.4%', icon: Zap },
+  { label: 'Attrition Risk', val: '12', suffix: '%', sparkData: [18, 16, 15, 14, 13, 12, 13, 12], color: '#f43f5e', trend: '-6pts', icon: ShieldAlert },
 ];
 
 export function Dashboard() {
@@ -61,7 +61,7 @@ export function Dashboard() {
         className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
       >
         <div>
-          <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6">Director Overview</p>
+          <p className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-6 flex items-center gap-2">Director Overview</p>
           <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
             System <span className="text-white/30 italic font-serif">Pulse</span>
           </h1>
@@ -183,10 +183,9 @@ export function Dashboard() {
 
                 {/* Risk dot */}
                 <div className="absolute top-5 left-5 flex items-center gap-2 pointer-events-none">
-                  <div className={`w-1.5 h-1.5 rounded-full shadow-[0_0_10px_currentColor] ${
-                    emp.attritionRisk === 'High' ? 'bg-rose-500 text-rose-500' :
-                    emp.attritionRisk === 'Medium' ? 'bg-amber-500 text-amber-500' : 'bg-emerald-500 text-emerald-500'
-                  }`} />
+                  <div className={`w-1.5 h-1.5 rounded-full shadow-[0_0_10px_currentColor] ${emp.attritionRisk === 'High' ? 'bg-rose-500 text-rose-500' :
+                      emp.attritionRisk === 'Medium' ? 'bg-amber-500 text-amber-500' : 'bg-emerald-500 text-emerald-500'
+                    }`} />
                   <span className="text-[9px] uppercase tracking-widest text-white/60 font-semibold">{emp.stage}</span>
                 </div>
 
@@ -287,10 +286,9 @@ export function Dashboard() {
             {alerts.map((alert) => (
               <div key={alert.id} className="group cursor-default">
                 <div className="flex items-start gap-3 mb-2">
-                  <div className={`w-1 h-7 rounded-full flex-shrink-0 mt-0.5 ${
-                    alert.type === 'warning' ? 'bg-amber-500/50' :
-                    alert.type === 'success' ? 'bg-emerald-500/50' : 'bg-cyan-500/50'
-                  }`} />
+                  <div className={`w-1 h-7 rounded-full flex-shrink-0 mt-0.5 ${alert.type === 'warning' ? 'bg-amber-500/50' :
+                      alert.type === 'success' ? 'bg-emerald-500/50' : 'bg-cyan-500/50'
+                    }`} />
                   <div>
                     <p className="text-xs font-light text-white/70 group-hover:text-white transition-colors leading-relaxed">{alert.message}</p>
                     <p className="text-[9px] uppercase tracking-widest text-white/30 mt-1.5 font-mono">
@@ -322,6 +320,7 @@ export function Dashboard() {
                   className="flex items-center gap-4 group hover:bg-rose-500/5 -mx-2 px-2 py-2 rounded-xl transition-colors"
                 >
                   <img src={emp.avatar} alt={emp.name} loading="lazy" decoding="async" className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
+
                   <div className="text-right flex-shrink-0">
                     <p className="text-rose-400 text-sm font-mono">{emp.attritionRiskPercentage}%</p>
                     <p className="text-[8px] uppercase tracking-widest text-white/30">risk</p>

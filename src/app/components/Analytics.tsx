@@ -58,7 +58,7 @@ export function Analytics() {
         </div>
         <div className="text-right flex gap-12">
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2">Network Resonance</p>
+            <p className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2">System Health</p>
             <p className="text-4xl font-light text-white">98.9<span className="text-xl text-white/30">%</span></p>
           </div>
           <div>

@@ -22,7 +22,12 @@ function TemporalGrid({ calendar }: { calendar: any[] }) {
         {(Object.keys(dayConfig) as DayType[]).filter(t => t !== 'weekend').map(t => (
           <div key={t} className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-sm" style={{ background: dayConfig[t].color }} />
-            <span className="text-[8px] uppercase tracking-widest text-white/30 font-mono">{dayConfig[t].label}</span>
+            <div>
+              <span className="text-[8px] uppercase tracking-widest text-white/30 font-mono">{dayConfig[t].label}</span>
+              <span className="text-[8px] text-white/15 font-light ml-1.5">
+                {({'In Orbit':'present','Remote':'work from home','Leave':'on leave','Dark':'absent','Standby':'weekend'} as Record<string,string>)[dayConfig[t].label]}
+              </span>
+            </div>
           </div>
         ))}
       </div>

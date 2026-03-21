@@ -48,7 +48,7 @@ export function ROIInvestment() {
         </div>
         <div className="flex gap-16 text-right">
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2">Org ROI Vector</p>
+            <p className="text-white/40 uppercase tracking-[0.2em] text-[10px] mb-2">Org ROI</p>
             <p className="text-4xl font-light text-emerald-400">{orgROI}%</p>
           </div>
           <div>

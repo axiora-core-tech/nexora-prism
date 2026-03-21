@@ -20,14 +20,14 @@ const features = [
   {
     icon: RefreshCw,
     title: "Continuous Calibration",
-    description: "Annual reviews are archaic and destructive. Engage in continuous, frictionless feedback loops that course-correct performance in real-time, long before friction turns to attrition.",
+    description: "Feedback that waits for December misses everything in between. Prism keeps the conversation open — small, frequent signals that let you act before small issues become exits.",
     image: "https://images.unsplash.com/photo-1764268602042-88b05a211378?q=80&w=1080&auto=format&fit=crop",
     color: "purple"
   },
   {
     icon: BarChart,
     title: "Executive Clarity",
-    description: "No more fragmented spreadsheets. See the entire organizational hierarchy and performance health at a single, blindingly clear glance. Act on data, not intuition.",
+    description: "Every OKR, every review cycle, every risk flag — in one place. Built for the leaders who are accountable for the whole picture, not just their slice of it.",
     image: "https://images.unsplash.com/photo-1649182784901-48f5f2d40ecc?q=80&w=1080&auto=format&fit=crop",
     color: "rose"
   },
@@ -75,12 +75,6 @@ const Card = ({ i, title, description, icon: Icon, image, color, progress, targe
 
         {/* Content Side */}
         <div className="w-full lg:w-5/12 p-8 sm:p-12 lg:p-16 flex flex-col justify-center relative z-10 border-b lg:border-b-0 lg:border-r border-white/10 bg-black/90 backdrop-blur-3xl">
-          {/* Tech crosshairs */}
-          <div className="absolute top-4 left-4 w-2 h-2 border-t border-l border-white/40 group-hover:border-white transition-colors" />
-          <div className="absolute top-4 right-4 w-2 h-2 border-t border-r border-white/40 group-hover:border-white transition-colors" />
-          <div className="absolute bottom-4 left-4 w-2 h-2 border-b border-l border-white/40 group-hover:border-white transition-colors" />
-          <div className="absolute bottom-4 right-4 w-2 h-2 border-b border-r border-white/40 group-hover:border-white transition-colors" />
-
           <div className="flex items-center gap-4 mb-8">
             <div className={`flex items-center justify-center w-12 h-12 border ${borderGlow} bg-white/[0.05] group-hover:bg-white/[0.1] transition-colors`}>
               <Icon className={`w-5 h-5 ${textGlow} drop-shadow-[0_0_8px_currentColor]`} strokeWidth={1.5} />
@@ -130,7 +124,7 @@ const Card = ({ i, title, description, icon: Icon, image, color, progress, targe
             </div>
             {/* Data stream */}
             <div className="absolute bottom-6 right-6 flex flex-col items-end gap-1 font-mono text-[9px] text-zinc-300 tracking-widest bg-black/50 backdrop-blur-md px-3 py-2 border border-white/10">
-              <span>REV.MODEL // {Math.random().toString(36).substring(2, 8).toUpperCase()}</span>
+              <span>REV.MODEL // {['A4F2C1', 'B9E3D7', 'C1A8F4', 'D6B2E9'][i % 4]}</span>
               <span>CALCULATING ROI...</span>
               <span className={`${textGlow} font-bold animate-pulse`}>100% FORECASTED</span>
             </div>
@@ -157,16 +151,16 @@ export function FeatureSection() {
       <div className="w-full px-6 md:px-12 lg:px-24 py-32 sm:py-48 z-10 relative pointer-events-none flex flex-col items-center text-center">
         <div className="inline-flex items-center gap-2 px-3 py-1 border border-white/20 bg-white/5 backdrop-blur-sm mb-8">
           <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(99,102,241,0.8)]" />
-          <span className="text-[10px] font-mono text-white uppercase tracking-widest">Enterprise Architecture</span>
+          <span className="text-[10px] font-mono text-white uppercase tracking-widest">Four ways to see more clearly</span>
         </div>
         <h2 className="text-4xl sm:text-6xl lg:text-[7rem] font-bold tracking-tighter leading-[0.9] text-white mb-6">
-          The Anatomy of <br />
+          The shape of <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-rose-400 drop-shadow-[0_0_30px_rgba(168,85,247,0.3)]">
-            Performance.
+            your team.
           </span>
         </h2>
         <p className="text-lg text-zinc-300 font-light max-w-2xl mx-auto">
-          Prism turns abstract human capital into actionable data. Predict revenue, prevent turnover, and scale your workforce with mathematical precision.
+          Four lenses. One coherent picture of the people who make your organisation work.
         </p>
       </div>
 

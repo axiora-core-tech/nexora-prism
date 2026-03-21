@@ -9,11 +9,9 @@ export function CustomCursor() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Ring lags softly
   const ringX = useSpring(mouseX, { damping: 26, stiffness: 120, mass: 0.8 });
   const ringY = useSpring(mouseY, { damping: 26, stiffness: 120, mass: 0.8 });
 
-  // Dot snaps precisely
   const dotX = useSpring(mouseX, { damping: 28, stiffness: 480, mass: 0.2 });
   const dotY = useSpring(mouseY, { damping: 28, stiffness: 480, mass: 0.2 });
 
@@ -54,51 +52,52 @@ export function CustomCursor() {
 
   if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) return null;
 
-  const ringSize = isHovering ? (hoverText ? 76 : 48) : 34;
+  const ringSize = hoverText ? 76 : 48;
 
   return (
     <>
-      {/* Static ring — no scale animation */}
+      {/* Ring — only appears on nav links and clickables */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none z-[9998] rounded-full flex items-center justify-center mix-blend-difference"
         style={{
           x: ringX, y: ringY,
           translateX: '-50%', translateY: '-50%',
-          opacity: isVisible ? 1 : 0,
           border: '1px solid',
         }}
         animate={{
-          width:  ringSize,
-          height: ringSize,
-          borderColor:     isHovering ? 'rgba(129,140,248,0.35)' : 'rgba(255,255,255,0.35)',
+          width:           isHovering ? ringSize : 0,
+          height:          isHovering ? ringSize : 0,
+          opacity:         isHovering ? 1 : 0,
+          borderColor:     isHovering ? 'rgba(129,140,248,0.4)' : 'rgba(255,255,255,0.35)',
           backgroundColor: isHovering ? 'rgba(99,102,241,0.10)' : 'rgba(255,255,255,0)',
         }}
         transition={{
-          width:  { type: 'spring', stiffness: 200, damping: 20 },
-          height: { type: 'spring', stiffness: 200, damping: 20 },
-          borderColor:     { duration: 0.25 },
-          backgroundColor: { duration: 0.25 },
+          width:   { type: 'spring', stiffness: 240, damping: 22 },
+          height:  { type: 'spring', stiffness: 240, damping: 22 },
+          opacity: { duration: 0.15 },
+          borderColor:     { duration: 0.2 },
+          backgroundColor: { duration: 0.2 },
         }}
       >
         <motion.span
           animate={{ opacity: hoverText ? 1 : 0, scale: hoverText ? 1 : 0.5 }}
-          transition={{ duration: 0.15 }}
+          transition={{ duration: 0.12 }}
           className="text-[10px] font-mono uppercase tracking-widest text-white whitespace-nowrap"
         >
           {hoverText}
         </motion.span>
       </motion.div>
 
-      {/* Breathing dot — pulses continuously */}
+      {/* Breathing dot — always present */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full mix-blend-difference bg-white"
-        style={{ x: dotX, y: dotY, translateX: '-50%', translateY: '-50%', width: 6, height: 6 }}
+        style={{ x: dotX, y: dotY, translateX: '-50%', translateY: '-50%', width: 9, height: 9 }}
         animate={{
           scale:   (isHovering && hoverText) ? 0 : [1, 2.0, 1],
-          opacity: (isHovering && hoverText) ? 0 : (isVisible ? 1 : 0),
+          opacity: isVisible ? 1 : 0,
         }}
         transition={{
-          scale: { duration: 2.6, repeat: Infinity, ease: 'easeInOut' },
+          scale:   { duration: 2.6, repeat: Infinity, ease: 'easeInOut' },
           opacity: { duration: 0.15 },
         }}
       />

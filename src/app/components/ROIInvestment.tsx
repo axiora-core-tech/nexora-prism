@@ -1,4 +1,4 @@
-import { useNavigate, NavLink } from 'react-router';
+import { useNavigate } from 'react-router';
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Cpu, TrendingUp, ArrowUpRight, ArrowDownRight, Coins, ArrowLeft } from 'lucide-react';
@@ -144,10 +144,10 @@ export function ROIInvestment() {
                     <stop offset="95%" stopColor="#f43f5e" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false}/>
-                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} dy={10}/>
-                <YAxis yAxisId="l" axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} tickFormatter={v=>`$${v}M`}/>
-                <YAxis yAxisId="r" orientation="right" axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} tickFormatter={v=>`${v}%`}/>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--p-chart-grid-faint)" vertical={false}/>
+                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: 'var(--p-chart-axis)', fontSize: 10 }} dy={10}/>
+                <YAxis yAxisId="l" axisLine={false} tickLine={false} tick={{ fill: 'var(--p-chart-axis)', fontSize: 10 }} tickFormatter={v=>`$${v}M`}/>
+                <YAxis yAxisId="r" orientation="right" axisLine={false} tickLine={false} tick={{ fill: 'var(--p-chart-axis)', fontSize: 10 }} tickFormatter={v=>`${v}%`}/>
                 <Tooltip content={<CustomTooltip/>}/>
                 <Area yAxisId="l" type="monotone" dataKey="totalValue" name="Value ($M)" stroke="#10b981" strokeWidth={2} fill="url(#valueGrad)"/>
                 <Area yAxisId="l" type="monotone" dataKey="totalInvestment" name="Investment ($M)" stroke="#f43f5e" strokeWidth={1.5} strokeDasharray="5 5" fill="url(#invGrad)"/>
@@ -279,10 +279,10 @@ export function ROIInvestment() {
           <div className="h-56 relative z-10" data-cursor="Trace">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={emp.roiQuarterly} barGap={4}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false}/>
-                <XAxis dataKey="quarter" axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} dy={10}/>
-                <YAxis axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} tickFormatter={v=>`$${v/1000}K`}/>
-                <Tooltip content={<CustomTooltip/>} cursor={{ fill: 'rgba(255,255,255,0.03)' }}/>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--p-chart-grid-faint)" vertical={false}/>
+                <XAxis dataKey="quarter" axisLine={false} tickLine={false} tick={{ fill: 'var(--p-chart-axis)', fontSize: 10 }} dy={10}/>
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--p-chart-axis)', fontSize: 10 }} tickFormatter={v=>`$${v/1000}K`}/>
+                <Tooltip content={<CustomTooltip/>} cursor={{ fill: 'var(--p-chart-cursor)' }}/>
                 <Bar dataKey="investment" name="Investment" fill="rgba(244,63,94,0.35)" radius={[4,4,0,0]} barSize={28}/>
                 <Bar dataKey="value" name="Value ($M)" fill="#10b981" radius={[4,4,0,0]} barSize={28}/>
               </BarChart>

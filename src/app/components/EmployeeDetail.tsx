@@ -386,10 +386,10 @@ export function EmployeeDetail() {
                   <div className="flex items-center gap-6">
                     <div className="relative w-12 h-12 flex-shrink-0">
                       <svg viewBox="0 0 36 36" className="w-full h-full transform -rotate-90">
-                        <circle cx="18" cy="18" r="16" stroke="rgba(255,255,255,0.05)" strokeWidth="2" fill="none" />
+                        <circle cx="18" cy="18" r="16" stroke="var(--p-chart-grid)" strokeWidth="2" fill="none" />
                         <motion.circle 
                           cx="18" cy="18" r="16" 
-                          stroke={module.status === 'completed' ? '#10b981' : module.status === 'in_progress' ? '#22d3ee' : 'rgba(255,255,255,0.2)'} 
+                          stroke={module.status === 'completed' ? '#10b981' : module.status === 'in_progress' ? '#22d3ee' : 'var(--p-chart-line-muted)'} 
                           strokeWidth="2" 
                           strokeLinecap="round"
                           fill="none"
@@ -448,10 +448,10 @@ export function EmployeeDetail() {
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={employee.timesheets}>
                       <Tooltip 
-                        cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                        cursor={{ fill: 'var(--p-chart-cursor)' }}
                         contentStyle={{ backgroundColor: 'var(--p-surface)', border: '1px solid var(--p-border-mid)', borderRadius: '0.5rem', fontSize: '12px' }}
                       />
-                      <XAxis dataKey="week" axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} dy={10} />
+                      <XAxis dataKey="week" axisLine={false} tickLine={false} tick={{ fill: 'var(--p-chart-axis)', fontSize: 10 }} dy={10} />
                       <Bar dataKey="hoursLogged" fill="#818cf8" radius={[4, 4, 0, 0]} barSize={12} stackId="a" />
                       <Bar dataKey="billable" fill="#22d3ee" radius={[0, 0, 0, 0]} barSize={12} stackId="a" />
                     </BarChart>

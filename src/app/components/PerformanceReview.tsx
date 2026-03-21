@@ -39,11 +39,11 @@ function RadarWeb({ scores, size = 140 }: { scores: Record<string,number>; size?
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
       {[0.25,0.5,0.75,1].map(f => (
-        <polygon key={f} points={grid(f)} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="0.5" />
+        <polygon key={f} points={grid(f)} fill="none" stroke="var(--p-chart-grid)" strokeWidth="0.5" />
       ))}
       {SCORE_KEYS.map((_,i) => {
         const a = (Math.PI*2*i)/n - Math.PI/2;
-        return <line key={i} x1={cx} y1={cy} x2={cx+r*Math.cos(a)} y2={cy+r*Math.sin(a)} stroke="rgba(255,255,255,0.04)" strokeWidth="0.5" />;
+        return <line key={i} x1={cx} y1={cy} x2={cx+r*Math.cos(a)} y2={cy+r*Math.sin(a)} stroke="var(--p-chart-grid)" strokeWidth="0.5" />;
       })}
       <polygon points={pts.map(p=>`${p.x},${p.y}`).join(' ')}
         fill="rgba(56,189,248,0.08)" stroke="#38bdf8" strokeWidth="1.5" strokeLinejoin="round" />
@@ -57,7 +57,7 @@ function ScoreArc({ value, color, size=72 }: { value:number; color:string; size?
   const r = size*0.4, circ = 2*Math.PI*r;
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
-      <circle cx={size/2} cy={size/2} r={r} stroke="rgba(255,255,255,0.05)" strokeWidth="3" fill="none"/>
+      <circle cx={size/2} cy={size/2} r={r} stroke="var(--p-chart-grid)" strokeWidth="3" fill="none"/>
       <motion.circle cx={size/2} cy={size/2} r={r} stroke={color} strokeWidth="3"
         strokeLinecap="round" fill="none" strokeDasharray={`${circ} ${circ}`}
         initial={{ strokeDashoffset: circ }}

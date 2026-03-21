@@ -119,8 +119,8 @@ export function Analytics() {
                         <stop offset="95%" stopColor="#22d3ee" stopOpacity={0}/>
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                    <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} dy={20} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--p-chart-grid)" vertical={false} />
+                    <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: 'var(--p-chart-axis)', fontSize: 10 }} dy={20} />
                     <Tooltip content={<CustomTooltip />} />
                     <Area type="monotone" dataKey="projected" stroke="#22d3ee" strokeDasharray="5 5" fillOpacity={1} fill="url(#colorProjected)" name="Projected Rev" />
                     <Line type="monotone" dataKey="actual" stroke="#10b981" strokeWidth={3} dot={{ r: 4, fill: '#10b981' }} name="Actual Rev" />
@@ -180,7 +180,7 @@ export function Analytics() {
                         </linearGradient>
                       </defs>
                       <Area type="monotone" dataKey="avgScore" stroke="#c084fc" strokeWidth={2} fill="url(#perfGrad)" />
-                      <Line type="monotone" dataKey="target" stroke="rgba(255,255,255,0.2)" strokeDasharray="4 4" strokeWidth={1} dot={false} />
+                      <Line type="monotone" dataKey="target" stroke="var(--p-chart-line-muted)" strokeDasharray="4 4" strokeWidth={1} dot={false} />
                       <Tooltip content={<CustomTooltip />} />
                     </AreaChart>
                   </ResponsiveContainer>
@@ -271,8 +271,8 @@ export function Analytics() {
                         <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
-                    <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} dy={10} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--p-chart-grid-faint)" vertical={false} />
+                    <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: 'var(--p-chart-axis)', fontSize: 10 }} dy={10} />
                     <Tooltip content={<CustomTooltip />} />
                     <Area type="monotone" dataKey="totalValue" name="Value ($M)" stroke="#10b981" strokeWidth={2} fill="url(#roiValueGrad)" />
                     <Line type="monotone" dataKey="totalInvestment" name="Investment ($M)" stroke="#f43f5e" strokeWidth={1.5} strokeDasharray="5 5" dot={false} />
@@ -318,8 +318,8 @@ export function Analytics() {
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
-                  <PolarGrid stroke="rgba(255,255,255,0.05)" />
-                  <PolarAngleAxis dataKey="metric" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 11 }} />
+                  <PolarGrid stroke="var(--p-chart-grid)" />
+                  <PolarAngleAxis dataKey="metric" tick={{ fill: 'var(--p-chart-axis)', fontSize: 11 }} />
                   <Radar name="Score" dataKey="score" stroke="#38bdf8" fill="#38bdf8" fillOpacity={0.15} strokeWidth={1.5} />
                   <Tooltip content={<CustomTooltip />} />
                 </RadarChart>
@@ -332,9 +332,9 @@ export function Analytics() {
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={globalLearningData} layout="vertical">
-                  <XAxis type="number" axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} />
-                  <YAxis dataKey="domain" type="category" axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11 }} width={80} />
-                  <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.02)' }} />
+                  <XAxis type="number" axisLine={false} tickLine={false} tick={{ fill: 'var(--p-chart-axis)', fontSize: 10 }} />
+                  <YAxis dataKey="domain" type="category" axisLine={false} tickLine={false} tick={{ fill: 'var(--p-chart-axis-hi)', fontSize: 11 }} width={80} />
+                  <Tooltip content={<CustomTooltip />} cursor={{ fill: 'var(--p-chart-cursor)' }} />
                   <Bar dataKey="completed" name="Completed" fill="#10b981" radius={[0, 4, 4, 0]} barSize={12} stackId="a" />
                   <Bar dataKey="active" name="In Progress" fill="#38bdf8" radius={[0, 4, 4, 0]} barSize={12} stackId="a" />
                 </ComposedChart>

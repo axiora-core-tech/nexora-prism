@@ -376,3 +376,28 @@
 .prism-light .from-\[\#030303\] {
   --tw-gradient-from: var(--p-bg);
 }
+
+/* ─── Chart & SVG reactive tokens ──────────────────────────────────────────
+   All hardcoded rgba(255,255,255,x) chart colours replaced with these vars.
+   Components use var(--p-chart-*) so light/dark switch is automatic.       */
+
+:root,
+.prism-dark {
+  --p-chart-grid:       rgba(255,255,255,0.05);
+  --p-chart-grid-faint: rgba(255,255,255,0.03);
+  --p-chart-axis:       rgba(255,255,255,0.35);
+  --p-chart-axis-hi:    rgba(255,255,255,0.50);
+  --p-chart-cursor:     rgba(255,255,255,0.04);
+  --p-chart-track:      rgba(255,255,255,0.06);
+  --p-chart-line-muted: rgba(255,255,255,0.20);
+}
+
+.prism-light {
+  --p-chart-grid:       rgba(0,0,0,0.08);
+  --p-chart-grid-faint: rgba(0,0,0,0.05);
+  --p-chart-axis:       rgba(0,0,0,0.45);
+  --p-chart-axis-hi:    rgba(0,0,0,0.60);
+  --p-chart-cursor:     rgba(0,0,0,0.04);
+  --p-chart-track:      rgba(0,0,0,0.10);
+  --p-chart-line-muted: rgba(0,0,0,0.18);
+}

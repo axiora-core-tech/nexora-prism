@@ -62,7 +62,7 @@ function TemporalGrid({ calendar }: { calendar: any[] }) {
 
               {hoveredDay === day && type !== 'weekend' && (
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-none">
-                  <div className="bg-[#0a0a0c] border p-border-mid rounded-xl p-3 whitespace-nowrap shadow-2xl">
+                  <div className="border p-border-mid rounded-xl p-3 whitespace-nowrap shadow-2xl" style={{ backgroundColor: 'var(--p-surface)' }}>
                     <p className="text-sm uppercase tracking-[0.12em] font-mono mb-1.5" style={{ color: cfg.color }}>{cfg.label}</p>
                     {day.checkIn && (
                       <div className="flex items-center gap-2 text-xs p-text-mid">
@@ -280,7 +280,7 @@ export function Attendance() {
               <div className="flex items-center gap-4 relative z-10">
                 <div className="relative w-16 h-16 flex-shrink-0" data-cursor="Scan Bio">
                   <svg viewBox="0 0 64 64" className="w-full h-full -rotate-90">
-                    <circle cx="32" cy="32" r="28" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="6"/>
+                    <circle cx="32" cy="32" r="28" fill="none" stroke="var(--p-chart-grid)" strokeWidth="6"/>
                     <circle cx="32" cy="32" r="28" fill="none" stroke="#10b981" strokeWidth="5" strokeLinecap="round"
                       strokeDasharray={`${(att.present / (att.present + att.wfh)) * 175.9} 175.9`}/>
                     <circle cx="32" cy="32" r="28" fill="none" stroke="#38bdf8" strokeWidth="5" strokeLinecap="round"

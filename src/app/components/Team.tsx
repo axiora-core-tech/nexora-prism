@@ -146,8 +146,8 @@ function EmpCard({ emp, selected, onSelect }: { emp: any; selected: boolean; onS
               <div className="mt-4 h-28 -mx-2">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
-                    <PolarGrid stroke="rgba(255,255,255,0.04)" />
-                    <PolarAngleAxis dataKey="subject" tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 9 }} />
+                    <PolarGrid stroke="var(--p-chart-grid)" />
+                    <PolarAngleAxis dataKey="subject" tick={{ fill: 'var(--p-chart-axis)', fontSize: 9 }} />
                     <Radar dataKey="A" stroke={c} fill={c} fillOpacity={0.12} strokeWidth={1.5} />
                   </RadarChart>
                 </ResponsiveContainer>

@@ -24,7 +24,7 @@ export function Demo() {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-4"
-      style={{ background: '#0A0A08' }}
+      style={{ backgroundColor: 'var(--p-bg)' }}
     >
       {/* ambient */}
       <div

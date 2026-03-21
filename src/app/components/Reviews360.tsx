@@ -30,11 +30,11 @@ function RadarWeb({ scores }: { scores: Record<string, number> }) {
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
       {[0.25,0.5,0.75,1].map(f => (
-        <polygon key={f} points={grid(f)} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="0.5" />
+        <polygon key={f} points={grid(f)} fill="none" stroke="var(--p-chart-grid)" strokeWidth="0.5" />
       ))}
       {keys.map((_,i) => {
         const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
-        return <line key={i} x1={cx} y1={cy} x2={cx + r * Math.cos(angle)} y2={cy + r * Math.sin(angle)} stroke="rgba(255,255,255,0.04)" strokeWidth="0.5" />;
+        return <line key={i} x1={cx} y1={cy} x2={cx + r * Math.cos(angle)} y2={cy + r * Math.sin(angle)} stroke="var(--p-chart-grid)" strokeWidth="0.5" />;
       })}
       <polygon points={pts.map(p => `${p.x},${p.y}`).join(' ')}
         fill="rgba(56,189,248,0.08)" stroke="#38bdf8" strokeWidth="1.5" strokeLinejoin="round" />

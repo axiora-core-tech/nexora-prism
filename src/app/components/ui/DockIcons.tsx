@@ -230,3 +230,22 @@ export function IconSettings({ size=20, color='currentColor', strokeWidth=1.5, c
     </svg>
   );
 }
+
+// ── Spectrum — six diverging rays from a central prism point ─────────────────
+export function IconSpectrum({ size=20, color='currentColor', strokeWidth=1.5, className }: IconProps) {
+  return (
+    <svg {...base(size)} strokeWidth={strokeWidth} className={className} style={{ color }}>
+      {/* Prism triangle */}
+      <polygon points="12,4 20,18 4,18" fill="none" strokeOpacity="0.7" />
+      {/* Incoming ray */}
+      <line x1="12" y1="0" x2="12" y2="4" strokeOpacity="0.5" />
+      {/* Six spectrum rays diverging from bottom of prism */}
+      <line x1="12" y1="18" x2="4"  y2="22" stroke="#f43f5e" strokeOpacity="0.9" />
+      <line x1="12" y1="18" x2="7"  y2="23" stroke="#f59e0b" strokeOpacity="0.9" />
+      <line x1="12" y1="18" x2="10" y2="24" stroke="#10b981" strokeOpacity="0.9" />
+      <line x1="12" y1="18" x2="14" y2="24" stroke="#38bdf8" strokeOpacity="0.9" />
+      <line x1="12" y1="18" x2="17" y2="23" stroke="#c084fc" strokeOpacity="0.9" />
+      <line x1="12" y1="18" x2="20" y2="22" stroke="#fb923c" strokeOpacity="0.9" />
+    </svg>
+  );
+}

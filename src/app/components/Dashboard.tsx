@@ -174,38 +174,57 @@ export function Dashboard() {
         </div>
       </motion.div>
 
-      {/* ORG METRIC PULSE CARDS */}
+      {/* SPECTRUM INLINE — six dimensions replacing KPI pulse cards */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.8 }}
-        className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="mb-8 p-bg-card border p-border rounded-[2rem] overflow-hidden"
       >
-        {orgMetrics.map((m, i) => (
-          <motion.div
-            key={m.label}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 * i }}
-            className="relative bg-white/[0.02] border p-border rounded-[1.5rem] p-6 overflow-hidden group hover:p-border-mid transition-colors hover-lift hover-card"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <p className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono mb-2">{m.label}</p>
-                <p className="text-3xl font-light text-white leading-none">
-                  {m.val}<span className="text-lg p-text-dim">{m.suffix}</span>
-                </p>
+        {/* Section header */}
+        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b p-border">
+          <div>
+            <p className="text-xs font-mono uppercase tracking-[0.2em] p-text-ghost mb-1">People Intelligence</p>
+            <h3 className="text-lg font-light text-white">
+              Six <span className="font-serif italic p-text-dim">Signals</span>
+            </h3>
+          </div>
+          <NavLink to="/app/spectrum"
+            className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-widest p-text-dim hover:p-text-hi transition-colors group"
+            data-cursor="Full Spectrum">
+            Full Analysis <ArrowUpRight size={10} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+          </NavLink>
+        </div>
+
+        {/* Six dimension bars */}
+        <div className="divide-y" style={{ borderColor: 'var(--p-border)' }}>
+          {[
+            { label:'Output',     val: Math.round(employees.reduce((s,e)=>s+e.performanceScore,0)/employees.length), unit:'pt', color:'#f43f5e' },
+            { label:'Growth',     val: Math.round(employees.reduce((s,e)=>s+e.learningProgress,0)/employees.length), unit:'%',  color:'#10b981' },
+            { label:'Motivation', val: Math.round(employees.reduce((s,e)=>s+e.motivationScore,0)/employees.length),  unit:'pt', color:'#f59e0b' },
+            { label:'Wellbeing',  val: Math.round(employees.reduce((s,e)=>s+e.welfareScore,0)/employees.length),     unit:'pt', color:'#c084fc' },
+            { label:'Return',     val: Math.round(employees.reduce((s,e)=>s+e.roi,0)/employees.length),              unit:'%',  color:'#38bdf8' },
+            { label:'Risk',       val: Math.round(employees.reduce((s,e)=>s+e.attritionRiskPercentage,0)/employees.length), unit:'%', color:'#fb923c' },
+          ].map((dim, i) => (
+            <NavLink key={dim.label} to="/app/spectrum"
+              className="flex items-center gap-4 px-6 py-3.5 group hover:bg-white/[0.02] transition-colors"
+            >
+              <span className="text-[9px] font-mono p-text-ghost w-4 flex-shrink-0">{String(i+1).padStart(2,'0')}</span>
+              <span className="text-sm font-light p-text-body group-hover:text-white transition-colors w-24 flex-shrink-0">{dim.label}</span>
+              <div className="flex-1 h-px relative overflow-hidden" style={{ background: 'var(--p-border)' }}>
+                <motion.div className="absolute left-0 top-0 h-full"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${Math.min(dim.val, 100)}%` }}
+                  transition={{ duration: 1, delay: 0.3 + i * 0.08, ease: [0.16,1,0.3,1] }}
+                  style={{ background: dim.color }}
+                />
               </div>
-              <div className="p-2 rounded-xl" style={{ background: m.color + '15' }}>
-                <m.icon size={14} style={{ color: m.color }} />
-              </div>
-            </div>
-            <div className="flex items-end justify-between">
-              <span className="text-sm font-mono" style={{ color: m.color }}>{m.trend}</span>
-              <SparkLine data={m.sparkData} color={m.color} />
-            </div>
-          </motion.div>
-        ))}
+              <span className="text-sm font-mono w-14 text-right flex-shrink-0" style={{ color: dim.color }}>
+                {dim.val}{dim.unit}
+              </span>
+            </NavLink>
+          ))}
+        </div>
       </motion.div>
 
       {/* QUICK ACTIONS */}

@@ -94,7 +94,7 @@ export function HeroSection() {
           <div className="flex items-center justify-center w-6 h-6 rounded-full bg-indigo-500/20">
             <div className="w-2 h-2 bg-indigo-400 rounded-full shadow-[0_0_10px_rgba(129,140,248,1)] animate-pulse" />
           </div>
-          <span className="text-xs sm:text-sm font-mono tracking-[0.2em] text-white uppercase font-bold">
+          <span className="text-xs sm:text-sm font-mono tracking-[0.2em] text-white uppercase font-medium">
             Every person. Every dimension.
           </span>
         </motion.div>

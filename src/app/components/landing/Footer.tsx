@@ -12,7 +12,7 @@ export function Footer() {
         <div className="flex flex-col gap-8 w-full max-w-md">
           <div className="flex items-center gap-3">
             <Hexagon className="w-8 h-8 text-white" />
-            <span className="text-xl font-bold tracking-widest text-white uppercase">Prism</span>
+            <span className="text-xl font-light tracking-[0.35em] text-white uppercase">Prism</span>
           </div>
           <p className="text-lg text-zinc-400 font-light leading-relaxed">
             Every person on your team contains more than their job title. Prism helps you see the whole picture — and act on it.

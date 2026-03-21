@@ -1,8 +1,9 @@
-import { useNavigate } from 'react-router';
+import { useNavigate, NavLink } from 'react-router';
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
+import { ResponsiveContainer, BarChart, Area, Tooltip, XAxis, YAxis, CartesianGrid, ComposedChart, Line, Bar, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from 'recharts';
 import { Cpu, TrendingUp, ArrowUpRight, ArrowDownRight, Coins, ArrowLeft } from 'lucide-react';
-import { ResponsiveContainer, ComposedChart, Area, Line, Bar, XAxis, YAxis, Tooltip, CartesianGrid, BarChart } from 'recharts';
+import { ROIWaveChart } from './ui/ROIWaveChart';
 import { employees, orgROIData, departmentROI } from '../mockData';
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -131,29 +132,8 @@ export function ROIInvestment() {
               <span className="text-sm font-mono">+33% YTD</span>
             </div>
           </div>
-          <div className="h-72 relative z-10" data-cursor="Analyze ROI">
-            <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={orgROIData}>
-                <defs>
-                  <linearGradient id="valueGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.15}/>
-                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="invGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#f43f5e" stopOpacity={0.08}/>
-                    <stop offset="95%" stopColor="#f43f5e" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--p-chart-grid-faint)" vertical={false}/>
-                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: 'var(--p-chart-axis)', fontSize: 10 }} dy={10}/>
-                <YAxis yAxisId="l" axisLine={false} tickLine={false} tick={{ fill: 'var(--p-chart-axis)', fontSize: 10 }} tickFormatter={v=>`$${v}M`}/>
-                <YAxis yAxisId="r" orientation="right" axisLine={false} tickLine={false} tick={{ fill: 'var(--p-chart-axis)', fontSize: 10 }} tickFormatter={v=>`${v}%`}/>
-                <Tooltip content={<CustomTooltip/>}/>
-                <Area yAxisId="l" type="monotone" dataKey="totalValue" name="Value ($M)" stroke="#10b981" strokeWidth={2} fill="url(#valueGrad)"/>
-                <Area yAxisId="l" type="monotone" dataKey="totalInvestment" name="Investment ($M)" stroke="#f43f5e" strokeWidth={1.5} strokeDasharray="5 5" fill="url(#invGrad)"/>
-                <Line yAxisId="r" type="monotone" dataKey="roi" name="ROI (%)" stroke="#f59e0b" strokeWidth={2} dot={{ r: 3, fill: '#f59e0b' }}/>
-              </ComposedChart>
-            </ResponsiveContainer>
+          <div className="relative z-10" data-cursor="Analyze ROI">
+            <ROIWaveChart data={orgROIData} height={288} />
           </div>
         </div>
 

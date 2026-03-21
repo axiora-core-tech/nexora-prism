@@ -85,7 +85,7 @@ const Card = ({ i, title, description, icon: Icon, image, color, progress, targe
             </div>
           </div>
           
-          <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tighter text-white mb-6 leading-[1.1]">
+          <h3 className="text-3xl sm:text-4xl lg:text-5xl font-light tracking-tighter text-white mb-6 leading-[1.1]">
             {title}
           </h3>
           
@@ -126,7 +126,7 @@ const Card = ({ i, title, description, icon: Icon, image, color, progress, targe
             <div className="absolute bottom-6 right-6 flex flex-col items-end gap-1 font-mono text-[9px] text-zinc-300 tracking-widest bg-black/50 backdrop-blur-md px-3 py-2 border border-white/10">
               <span>REV.MODEL // {['A4F2C1', 'B9E3D7', 'C1A8F4', 'D6B2E9'][i % 4]}</span>
               <span>CALCULATING ROI...</span>
-              <span className={`${textGlow} font-bold animate-pulse`}>100% FORECASTED</span>
+              <span className={`${textGlow} font-medium animate-pulse`}>100% FORECASTED</span>
             </div>
           </div>
         </div>
@@ -153,7 +153,7 @@ export function FeatureSection() {
           <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(99,102,241,0.8)]" />
           <span className="text-[10px] font-mono text-white uppercase tracking-widest">Four ways to see more clearly</span>
         </div>
-        <h2 className="text-4xl sm:text-6xl lg:text-[7rem] font-bold tracking-tighter leading-[0.9] text-white mb-6">
+        <h2 className="text-4xl sm:text-6xl lg:text-[7rem] font-light tracking-tighter leading-[0.9] text-white mb-6">
           The shape of <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-rose-400 drop-shadow-[0_0_30px_rgba(168,85,247,0.3)]">
             your team.

@@ -43,7 +43,7 @@ export function CTASection() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.2, type: "spring" }}
             viewport={{ once: true }}
-            className="text-5xl sm:text-7xl md:text-[8rem] font-bold tracking-tighter text-white mb-8 leading-[0.85] drop-shadow-2xl"
+            className="text-5xl sm:text-7xl md:text-[8rem] font-light tracking-tighter text-white mb-8 leading-[0.85] drop-shadow-2xl"
           >
             See your people <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-b from-zinc-300 to-zinc-600">

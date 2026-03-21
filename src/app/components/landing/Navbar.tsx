@@ -43,7 +43,7 @@ export function Navbar() {
           {/* Logo */}
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="flex items-center gap-4 text-white font-bold tracking-tighter text-2xl group cursor-pointer"
+            className="flex items-center gap-4 text-white font-light tracking-[0.3em] text-sm uppercase group cursor-pointer"
           >
             <Hexagon className="w-6 h-6 text-white group-hover:text-indigo-400 transition-colors" />
             <span className="tracking-[0.2em] text-sm uppercase">PRISM</span>

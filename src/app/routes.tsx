@@ -19,6 +19,7 @@ const ROIInvestment     = lazy(() => import("./components/ROIInvestment").then(m
 const Leaderboard       = lazy(() => import("./components/Leaderboard").then(m => ({ default: m.Leaderboard })));
 const PerformanceReview = lazy(() => import("./components/PerformanceReview").then(m => ({ default: m.PerformanceReview })));
 const Team               = lazy(() => import("./components/Team").then(m => ({ default: m.Team })));
+const Spectrum           = lazy(() => import("./components/Spectrum").then(m => ({ default: m.Spectrum })));
 
 // ─── Minimal fallback shown during chunk load ─────────────────────────────────
 function PageFallback() {
@@ -71,6 +72,7 @@ export const router = createBrowserRouter([
       { path: "reviews",      element: withSuspense(PerformanceReview) },
       { path: "tasks",        element: withSuspense(Tasks) },
       { path: "settings",     element: withSuspense(Settings) },
+      { path: "spectrum",     element: withSuspense(Spectrum) },
       {
         path: "*",
         element: (

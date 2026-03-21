@@ -74,7 +74,7 @@ export function JourneySection() {
           <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(129,140,248,0.8)]" />
           How it works
         </div>
-        <h2 className="text-4xl sm:text-6xl md:text-[5rem] font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50 mb-6 leading-[1.1]">
+        <h2 className="text-4xl sm:text-6xl md:text-[5rem] font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50 mb-6 leading-[1.1]">
           From signal <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-rose-400">
             to understanding.
@@ -142,7 +142,7 @@ export function JourneySection() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <span className={`inline-block px-2 py-0.5 text-[9px] font-mono uppercase tracking-widest text-white bg-gradient-to-r ${node.color} rounded-sm mb-2`}>Phase.0{i + 1}</span>
-                  <h3 className="text-xl font-extrabold tracking-tight text-white mb-2 leading-tight">{node.title}</h3>
+                  <h3 className="text-xl font-semibold tracking-tight text-white mb-2 leading-tight">{node.title}</h3>
                   <p className="text-sm text-zinc-300 font-light leading-relaxed">{node.desc}</p>
                 </div>
               </div>
@@ -173,7 +173,7 @@ export function JourneySection() {
                         <span className={`px-2 py-1 text-[9px] font-mono uppercase tracking-widest text-white font-bold rounded-sm bg-gradient-to-r ${node.color}`}>Phase.0{i + 1}</span>
                         <div className="flex-1 h-px bg-white/10 group-hover:bg-white/30 transition-colors" />
                       </div>
-                      <h3 className="text-2xl lg:text-3xl xl:text-4xl font-extrabold tracking-tight text-white mb-3 leading-tight">{node.title}</h3>
+                      <h3 className="text-2xl lg:text-3xl xl:text-4xl font-semibold tracking-tight text-white mb-3 leading-tight">{node.title}</h3>
                       <p className="text-base lg:text-lg text-zinc-300 leading-relaxed font-light group-hover:text-zinc-100 transition-colors max-w-2xl">{node.desc}</p>
                     </div>
                   </div>
@@ -203,7 +203,7 @@ export function JourneySection() {
                         <div className="flex-1 h-px bg-white/10 group-hover:bg-white/30 transition-colors" />
                         <span className={`px-2 py-1 text-[9px] font-mono uppercase tracking-widest text-white font-bold rounded-sm bg-gradient-to-r ${node.color}`}>Phase.0{i + 1}</span>
                       </div>
-                      <h3 className="text-2xl lg:text-3xl xl:text-4xl font-extrabold tracking-tight text-white mb-3 leading-tight">{node.title}</h3>
+                      <h3 className="text-2xl lg:text-3xl xl:text-4xl font-semibold tracking-tight text-white mb-3 leading-tight">{node.title}</h3>
                       <p className="text-base lg:text-lg text-zinc-300 leading-relaxed font-light group-hover:text-zinc-100 transition-colors">{node.desc}</p>
                     </div>
                   </div>

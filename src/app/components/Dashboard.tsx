@@ -195,7 +195,7 @@ export function Dashboard() {
                     <div className={`w-1.5 h-1.5 rounded-full shadow-[0_0_10px_currentColor] ${emp.attritionRisk === 'High' ? 'bg-rose-500 text-rose-500' :
                         emp.attritionRisk === 'Medium' ? 'bg-amber-500 text-amber-500' : 'bg-emerald-500 text-emerald-500'
                       }`} />
-                    <span className="text-sm uppercase tracking-[0.12em] text-white/60 font-semibold">{emp.stage}</span>
+                    <span className="text-xs uppercase tracking-[0.12em] text-white/60 font-semibold truncate max-w-[120px]">{emp.stage}</span>
                   </div>
 
                   {/* ROI badge */}
@@ -206,21 +206,21 @@ export function Dashboard() {
                   </div>
 
                   <div className="absolute bottom-5 left-5 right-5 pointer-events-none">
-                    <h3 className="text-2xl font-light text-white leading-none mb-0.5 group-hover:text-cyan-400 transition-colors">{emp.name.split(' ')[0]}</h3>
-                    <h3 className="text-2xl font-serif italic text-white/50 leading-none mb-4">{emp.name.split(' ')[1]}</h3>
+                    <h3 className="text-xl font-light text-white leading-none mb-0.5 group-hover:text-cyan-400 transition-colors truncate">{emp.name.split(' ')[0]}</h3>
+                    <h3 className="text-xl font-serif italic text-white/50 leading-none mb-3 truncate">{emp.name.split(' ')[1]}</h3>
 
                     <div className="flex justify-between items-end border-t border-white/10 pt-3">
                       <div>
                         <span className="block text-sm uppercase tracking-[0.15em] text-white/40 mb-0.5">Performance</span>
-                        <span className="text-xl font-light text-white">{emp.performanceScore}<span className="text-sm text-white/30">pt</span></span>
+                        <span className="text-lg font-light text-white">{emp.performanceScore}<span className="text-xs text-white/30">pt</span></span>
                       </div>
                       <div>
                         <span className="block text-sm uppercase tracking-[0.15em] text-white/40 mb-0.5">Learning</span>
-                        <span className="text-xl font-light text-white">{emp.learningProgress}<span className="text-sm text-white/30">%</span></span>
+                        <span className="text-lg font-light text-white">{emp.learningProgress}<span className="text-xs text-white/30">%</span></span>
                       </div>
                       <div>
                         <span className="block text-sm uppercase tracking-[0.15em] text-white/40 mb-0.5">Welfare</span>
-                        <span className="text-xl font-light text-white">{emp.welfareScore}<span className="text-sm text-white/30">pt</span></span>
+                        <span className="text-lg font-light text-white">{emp.welfareScore}<span className="text-xs text-white/30">pt</span></span>
                       </div>
                     </div>
                   </div>
@@ -330,7 +330,10 @@ export function Dashboard() {
                   className="flex items-center gap-4 group hover:bg-rose-500/5 -mx-2 px-2 py-2 rounded-xl transition-colors"
                 >
                   <img src={emp.avatar} alt={emp.name} loading="lazy" decoding="async" className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
-
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white text-sm font-light truncate">{emp.name}</p>
+                    <p className="text-white/40 text-xs truncate">{emp.role}</p>
+                  </div>
                   <div className="text-right flex-shrink-0">
                     <p className="text-rose-400 text-sm font-mono">{emp.attritionRiskPercentage}%</p>
                     <p className="text-sm uppercase tracking-[0.12em] text-white/30">risk</p>
@@ -338,47 +341,47 @@ export function Dashboard() {
                   <ChevronRight size={12} className="text-white/20 group-hover:text-rose-400 transition-colors flex-shrink-0" />
                 </NavLink>
               ))}
-          </div>
+            </div>
           </motion.div>
         )}
 
-      {/* Top Performers */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.1 }}
-        className="md:col-span-6 bg-emerald-500/5 border border-emerald-500/20 rounded-[2rem] p-8"
-      >
-        <div className="flex items-center gap-3 mb-6">
-          <Star size={14} className="text-amber-400" />
-          <h3 className="text-amber-400 uppercase tracking-[0.2em] text-sm font-semibold flex items-center gap-4 border-b border-white/10 pb-4">Top Performers</h3>
-        </div>
-        <div className="space-y-4">
-          {topPerformers.map((emp, i) => (
-            <NavLink to={`/app/employee/${emp.id}`} key={emp.id}
-              className="flex items-center gap-4 group hover:bg-amber-500/5 -mx-2 px-2 py-2 rounded-xl transition-colors"
-            >
-              <div className="w-6 text-center flex-shrink-0 text-sm font-mono text-white/30">{i === 0 ? '01' : '02'}</div>
-              <img src={emp.avatar} alt={emp.name} loading="lazy" decoding="async" className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
-              <div className="flex-1">
-                <p className="text-white text-sm font-light">{emp.name}</p>
-                <p className="text-white/40 text-xs">{emp.role}</p>
-              </div>
-              <div className="text-right flex-shrink-0">
-                <p className="text-emerald-400 text-sm font-mono">{emp.performanceScore}</p>
-                <p className="text-sm uppercase tracking-[0.12em] text-white/30">score</p>
-              </div>
-              <ChevronRight size={12} className="text-white/20 group-hover:text-amber-400 transition-colors flex-shrink-0" />
-            </NavLink>
-          ))}
-        </div>
+        {/* Top Performers */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="md:col-span-6 bg-emerald-500/5 border border-emerald-500/20 rounded-[2rem] p-8"
+        >
+          <div className="flex items-center gap-3 mb-6">
+            <Star size={14} className="text-amber-400" />
+            <h3 className="text-amber-400 uppercase tracking-[0.2em] text-sm font-semibold flex items-center gap-4 border-b border-white/10 pb-4">Top Performers</h3>
+          </div>
+          <div className="space-y-4">
+            {topPerformers.map((emp, i) => (
+              <NavLink to={`/app/employee/${emp.id}`} key={emp.id}
+                className="flex items-center gap-4 group hover:bg-amber-500/5 -mx-2 px-2 py-2 rounded-xl transition-colors"
+              >
+                <div className="w-6 text-center flex-shrink-0 text-sm font-mono text-white/30">{i === 0 ? '01' : '02'}</div>
+                <img src={emp.avatar} alt={emp.name} loading="lazy" decoding="async" className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
+                <div className="flex-1">
+                  <p className="text-white text-sm font-light">{emp.name}</p>
+                  <p className="text-white/40 text-xs">{emp.role}</p>
+                </div>
+                <div className="text-right flex-shrink-0">
+                  <p className="text-emerald-400 text-sm font-mono">{emp.performanceScore}</p>
+                  <p className="text-sm uppercase tracking-[0.12em] text-white/30">score</p>
+                </div>
+                <ChevronRight size={12} className="text-white/20 group-hover:text-amber-400 transition-colors flex-shrink-0" />
+              </NavLink>
+            ))}
+          </div>
 
-        <NavLink to="/app/leaderboard" className="mt-6 flex items-center gap-2 text-sm uppercase tracking-[0.12em] text-white/30 hover:text-amber-400 transition-colors">
-          <Trophy size={10} /> Signal Hierarchy <ChevronRight size={10} />
-        </NavLink>
-      </motion.div>
+          <NavLink to="/app/leaderboard" className="mt-6 flex items-center gap-2 text-sm uppercase tracking-[0.12em] text-white/30 hover:text-amber-400 transition-colors">
+            <Trophy size={10} /> Signal Hierarchy <ChevronRight size={10} />
+          </NavLink>
+        </motion.div>
+      </div>
     </div>
-    </div >
   );
 }

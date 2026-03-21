@@ -249,3 +249,105 @@
   background: var(--prism-bg-card2);
   border-color: var(--prism-border-mid);
 }
+
+/* ─── Light mode: global colour overrides for hardcoded dark patterns ─────── */
+/* These rules recolour the app shell, cards, and text without touching         */
+/* individual component files. Tailwind inline styles override CSS, so this     */
+/* only works for class-based colours (bg-white/5, text-white/40 etc).         */
+
+.prism-light,
+.prism-light * {
+  --tw-bg-opacity: 1;
+}
+
+/* App shell and main scroll area */
+.prism-light .prism-shell main {
+  background-color: var(--prism-bg) !important;
+}
+
+/* Cards: bg-white/[0.02], bg-white/5, bg-white/[0.03] → warm light surface */
+.prism-light .bg-white\/\[0\.02\],
+.prism-light .bg-white\/\[0\.03\],
+.prism-light .bg-white\/\[0\.04\],
+.prism-light .bg-white\/\[0\.05\] {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+.prism-light .bg-white\/5 {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+.prism-light .bg-white\/10 {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+.prism-light .bg-white\/20 {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Hardcoded dark backgrounds */
+.prism-light [class*="bg-\[\#030303\]"],
+.prism-light [class*="bg-\[\#050505\]"],
+.prism-light [class*="bg-\[\#0a0a0a\]"],
+.prism-light [class*="bg-\[\#111\]"] {
+  background-color: var(--prism-bg-card) !important;
+}
+
+/* Borders: border-white/5, border-white/10 → dark equivalents */
+.prism-light .border-white\/5 {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+.prism-light .border-white\/10 {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+.prism-light .border-white\/20 {
+  border-color: rgba(0, 0, 0, 0.18) !important;
+}
+
+/* Text colours: text-white → near-black, text-white/40 → grey */
+.prism-light .text-white {
+  color: #0f0e0d !important;
+}
+.prism-light .text-white\/80 {
+  color: rgba(15, 14, 13, 0.80) !important;
+}
+.prism-light .text-white\/60 {
+  color: rgba(15, 14, 13, 0.60) !important;
+}
+.prism-light .text-white\/50 {
+  color: rgba(15, 14, 13, 0.50) !important;
+}
+.prism-light .text-white\/40 {
+  color: rgba(15, 14, 13, 0.40) !important;
+}
+.prism-light .text-white\/30 {
+  color: rgba(15, 14, 13, 0.30) !important;
+}
+.prism-light .text-white\/20 {
+  color: rgba(15, 14, 13, 0.20) !important;
+}
+.prism-light .text-zinc-100 {
+  color: #1a1918 !important;
+}
+.prism-light .text-zinc-300,
+.prism-light .text-zinc-400 {
+  color: rgba(15, 14, 13, 0.55) !important;
+}
+
+/* Dock: force a warm translucent background in light mode */
+.prism-light .backdrop-blur-2xl.bg-white\/5 {
+  background-color: rgba(255, 255, 255, 0.72) !important;
+  border-color: rgba(0, 0, 0, 0.10) !important;
+}
+
+/* Gradient overlays on employee cards — tone down in light mode */
+.prism-light .bg-gradient-to-t.from-black {
+  --tw-gradient-from: rgba(0,0,0,0.55) !important;
+}
+
+/* Mix-blend-difference cursors — invert for light bg */
+.prism-light .mix-blend-difference {
+  mix-blend-mode: multiply;
+}
+
+/* Ambient blobs — already handled in Layout.tsx but add a fallback */
+.prism-light .app-blob {
+  opacity: 0.15;
+}

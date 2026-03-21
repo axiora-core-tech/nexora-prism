@@ -1,12 +1,14 @@
-import React, { useRef, useState, useEffect, useMemo, memo } from 'react';
+import React, { useRef, useMemo, memo } from 'react';
 import { NavLink } from 'react-router';
-import { motion, useScroll, useTransform } from 'motion/react';
-import { ArrowUpRight, TrendingUp, ShieldAlert, Zap, Target, Star, ChevronRight, DollarSign, Activity, Trophy, FileText, BarChart2 } from 'lucide-react';
-import { ResponsiveContainer, AreaChart, Area, Tooltip } from 'recharts';
+import { motion } from 'motion/react';
+import { ArrowUpRight, TrendingUp, ShieldAlert, Zap, Target, Star, ChevronRight, DollarSign, Activity, Trophy, FileText, BarChart2, Brain } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 import { employees, alerts, performanceData } from '../mockData';
 
-// Isolated so setTime re-renders only this element, not the whole Dashboard
+/* ═══════════════════════════════════════════════════════════════════════════
+   LIVE CLOCK — Isolated to prevent re-rendering the whole dashboard
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 function LiveClock() {
   const [time, setTime] = React.useState(new Date());
   React.useEffect(() => {
@@ -20,6 +22,133 @@ function LiveClock() {
   );
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   CUSTOM CHART: Waveform Sparkline — hand-crafted SVG
+   A smooth interpolated path with gradient fill, no recharts.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+const WaveformSpark = memo(function WaveformSpark({ data, color, width = 72, height = 32 }: { data: number[]; color: string; width?: number; height?: number }) {
+  const id = useMemo(() => `wf-${color.replace('#', '')}-${Math.random().toString(36).slice(2, 6)}`, [color]);
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+
+  // Build smooth cubic path
+  const points = data.map((v, i) => ({
+    x: (i / (data.length - 1)) * width,
+    y: height - ((v - min) / range) * (height * 0.85) - height * 0.075,
+  }));
+
+  let d = `M ${points[0].x},${points[0].y}`;
+  for (let i = 1; i < points.length; i++) {
+    const prev = points[i - 1];
+    const curr = points[i];
+    const cpx = (prev.x + curr.x) / 2;
+    d += ` C ${cpx},${prev.y} ${cpx},${curr.y} ${curr.x},${curr.y}`;
+  }
+
+  const areaD = d + ` L ${width},${height} L 0,${height} Z`;
+
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
+      <defs>
+        <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity={0.3} />
+          <stop offset="100%" stopColor={color} stopOpacity={0} />
+        </linearGradient>
+      </defs>
+      <path d={areaD} fill={`url(#${id})`} />
+      <path d={d} fill="none" stroke={color} strokeWidth={1.5} strokeLinecap="round" />
+      {/* End dot */}
+      <circle cx={points[points.length - 1].x} cy={points[points.length - 1].y} r={2} fill={color} />
+    </svg>
+  );
+});
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CUSTOM CHART: Signal Columns — Animated bar chart from scratch
+   Each bar grows from bottom with a glowing cap and staggered entrance.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+function SignalColumns({ values, gradientFrom, gradientTo }: { values: number[]; gradientFrom: string; gradientTo: string }) {
+  const max = Math.max(...values);
+  const id = useMemo(() => `sc-${Math.random().toString(36).slice(2, 6)}`, []);
+
+  return (
+    <div className="h-56 flex items-end justify-between gap-2 relative z-10">
+      {values.map((val, i) => {
+        const hPct = Math.max(6, (val / max) * 100);
+        return (
+          <div key={i} className="w-full relative group" style={{ height: '100%' }}>
+            {/* Background track */}
+            <div className="absolute inset-0 rounded-t-md" style={{ background: 'var(--p-bg-card)' }} />
+            {/* Filled bar */}
+            <motion.div
+              className="absolute bottom-0 left-0 right-0 rounded-t-md overflow-hidden"
+              initial={{ height: 0 }}
+              whileInView={{ height: `${hPct}%` }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, delay: i * 0.04, type: 'spring', bounce: 0.15 }}>
+              <div className="w-full h-full"
+                style={{ background: `linear-gradient(to top, ${gradientFrom}, ${gradientTo})`, opacity: 0.7 }} />
+            </motion.div>
+            {/* Glow cap */}
+            <motion.div
+              className="absolute left-0 right-0 h-0.5 rounded-full"
+              style={{ background: gradientTo, boxShadow: `0 0 8px ${gradientTo}80` }}
+              initial={{ bottom: 0, opacity: 0 }}
+              whileInView={{ bottom: `${hPct}%`, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, delay: i * 0.04 }}
+            />
+            {/* Hover value */}
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none">
+              <span className="text-[8px] font-mono px-1 py-0.5 rounded text-white" style={{ background: 'var(--p-surface)' }}>
+                {val}
+              </span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CUSTOM CHART: Orbital Health Rings — Mini dimension overview
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+function HealthRingMini({ value, color, size = 36, strokeW = 2.5 }: { value: number; color: string; size?: number; strokeW?: number }) {
+  const r = (size - strokeW * 2) / 2;
+  const circ = 2 * Math.PI * r;
+  const pct = Math.min(value, 100) / 100;
+
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      <circle cx={size / 2} cy={size / 2} r={r}
+        fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth={strokeW} />
+      <motion.circle cx={size / 2} cy={size / 2} r={r}
+        fill="none" stroke={color} strokeWidth={strokeW}
+        strokeLinecap="round"
+        strokeDasharray={circ}
+        initial={{ strokeDashoffset: circ }}
+        whileInView={{ strokeDashoffset: circ * (1 - pct) }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%' }}
+      />
+      <text x={size / 2} y={size / 2 + 1} textAnchor="middle" dominantBaseline="middle"
+        fill={color} fontSize={size * 0.28} fontFamily="'Space Mono',monospace">
+        {value}
+      </text>
+    </svg>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   QUICK ACTIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 const quickActions = [
   { icon: FileText, label: 'Start Review', path: '/app/review', color: '#38bdf8', desc: '360° cycle' },
   { icon: Target, label: 'View KPIs', path: '/app/kpis', color: '#f59e0b', desc: 'Goals tracker' },
@@ -27,24 +156,9 @@ const quickActions = [
   { icon: BarChart2, label: 'Analytics', path: '/app/analytics', color: '#10b981', desc: 'Deep dive' },
 ];
 
-const SparkLine = memo(function SparkLine({ data, color }: { data: number[]; color: string }) {
-  const chartData = useMemo(() => data.map((v, i) => ({ i, v })), [data]);
-  return (
-    <div style={{ width: 64, height: 28 }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData}>
-          <defs>
-            <linearGradient id={`sg-${color.replace('#', '')}`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={color} stopOpacity={0.3} />
-              <stop offset="100%" stopColor={color} stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <Area type="monotone" dataKey="v" stroke={color} strokeWidth={1.5} fill={`url(#sg-${color.replace('#', '')})`} dot={false} />
-        </AreaChart>
-      </ResponsiveContainer>
-    </div>
-  );
-});
+/* ═══════════════════════════════════════════════════════════════════════════
+   ORG METRICS — data-driven insight cards
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 const orgMetrics = [
   { label: 'Avg Performance', val: '84.2', suffix: '', sparkData: [79, 81, 83, 82, 85, 84, 87, 84], color: '#c084fc', trend: '+2.3%', icon: Activity },
@@ -52,6 +166,10 @@ const orgMetrics = [
   { label: 'Engagement', val: '78', suffix: '', sparkData: [72, 74, 75, 76, 78, 77, 79, 78], color: '#f59e0b', trend: '+5.4%', icon: Zap },
   { label: 'Attrition Risk', val: '12', suffix: '%', sparkData: [18, 16, 15, 14, 13, 12, 13, 12], color: '#f43f5e', trend: '-6pts', icon: ShieldAlert },
 ];
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DASHBOARD
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 export function Dashboard() {
   const { user } = useAuth();
@@ -61,10 +179,24 @@ export function Dashboard() {
   const atRisk = useMemo(() => employees.filter(e => e.attritionRisk === 'High'), []);
   const topPerformers = useMemo(() => [...employees].sort((a, b) => b.performanceScore - a.performanceScore).slice(0, 2), []);
 
+  // Generate smart narrative insight
+  const narrativeInsight = useMemo(() => {
+    const avgPerf = employees.reduce((s, e) => s + e.performanceScore, 0) / employees.length;
+    const avgWelf = employees.reduce((s, e) => s + e.welfareScore, 0) / employees.length;
+    const highRisk = employees.filter(e => e.attritionRiskPercentage > 50);
+    if (highRisk.length > 0 && avgPerf > 80) {
+      return { text: `Strong output at ${Math.round(avgPerf)}pt but ${highRisk.length} employee${highRisk.length > 1 ? 's' : ''} above 50% flight risk. Your performance is masking a retention problem.`, type: 'warn' as const };
+    }
+    if (avgWelf < 70) {
+      return { text: `Wellbeing is averaging ${Math.round(avgWelf)}pt — below the healthy threshold. Consider force-scheduling PTO this quarter.`, type: 'warn' as const };
+    }
+    return { text: `Team is performing well across dimensions. Focus on growth investments to compound current momentum.`, type: 'good' as const };
+  }, []);
+
   return (
     <div className="page-wrap" ref={scrollRef}>
 
-      {/* HERO */}
+      {/* ═══ HERO ═══ */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -97,7 +229,28 @@ export function Dashboard() {
         </div>
       </motion.div>
 
-      {/* TEAM CONSTELLATION */}
+      {/* ═══ NARRATIVE INSIGHT BANNER ═══ */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15, duration: 0.6 }}
+        className="mb-8 md:mb-12 p-4 md:p-5 rounded-2xl flex items-start gap-3"
+        style={{
+          background: narrativeInsight.type === 'warn' ? 'rgba(245,158,11,0.06)' : 'rgba(16,185,129,0.06)',
+          border: `1px solid ${narrativeInsight.type === 'warn' ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.15)'}`,
+        }}>
+        <Brain size={14} className="flex-shrink-0 mt-0.5"
+          style={{ color: narrativeInsight.type === 'warn' ? '#f59e0b' : '#10b981' }} />
+        <div>
+          <p className="text-[8px] font-mono uppercase tracking-[0.22em] mb-1"
+            style={{ color: narrativeInsight.type === 'warn' ? '#f59e0b' : '#10b981' }}>
+            Intelligence Summary
+          </p>
+          <p className="text-sm font-light p-text-body leading-relaxed">{narrativeInsight.text}</p>
+        </div>
+      </motion.div>
+
+      {/* ═══ TEAM CONSTELLATION ═══ */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -111,7 +264,6 @@ export function Dashboard() {
           </div>
         </div>
 
-        {/* Right-edge fade signals scrollability on desktop */}
         <div className="relative">
           <div className="pointer-events-none absolute top-0 right-0 w-24 h-full z-10 bg-gradient-to-l to-transparent" style={{ background: 'linear-gradient(to left, var(--p-bg), transparent)' }} />
           <div className="constellation-track flex overflow-x-auto gap-6 pb-8 pt-2 snap-x snap-mandatory" style={{ scrollbarWidth: 'none' }}>
@@ -124,13 +276,8 @@ export function Dashboard() {
                   whileHover={{ y: -20, scale: 1.02 }}
                   className="group relative w-[260px] h-[370px] shrink-0 rounded-[2rem] overflow-hidden p-bg-surface snap-center cursor-crosshair border p-border hover:p-border-hi transition-all duration-500"
                 >
-                  <img
-                    src={emp.avatar}
-                    alt={emp.name}
-                    loading="lazy"
-                    decoding="async"
-                    className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000 grayscale group-hover:grayscale-0"
-                  />
+                  <img src={emp.avatar} alt={emp.name} loading="lazy" decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000 grayscale group-hover:grayscale-0" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none" />
 
                   {/* Risk dot */}
@@ -174,14 +321,13 @@ export function Dashboard() {
         </div>
       </motion.div>
 
-      {/* SPECTRUM INLINE — six dimensions replacing KPI pulse cards */}
+      {/* ═══ SPECTRUM INLINE — Six Signals ═══ */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="mb-8 p-bg-card border p-border rounded-[2rem] overflow-hidden"
       >
-        {/* Section header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b p-border">
           <div>
             <p className="text-xs font-mono uppercase tracking-[0.2em] p-text-ghost mb-1">People Intelligence</p>
@@ -196,26 +342,24 @@ export function Dashboard() {
           </NavLink>
         </div>
 
-        {/* Six dimension bars */}
         <div className="divide-y" style={{ borderColor: 'var(--p-border)' }}>
           {[
-            { label:'Output',     val: Math.round(employees.reduce((s,e)=>s+e.performanceScore,0)/employees.length), unit:'pt', color:'#f43f5e' },
-            { label:'Growth',     val: Math.round(employees.reduce((s,e)=>s+e.learningProgress,0)/employees.length), unit:'%',  color:'#10b981' },
-            { label:'Motivation', val: Math.round(employees.reduce((s,e)=>s+e.motivationScore,0)/employees.length),  unit:'pt', color:'#f59e0b' },
-            { label:'Wellbeing',  val: Math.round(employees.reduce((s,e)=>s+e.welfareScore,0)/employees.length),     unit:'pt', color:'#c084fc' },
-            { label:'Return',     val: Math.round(employees.reduce((s,e)=>s+e.roi,0)/employees.length),              unit:'%',  color:'#38bdf8' },
-            { label:'Risk',       val: Math.round(employees.reduce((s,e)=>s+e.attritionRiskPercentage,0)/employees.length), unit:'%', color:'#fb923c' },
+            { label: 'Output', val: Math.round(employees.reduce((s, e) => s + e.performanceScore, 0) / employees.length), unit: 'pt', color: '#f43f5e' },
+            { label: 'Growth', val: Math.round(employees.reduce((s, e) => s + e.learningProgress, 0) / employees.length), unit: '%', color: '#10b981' },
+            { label: 'Motivation', val: Math.round(employees.reduce((s, e) => s + e.motivationScore, 0) / employees.length), unit: 'pt', color: '#f59e0b' },
+            { label: 'Wellbeing', val: Math.round(employees.reduce((s, e) => s + e.welfareScore, 0) / employees.length), unit: 'pt', color: '#c084fc' },
+            { label: 'Return', val: Math.round(employees.reduce((s, e) => s + e.roi, 0) / employees.length), unit: '%', color: '#38bdf8' },
+            { label: 'Risk', val: Math.round(employees.reduce((s, e) => s + e.attritionRiskPercentage, 0) / employees.length), unit: '%', color: '#fb923c' },
           ].map((dim, i) => (
             <NavLink key={dim.label} to="/app/spectrum"
-              className="flex items-center gap-4 px-6 py-3.5 group hover:bg-white/[0.02] transition-colors"
-            >
-              <span className="text-[9px] font-mono p-text-ghost w-4 flex-shrink-0">{String(i+1).padStart(2,'0')}</span>
+              className="flex items-center gap-4 px-6 py-3.5 group hover:bg-white/[0.02] transition-colors">
+              <span className="text-[9px] font-mono p-text-ghost w-4 flex-shrink-0">{String(i + 1).padStart(2, '0')}</span>
               <span className="text-sm font-light p-text-body group-hover:text-white transition-colors w-24 flex-shrink-0">{dim.label}</span>
               <div className="flex-1 h-px relative overflow-hidden" style={{ background: 'var(--p-border)' }}>
                 <motion.div className="absolute left-0 top-0 h-full"
                   initial={{ width: 0 }}
                   animate={{ width: `${Math.min(dim.val, 100)}%` }}
-                  transition={{ duration: 1, delay: 0.3 + i * 0.08, ease: [0.16,1,0.3,1] }}
+                  transition={{ duration: 1, delay: 0.3 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
                   style={{ background: dim.color }}
                 />
               </div>
@@ -227,20 +371,19 @@ export function Dashboard() {
         </div>
       </motion.div>
 
-      {/* QUICK ACTIONS */}
+      {/* ═══ QUICK ACTIONS ═══ */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.8 }}
         className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-12"
       >
-        {quickActions.map((a, i) => (
+        {quickActions.map((a) => (
           <NavLink
             key={a.path}
             to={a.path}
             className="group flex items-center gap-4 p-4 bg-white/[0.02] border p-border rounded-2xl hover:p-border-mid hover:bg-white/[0.04] transition-all"
-            data-cursor={a.label}
-          >
+            data-cursor={a.label}>
             <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: a.color + '15' }}>
               <a.icon size={16} style={{ color: a.color }} />
             </div>
@@ -253,10 +396,10 @@ export function Dashboard() {
         ))}
       </motion.div>
 
-      {/* MAIN GRID */}
+      {/* ═══ MAIN GRID — Custom charts ═══ */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
 
-        {/* Performance Chart */}
+        {/* ── Performance Signal Columns ── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -273,27 +416,11 @@ export function Dashboard() {
             <TrendingUp size={14} className="text-cyan-400" />
           </div>
 
-          <div className="h-56 flex items-end justify-between gap-2 relative z-10">
-            {[45, 60, 35, 75, 50, 85, 95, 65, 80, 40, 90, 70, 85, 60, 95].map((val, i) => (
-              <motion.div
-                key={i}
-                initial={{ height: 0 }}
-                whileInView={{ height: `${val}%` }}
-                viewport={{ once: true }}
-                transition={{ duration: 1, delay: i * 0.04, type: "spring" }}
-                className="w-full relative rounded-t-md overflow-hidden p-bg-card group-hover:bg-white/8 transition-colors"
-              >
-                <div
-                  className="absolute bottom-0 left-0 right-0"
-                  style={{
-                    height: `${val}%`,
-                    background: `linear-gradient(to top, #0891b2, #7c3aed)`,
-                    opacity: 0.7
-                  }}
-                />
-              </motion.div>
-            ))}
-          </div>
+          <SignalColumns
+            values={[45, 60, 35, 75, 50, 85, 95, 65, 80, 40, 90, 70, 85, 60, 95]}
+            gradientFrom="#0891b2"
+            gradientTo="#7c3aed"
+          />
 
           <div className="mt-6 flex justify-between text-sm uppercase tracking-[0.12em] p-text-dim border-t p-border pt-4 relative z-10">
             <span>T-15</span>
@@ -301,7 +428,7 @@ export function Dashboard() {
           </div>
         </motion.div>
 
-        {/* Alert Feed */}
+        {/* ── Alert Feed ── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -333,7 +460,39 @@ export function Dashboard() {
           </div>
         </motion.div>
 
-        {/* At-Risk Panel */}
+        {/* ── Org Metrics with Waveform Sparklines ── */}
+        {orgMetrics.map((m, i) => (
+          <motion.div key={m.label}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: i * 0.06 }}
+            className="md:col-span-3 p-bg-card border p-border rounded-[2rem] p-6 group hover:bg-white/[0.04] transition-colors relative overflow-hidden">
+            <div className="flex items-center justify-between mb-4">
+              <m.icon size={14} style={{ color: m.color }} />
+              <span className="text-[9px] font-mono px-1.5 py-0.5 rounded"
+                style={{
+                  background: m.trend.startsWith('+') || m.trend.startsWith('-') && m.label === 'Attrition Risk'
+                    ? 'rgba(16,185,129,0.1)' : 'rgba(244,63,94,0.1)',
+                  color: m.trend.startsWith('+') && m.label !== 'Attrition Risk' ? '#10b981'
+                    : m.trend.startsWith('-') && m.label === 'Attrition Risk' ? '#10b981' : '#f43f5e',
+                }}>
+                {m.trend}
+              </span>
+            </div>
+            <div className="flex items-end justify-between">
+              <div>
+                <p className="text-2xl font-light text-white font-mono">
+                  {m.val}<span className="text-sm p-text-dim">{m.suffix}</span>
+                </p>
+                <p className="text-[9px] font-mono uppercase tracking-widest p-text-ghost mt-1">{m.label}</p>
+              </div>
+              <WaveformSpark data={m.sparkData} color={m.color} />
+            </div>
+          </motion.div>
+        ))}
+
+        {/* ── At-Risk Panel ── */}
         {atRisk.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -349,8 +508,7 @@ export function Dashboard() {
             <div className="space-y-4">
               {atRisk.map(emp => (
                 <NavLink to={`/app/employee/${emp.id}`} key={emp.id}
-                  className="flex items-center gap-4 group hover:bg-rose-500/5 -mx-2 px-2 py-2 rounded-xl transition-colors"
-                >
+                  className="flex items-center gap-4 group hover:bg-rose-500/5 -mx-2 px-2 py-2 rounded-xl transition-colors">
                   <img src={emp.avatar} alt={emp.name} loading="lazy" decoding="async" className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                   <div className="flex-1 min-w-0">
                     <p className="text-white text-sm font-light truncate">{emp.name}</p>
@@ -367,7 +525,7 @@ export function Dashboard() {
           </motion.div>
         )}
 
-        {/* Top Performers */}
+        {/* ── Top Performers ── */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -382,8 +540,7 @@ export function Dashboard() {
           <div className="space-y-4">
             {topPerformers.map((emp, i) => (
               <NavLink to={`/app/employee/${emp.id}`} key={emp.id}
-                className="flex items-center gap-4 group hover:bg-amber-500/5 -mx-2 px-2 py-2 rounded-xl transition-colors"
-              >
+                className="flex items-center gap-4 group hover:bg-amber-500/5 -mx-2 px-2 py-2 rounded-xl transition-colors">
                 <div className="w-6 text-center flex-shrink-0 text-sm font-mono p-text-dim">{i === 0 ? '01' : '02'}</div>
                 <img src={emp.avatar} alt={emp.name} loading="lazy" decoding="async" className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                 <div className="flex-1">

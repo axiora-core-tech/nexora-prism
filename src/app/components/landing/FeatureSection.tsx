@@ -150,6 +150,7 @@ export function FeatureSection() {
 
   return (
     <section 
+      id="intelligence"
       ref={container} 
       className="relative w-full bg-[#010101] pb-[10vh] overflow-hidden"
     >

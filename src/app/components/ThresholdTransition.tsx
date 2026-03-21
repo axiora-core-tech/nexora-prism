@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router';
 
@@ -119,6 +119,14 @@ export function ThresholdTransition({ name = 'Alex Mercer' }: Props) {
   const firstName  = name.split(' ')[0] ?? name;
   const secondName = name.split(' ')[1] ?? '';
 
+  // Track whether the component is still mounted so the navigate
+  // callback becomes a no-op if the user leaves /enter early.
+  const mountedRef = useRef(true);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
+
   useEffect(() => {
     const phases: [Phase, number][] = [
       ['name',     400  ],
@@ -129,12 +137,13 @@ export function ThresholdTransition({ name = 'Alex Mercer' }: Props) {
     ];
 
     const timers = phases.map(([p, t]) =>
-      setTimeout(() => setPhase(p), t)
+      setTimeout(() => { if (mountedRef.current) setPhase(p); }, t)
     );
 
     // Cracks appear one at a time, 350ms apart
     const crackTimers = SPECTRUM.map((_, i) =>
       setTimeout(() => {
+        if (!mountedRef.current) return;
         setCracksVisible(prev => {
           const n = [...prev];
           n[i] = true;
@@ -143,7 +152,11 @@ export function ThresholdTransition({ name = 'Alex Mercer' }: Props) {
       }, 1700 + i * 350)
     );
 
-    const nav = setTimeout(() => navigate('/app'), 6200);
+    // Guard navigate behind mounted check — prevents stale timer firing
+    // if the tab was suspended or user navigated away mid-animation.
+    const nav = setTimeout(() => {
+      if (mountedRef.current) navigate('/app');
+    }, 6200);
 
     return () => {
       timers.forEach(clearTimeout);

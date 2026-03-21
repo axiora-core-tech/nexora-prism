@@ -380,6 +380,394 @@ export const employees = [
       { peer: "Marcus Johnson", connection: "Weak", sentiment: 55, nodes: 2 }
     ],
     equipment: ["MacBook Air M2", "AirPods Pro"]
+  },
+
+  // ── e5 ─────────────────────────────────────────────────────────────────────
+  {
+    id: "e5",
+    name: "Jordan Lee",
+    role: "Product Manager",
+    department: "Product",
+    stage: "Rising Star",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    performanceScore: 87,
+    attritionRisk: "Low",
+    attritionRiskPercentage: 15,
+    learningProgress: 72,
+    recentFeedback: "Shipped the roadmap overhaul two sprints ahead of schedule.",
+    nextPromotionEligibility: "6 Months",
+    skills: ["Roadmapping", "Stakeholder Mgmt", "SQL", "Figma", "OKRs"],
+    revenueContribution: 280000,
+    costInvestment: 145000,
+    roi: 193,
+    motivationScore: 91,
+    welfareScore: 84,
+    engagementLevel: "Engaged",
+    dailyPerformance: [
+      { day: "Mon", score: 88, hours: 8.0 },
+      { day: "Tue", score: 85, hours: 8.5 },
+      { day: "Wed", score: 90, hours: 7.5 },
+      { day: "Thu", score: 86, hours: 9.0 },
+      { day: "Fri", score: 87, hours: 8.0 },
+    ],
+    timesheets: [
+      { week: "W1", hoursLogged: 40, utilizationRate: 90, billable: 36 },
+      { week: "W2", hoursLogged: 42, utilizationRate: 95, billable: 38 },
+      { week: "W3", hoursLogged: 38, utilizationRate: 88, billable: 34 },
+      { week: "W4", hoursLogged: 41, utilizationRate: 92, billable: 37 },
+    ],
+    workLogFeedback: [
+      { date: "03-Nov", comment: "Stakeholder alignment session resulted in 3 new feature approvals.", sentiment: "positive" },
+      { date: "10-Nov", comment: "Discovery sprint yielded actionable user insights.", sentiment: "positive" },
+    ],
+    projectedPromotions: [{ role: "Senior PM", timeframe: "Q4 2026", probability: 72 }],
+    lmsModules: [
+      { id: "l1", title: "Product Strategy Fundamentals", status: "completed", progress: 100, score: 91, date: "20-Oct" },
+      { id: "l2", title: "Data-Driven Product Management", status: "in_progress", progress: 55, score: null, date: "Ongoing" },
+    ],
+    okrs: [
+      { objective: "Launch v2 onboarding flow", progress: 90, status: "on_track", weight: "High" },
+      { objective: "Reduce churn by 15%", progress: 60, status: "at_risk", weight: "Critical" },
+      { objective: "Define 2026 product roadmap", progress: 100, status: "completed", weight: "High" },
+    ],
+    kpis: [
+      { name: "Feature Adoption Rate", target: 60, current: 64, unit: "%", trend: "up", weight: 30 },
+      { name: "Sprint Goal Achievement", target: 90, current: 86, unit: "%", trend: "stable", weight: 25 },
+      { name: "Stakeholder NPS", target: 75, current: 80, unit: "", trend: "up", weight: 25 },
+      { name: "Time-to-Ship", target: 14, current: 11, unit: "days", trend: "up", weight: 20 },
+    ],
+    reviews360: [
+      {
+        reviewer: "Alex Mercer", relation: "Peer", date: "Nov 2025",
+        scores: { communication: 90, technical: 72, leadership: 85, collaboration: 88, innovation: 82 },
+        strengths: "Jordan has a rare ability to align engineering and design toward a shared vision.",
+        improvements: "Could deepen technical understanding to reduce back-and-forth on feasibility.",
+        overall: 84
+      }
+    ],
+    attendance: {
+      present: 20, wfh: 4, leave: 0, absent: 1,
+      calendar: [
+        { date: "2025-11-01", type: "present", checkIn: "08:45", checkOut: "18:00" },
+        { date: "2025-11-02", type: "weekend" }, { date: "2025-11-03", type: "weekend" },
+        { date: "2025-11-04", type: "present", checkIn: "09:00", checkOut: "18:00" },
+        { date: "2025-11-05", type: "wfh",     checkIn: "09:00", checkOut: "17:30" },
+        { date: "2025-11-06", type: "present", checkIn: "08:55", checkOut: "18:30" },
+        { date: "2025-11-07", type: "absent" },
+        { date: "2025-11-08", type: "present", checkIn: "09:00", checkOut: "18:00" },
+        { date: "2025-11-09", type: "weekend" }, { date: "2025-11-10", type: "weekend" },
+        { date: "2025-11-11", type: "wfh",     checkIn: "09:30", checkOut: "18:00" },
+        { date: "2025-11-12", type: "present", checkIn: "09:00", checkOut: "18:00" },
+        { date: "2025-11-13", type: "present", checkIn: "09:00", checkOut: "17:45" },
+        { date: "2025-11-14", type: "wfh",     checkIn: "09:00", checkOut: "18:00" },
+        { date: "2025-11-15", type: "present", checkIn: "09:00", checkOut: "18:00" },
+      ]
+    },
+    roiQuarterly: [
+      { quarter: "Q1 2025", investment: 35000, value: 68000, roi: 194 },
+      { quarter: "Q2 2025", investment: 35000, value: 72000, roi: 206 },
+      { quarter: "Q3 2025", investment: 36000, value: 78000, roi: 217 },
+      { quarter: "Q4 2025", investment: 36000, value: 80000, roi: 222 },
+    ],
+    compensation: { base: 120000, bonus: 20000, equityVested: 15000, equityUnvested: 30000, nextVestDate: "01-Mar-2026", wellnessStipend: 1200, utilizedStipend: 900 },
+    leaveBalance: { ptoTotal: 20, ptoUsed: 5, sickTotal: 10, sickUsed: 1, sabbaticalEligible: false },
+    bioRhythm: { stressIndex: 44, cognitiveLoad: 62, burnoutProbability: 28, sleepQuality: 78, focusBlocksAvg: 3.2 },
+    peerReviews: [
+      { peer: "Sarah Chen", connection: "Strong", sentiment: 92, nodes: 14 },
+      { peer: "Priya Sharma", connection: "Moderate", sentiment: 79, nodes: 7 },
+    ],
+    equipment: ["MacBook Pro M3", "Dell 4K Monitor", "Logitech MX Keys"]
+  },
+
+  // ── e6 ─────────────────────────────────────────────────────────────────────
+  {
+    id: "e6",
+    name: "Ethan Brooks",
+    role: "Data Engineer",
+    department: "Data Infrastructure",
+    stage: "Established",
+    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    performanceScore: 79,
+    attritionRisk: "Medium",
+    attritionRiskPercentage: 52,
+    learningProgress: 60,
+    recentFeedback: "Pipeline reliability has improved significantly, though documentation lags.",
+    nextPromotionEligibility: "12 Months",
+    skills: ["Python", "Spark", "dbt", "Airflow", "Snowflake"],
+    revenueContribution: 195000,
+    costInvestment: 130000,
+    roi: 150,
+    motivationScore: 68,
+    welfareScore: 71,
+    engagementLevel: "Moderately Engaged",
+    dailyPerformance: [
+      { day: "Mon", score: 80, hours: 8.0 },
+      { day: "Tue", score: 76, hours: 7.5 },
+      { day: "Wed", score: 82, hours: 8.5 },
+      { day: "Thu", score: 77, hours: 7.0 },
+      { day: "Fri", score: 78, hours: 8.0 },
+    ],
+    timesheets: [
+      { week: "W1", hoursLogged: 38, utilizationRate: 84, billable: 32 },
+      { week: "W2", hoursLogged: 40, utilizationRate: 88, billable: 35 },
+      { week: "W3", hoursLogged: 37, utilizationRate: 82, billable: 30 },
+      { week: "W4", hoursLogged: 39, utilizationRate: 86, billable: 33 },
+    ],
+    workLogFeedback: [
+      { date: "05-Nov", comment: "Refactored ingestion layer — 30% latency reduction.", sentiment: "positive" },
+      { date: "12-Nov", comment: "Documentation backlog still unresolved from last sprint.", sentiment: "neutral" },
+    ],
+    projectedPromotions: [{ role: "Senior Data Engineer", timeframe: "Q2 2027", probability: 55 }],
+    lmsModules: [
+      { id: "l1", title: "Advanced dbt Patterns", status: "in_progress", progress: 40, score: null, date: "Ongoing" },
+      { id: "l2", title: "Data Mesh Architecture", status: "enrolled", progress: 0, score: null, date: "Upcoming" },
+    ],
+    okrs: [
+      { objective: "Achieve 99.9% pipeline uptime", progress: 96, status: "on_track", weight: "Critical" },
+      { objective: "Migrate legacy ETL to dbt", progress: 45, status: "at_risk", weight: "High" },
+      { objective: "Document all data contracts", progress: 20, status: "off_track", weight: "Medium" },
+    ],
+    kpis: [
+      { name: "Pipeline Uptime", target: 99.9, current: 99.6, unit: "%", trend: "up", weight: 35 },
+      { name: "Data Freshness SLA", target: 95, current: 88, unit: "%", trend: "down", weight: 30 },
+      { name: "Incident Response Time", target: 30, current: 45, unit: "min", trend: "down", weight: 20 },
+      { name: "Doc Coverage", target: 80, current: 35, unit: "%", trend: "stable", weight: 15 },
+    ],
+    reviews360: [
+      {
+        reviewer: "Marcus Johnson", relation: "Peer", date: "Nov 2025",
+        scores: { communication: 65, technical: 88, leadership: 60, collaboration: 70, innovation: 75 },
+        strengths: "Deep expertise in distributed systems. Consistently solves the hard infra problems.",
+        improvements: "Communication cadence with stakeholders needs improvement. Goes dark mid-sprint.",
+        overall: 72
+      }
+    ],
+    attendance: {
+      present: 17, wfh: 5, leave: 2, absent: 1,
+      calendar: [
+        { date: "2025-11-01", type: "wfh",     checkIn: "09:30", checkOut: "18:00" },
+        { date: "2025-11-02", type: "weekend" }, { date: "2025-11-03", type: "weekend" },
+        { date: "2025-11-04", type: "present", checkIn: "09:00", checkOut: "17:30" },
+        { date: "2025-11-05", type: "present", checkIn: "09:00", checkOut: "18:00" },
+        { date: "2025-11-06", type: "wfh",     checkIn: "10:00", checkOut: "18:30" },
+        { date: "2025-11-07", type: "leave",   leaveType: "sick" },
+        { date: "2025-11-08", type: "leave",   leaveType: "sick" },
+        { date: "2025-11-09", type: "weekend" }, { date: "2025-11-10", type: "weekend" },
+        { date: "2025-11-11", type: "present", checkIn: "09:00", checkOut: "18:00" },
+        { date: "2025-11-12", type: "absent" },
+        { date: "2025-11-13", type: "present", checkIn: "09:15", checkOut: "18:00" },
+        { date: "2025-11-14", type: "wfh",     checkIn: "09:00", checkOut: "17:30" },
+        { date: "2025-11-15", type: "present", checkIn: "09:00", checkOut: "18:00" },
+      ]
+    },
+    roiQuarterly: [
+      { quarter: "Q1 2025", investment: 32000, value: 48000, roi: 150 },
+      { quarter: "Q2 2025", investment: 32000, value: 50000, roi: 156 },
+      { quarter: "Q3 2025", investment: 33000, value: 52000, roi: 158 },
+      { quarter: "Q4 2025", investment: 33000, value: 49000, roi: 148 },
+    ],
+    compensation: { base: 115000, bonus: 10000, equityVested: 8000, equityUnvested: 22000, nextVestDate: "01-Aug-2026", wellnessStipend: 1200, utilizedStipend: 200 },
+    leaveBalance: { ptoTotal: 20, ptoUsed: 12, sickTotal: 10, sickUsed: 5, sabbaticalEligible: false },
+    bioRhythm: { stressIndex: 68, cognitiveLoad: 80, burnoutProbability: 58, sleepQuality: 60, focusBlocksAvg: 2.1 },
+    peerReviews: [
+      { peer: "Alex Mercer", connection: "Weak", sentiment: 62, nodes: 3 },
+      { peer: "Jordan Lee",  connection: "Moderate", sentiment: 71, nodes: 6 },
+    ],
+    equipment: ["MacBook Pro M2", "Samsung 34\" Ultrawide"]
+  },
+
+  // ── e7 ─────────────────────────────────────────────────────────────────────
+  {
+    id: "e7",
+    name: "Aisha Patel",
+    role: "UX Researcher",
+    department: "User Experience",
+    stage: "Growing",
+    avatar: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    performanceScore: 83,
+    attritionRisk: "Low",
+    attritionRiskPercentage: 18,
+    learningProgress: 78,
+    recentFeedback: "User research synthesis on checkout flow directly shaped the Q3 redesign.",
+    nextPromotionEligibility: "9 Months",
+    skills: ["User Interviews", "Usability Testing", "Figma", "Dovetail", "Survey Design"],
+    revenueContribution: 165000,
+    costInvestment: 105000,
+    roi: 157,
+    motivationScore: 85,
+    welfareScore: 89,
+    engagementLevel: "Engaged",
+    dailyPerformance: [
+      { day: "Mon", score: 84, hours: 7.5 },
+      { day: "Tue", score: 82, hours: 8.0 },
+      { day: "Wed", score: 86, hours: 8.0 },
+      { day: "Thu", score: 80, hours: 7.5 },
+      { day: "Fri", score: 83, hours: 7.0 },
+    ],
+    timesheets: [
+      { week: "W1", hoursLogged: 37, utilizationRate: 86, billable: 32 },
+      { week: "W2", hoursLogged: 38, utilizationRate: 88, billable: 34 },
+      { week: "W3", hoursLogged: 36, utilizationRate: 84, billable: 31 },
+      { week: "W4", hoursLogged: 38, utilizationRate: 87, billable: 33 },
+    ],
+    workLogFeedback: [
+      { date: "07-Nov", comment: "Delivered research synthesis deck — 12 actionable insights adopted by product.", sentiment: "positive" },
+      { date: "14-Nov", comment: "Moderated 8 usability sessions this week, above target.", sentiment: "positive" },
+    ],
+    projectedPromotions: [{ role: "Senior UX Researcher", timeframe: "Q1 2027", probability: 68 }],
+    lmsModules: [
+      { id: "l1", title: "Mixed Methods Research", status: "completed", progress: 100, score: 89, date: "01-Oct" },
+      { id: "l2", title: "Quantitative UX Analysis", status: "in_progress", progress: 70, score: null, date: "Ongoing" },
+    ],
+    okrs: [
+      { objective: "Conduct 40 user interviews this quarter", progress: 80, status: "on_track", weight: "High" },
+      { objective: "Build shared research repository", progress: 55, status: "on_track", weight: "Medium" },
+      { objective: "Define UX metrics framework", progress: 100, status: "completed", weight: "High" },
+    ],
+    kpis: [
+      { name: "Research Sessions / Month", target: 12, current: 14, unit: "", trend: "up", weight: 30 },
+      { name: "Insight Adoption Rate", target: 70, current: 75, unit: "%", trend: "up", weight: 30 },
+      { name: "Time to Insight", target: 5, current: 6, unit: "days", trend: "stable", weight: 20 },
+      { name: "Stakeholder Satisfaction", target: 80, current: 85, unit: "%", trend: "up", weight: 20 },
+    ],
+    reviews360: [
+      {
+        reviewer: "Sarah Chen", relation: "Peer", date: "Nov 2025",
+        scores: { communication: 88, technical: 76, leadership: 78, collaboration: 90, innovation: 84 },
+        strengths: "Aisha's research brings the user's voice into every design decision. Invaluable.",
+        improvements: "Could present findings more concisely in exec-level readouts.",
+        overall: 83
+      }
+    ],
+    attendance: {
+      present: 18, wfh: 6, leave: 1, absent: 0,
+      calendar: [
+        { date: "2025-11-01", type: "present", checkIn: "09:00", checkOut: "17:30" },
+        { date: "2025-11-02", type: "weekend" }, { date: "2025-11-03", type: "weekend" },
+        { date: "2025-11-04", type: "wfh",     checkIn: "09:00", checkOut: "17:30" },
+        { date: "2025-11-05", type: "present", checkIn: "09:00", checkOut: "18:00" },
+        { date: "2025-11-06", type: "wfh",     checkIn: "09:30", checkOut: "17:30" },
+        { date: "2025-11-07", type: "present", checkIn: "09:00", checkOut: "18:00" },
+        { date: "2025-11-08", type: "leave",   leaveType: "personal" },
+        { date: "2025-11-09", type: "weekend" }, { date: "2025-11-10", type: "weekend" },
+        { date: "2025-11-11", type: "present", checkIn: "09:00", checkOut: "17:30" },
+        { date: "2025-11-12", type: "wfh",     checkIn: "09:00", checkOut: "18:00" },
+        { date: "2025-11-13", type: "present", checkIn: "09:00", checkOut: "17:30" },
+        { date: "2025-11-14", type: "wfh",     checkIn: "09:30", checkOut: "18:00" },
+        { date: "2025-11-15", type: "present", checkIn: "09:00", checkOut: "17:30" },
+      ]
+    },
+    roiQuarterly: [
+      { quarter: "Q1 2025", investment: 25000, value: 40000, roi: 160 },
+      { quarter: "Q2 2025", investment: 25000, value: 42000, roi: 168 },
+      { quarter: "Q3 2025", investment: 26000, value: 44000, roi: 169 },
+      { quarter: "Q4 2025", investment: 26000, value: 46000, roi: 177 },
+    ],
+    compensation: { base: 95000, bonus: 12000, equityVested: 6000, equityUnvested: 18000, nextVestDate: "01-Jun-2026", wellnessStipend: 1200, utilizedStipend: 1100 },
+    leaveBalance: { ptoTotal: 20, ptoUsed: 7, sickTotal: 10, sickUsed: 0, sabbaticalEligible: false },
+    bioRhythm: { stressIndex: 38, cognitiveLoad: 55, burnoutProbability: 22, sleepQuality: 82, focusBlocksAvg: 3.8 },
+    peerReviews: [
+      { peer: "Sarah Chen",  connection: "Strong",   sentiment: 94, nodes: 15 },
+      { peer: "Jordan Lee",  connection: "Strong",   sentiment: 88, nodes: 12 },
+    ],
+    equipment: ["MacBook Air M2", "iPad Pro", "Apple Pencil"]
+  },
+
+  // ── e8 ─────────────────────────────────────────────────────────────────────
+  {
+    id: "e8",
+    name: "Ryan Kowalski",
+    role: "DevOps Engineer",
+    department: "Core Architecture",
+    stage: "Established",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    performanceScore: 76,
+    attritionRisk: "High",
+    attritionRiskPercentage: 71,
+    learningProgress: 45,
+    recentFeedback: "CI/CD pipeline is rock solid but Ryan has declined two 1-on-1s this month.",
+    nextPromotionEligibility: "18 Months",
+    skills: ["Kubernetes", "Terraform", "AWS", "GitHub Actions", "Prometheus"],
+    revenueContribution: 210000,
+    costInvestment: 140000,
+    roi: 150,
+    motivationScore: 55,
+    welfareScore: 60,
+    engagementLevel: "Disengaged",
+    dailyPerformance: [
+      { day: "Mon", score: 78, hours: 7.5 },
+      { day: "Tue", score: 74, hours: 7.0 },
+      { day: "Wed", score: 80, hours: 8.0 },
+      { day: "Thu", score: 72, hours: 7.0 },
+      { day: "Fri", score: 75, hours: 6.5 },
+    ],
+    timesheets: [
+      { week: "W1", hoursLogged: 36, utilizationRate: 80, billable: 28 },
+      { week: "W2", hoursLogged: 34, utilizationRate: 76, billable: 26 },
+      { week: "W3", hoursLogged: 38, utilizationRate: 84, billable: 30 },
+      { week: "W4", hoursLogged: 35, utilizationRate: 78, billable: 27 },
+    ],
+    workLogFeedback: [
+      { date: "06-Nov", comment: "Deployment pipeline now averages 4.2 min — 40% faster than last quarter.", sentiment: "positive" },
+      { date: "13-Nov", comment: "Missed sprint planning. On-call rotation may be causing burnout.", sentiment: "neutral" },
+    ],
+    projectedPromotions: [{ role: "Senior DevOps Engineer", timeframe: "Q3 2027", probability: 40 }],
+    lmsModules: [
+      { id: "l1", title: "FinOps Fundamentals", status: "enrolled", progress: 0, score: null, date: "Upcoming" },
+      { id: "l2", title: "Platform Engineering", status: "enrolled", progress: 0, score: null, date: "Upcoming" },
+    ],
+    okrs: [
+      { objective: "Achieve zero-downtime deployments", progress: 100, status: "completed", weight: "Critical" },
+      { objective: "Reduce infra costs by 20%", progress: 30, status: "at_risk", weight: "High" },
+      { objective: "Complete Kubernetes certification", progress: 10, status: "off_track", weight: "Medium" },
+    ],
+    kpis: [
+      { name: "Deployment Frequency", target: 10, current: 12, unit: "/wk", trend: "up", weight: 30 },
+      { name: "MTTR", target: 30, current: 48, unit: "min", trend: "down", weight: 30 },
+      { name: "Change Failure Rate", target: 5, current: 8, unit: "%", trend: "stable", weight: 20 },
+      { name: "Infra Cost per Deploy", target: 12, current: 18, unit: "$", trend: "stable", weight: 20 },
+    ],
+    reviews360: [
+      {
+        reviewer: "Alex Mercer", relation: "Peer", date: "Nov 2025",
+        scores: { communication: 58, technical: 90, leadership: 52, collaboration: 60, innovation: 70 },
+        strengths: "Undeniably the most skilled infrastructure engineer on the team. Systems are bulletproof.",
+        improvements: "Disengagement is visible in meetings. Needs support — this is a retention risk.",
+        overall: 66
+      }
+    ],
+    attendance: {
+      present: 15, wfh: 6, leave: 0, absent: 4,
+      calendar: [
+        { date: "2025-11-01", type: "present", checkIn: "09:30", checkOut: "17:30" },
+        { date: "2025-11-02", type: "weekend" }, { date: "2025-11-03", type: "weekend" },
+        { date: "2025-11-04", type: "absent" },
+        { date: "2025-11-05", type: "wfh",     checkIn: "10:00", checkOut: "17:00" },
+        { date: "2025-11-06", type: "present", checkIn: "09:30", checkOut: "17:30" },
+        { date: "2025-11-07", type: "absent" },
+        { date: "2025-11-08", type: "present", checkIn: "09:00", checkOut: "18:00" },
+        { date: "2025-11-09", type: "weekend" }, { date: "2025-11-10", type: "weekend" },
+        { date: "2025-11-11", type: "wfh",     checkIn: "10:30", checkOut: "17:30" },
+        { date: "2025-11-12", type: "absent" },
+        { date: "2025-11-13", type: "present", checkIn: "09:30", checkOut: "17:00" },
+        { date: "2025-11-14", type: "absent" },
+        { date: "2025-11-15", type: "present", checkIn: "10:00", checkOut: "17:30" },
+      ]
+    },
+    roiQuarterly: [
+      { quarter: "Q1 2025", investment: 34000, value: 52000, roi: 153 },
+      { quarter: "Q2 2025", investment: 34000, value: 55000, roi: 162 },
+      { quarter: "Q3 2025", investment: 35000, value: 50000, roi: 143 },
+      { quarter: "Q4 2025", investment: 35000, value: 48000, roi: 137 },
+    ],
+    compensation: { base: 118000, bonus: 8000, equityVested: 10000, equityUnvested: 20000, nextVestDate: "15-Oct-2026", wellnessStipend: 1200, utilizedStipend: 0 },
+    leaveBalance: { ptoTotal: 20, ptoUsed: 3, sickTotal: 10, sickUsed: 2, sabbaticalEligible: false },
+    bioRhythm: { stressIndex: 82, cognitiveLoad: 88, burnoutProbability: 74, sleepQuality: 48, focusBlocksAvg: 1.4 },
+    peerReviews: [
+      { peer: "Alex Mercer",  connection: "Weak",     sentiment: 58, nodes: 2 },
+      { peer: "Ethan Brooks", connection: "Moderate", sentiment: 65, nodes: 5 },
+    ],
+    equipment: ["MacBook Pro M3 Max", "Mechanical Keyboard", "3× External Monitors"]
   }
 ];
 

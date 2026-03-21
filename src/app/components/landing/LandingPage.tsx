@@ -9,8 +9,24 @@ import { Loader }         from './Loader';
 import { useState }       from 'react';
 import { AnimatePresence } from 'motion/react';
 
+const LOADER_KEY = 'prism_intro_seen';
+
 export function LandingPage() {
-  const [isLoading, setIsLoading] = useState(true);
+  // Only show the loader on the very first visit per browser session.
+  // sessionStorage resets when the tab is closed, so a genuinely new session
+  // sees it once; back-button / same-tab navigation skips it entirely.
+  const [isLoading, setIsLoading] = useState(() => {
+    try {
+      return !sessionStorage.getItem(LOADER_KEY);
+    } catch {
+      return false;
+    }
+  });
+
+  const handleLoaderComplete = () => {
+    try { sessionStorage.setItem(LOADER_KEY, '1'); } catch {}
+    setIsLoading(false);
+  };
 
   return (
     <div className="min-h-screen bg-[#010101] text-zinc-100 selection:bg-indigo-500/30 selection:text-white overflow-x-clip w-full font-sans antialiased">
@@ -43,7 +59,7 @@ export function LandingPage() {
 
       {/* Cinematic intro loader — shown every visit */}
       <AnimatePresence>
-        {isLoading && <Loader onComplete={() => setIsLoading(false)} />}
+        {isLoading && <Loader onComplete={handleLoaderComplete} />}
       </AnimatePresence>
 
       {/* Navbar */}

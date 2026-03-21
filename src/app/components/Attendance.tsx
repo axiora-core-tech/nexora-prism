@@ -176,7 +176,7 @@ export function Attendance() {
               <div>
                 <h2 className="text-white text-xl font-light leading-none">{emp.name.split(' ')[0]}</h2>
                 <h2 className="text-white/30 font-serif italic text-sm leading-none mt-0.5">{emp.name.split(' ')[1]}</h2>
-                <p className="text-[9px] uppercase tracking-widest text-white/20 mt-2 font-mono">November 2025 — Temporal Log</p>
+                <p className="text-[9px] uppercase tracking-widest text-white/20 mt-2 font-mono">{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })} — Temporal Log</p>
               </div>
               <div className="text-right">
                 <p className="text-[8px] uppercase tracking-widest text-white/30 mb-1">Presence Rate</p>

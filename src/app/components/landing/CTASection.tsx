@@ -18,6 +18,7 @@ export function CTASection() {
 
   return (
     <section 
+      id="platform"
       ref={containerRef} 
       className="relative min-h-screen bg-[#010101] flex items-center justify-center py-32 overflow-hidden [perspective:2000px]"
     >

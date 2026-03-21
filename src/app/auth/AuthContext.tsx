@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 
 interface AuthUser {
   email: string;
@@ -12,10 +12,29 @@ interface AuthContextType {
   logout: () => void;
 }
 
+const AUTH_KEY = 'prism_auth_user';
+
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null);
+  // Initialise from localStorage so a page refresh restores the session
+  const [user, setUser] = useState<AuthUser | null>(() => {
+    try {
+      const stored = localStorage.getItem(AUTH_KEY);
+      return stored ? (JSON.parse(stored) as AuthUser) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  // Keep localStorage in sync whenever user changes
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem(AUTH_KEY, JSON.stringify(user));
+    } else {
+      localStorage.removeItem(AUTH_KEY);
+    }
+  }, [user]);
 
   const login = useCallback((email: string, name?: string) => {
     setUser({ email, name });

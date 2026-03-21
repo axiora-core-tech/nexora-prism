@@ -31,13 +31,24 @@ export function SignIn() {
   const [org, setOrg]         = useState('');
   const [invites, setInvites] = useState(['', '']);
   const [done, setDone]       = useState(false);
+  const [error, setError]     = useState('');
 
   const inp =
     'w-full rounded-2xl text-sm font-light outline-none transition-colors placeholder-opacity-30' +
     ' bg-white/[0.05] border border-white/[0.08] text-white placeholder:text-white/25 focus:border-white/25';
 
   const handleSuccess = () => {
-    login(email || 'user@prism.app', name || undefined);
+    setError('');
+    if (mode === 'login') {
+      if (!email.trim())        { setError('Email is required.');    return; }
+      if (!pass.trim())         { setError('Passphrase is required.'); return; }
+    }
+    if (mode === 'signup') {
+      if (!name.trim())         { setError('Name is required.');     return; }
+      if (!email.trim())        { setError('Email is required.');    return; }
+      if (pass.trim().length < 6){ setError('Passphrase must be at least 6 characters.'); return; }
+    }
+    login(email.trim() || 'user@prism.app', name.trim() || undefined);
     setDone(true);
   };
 
@@ -45,12 +56,13 @@ export function SignIn() {
     navigate(from === '/sign-in' ? '/enter' : from);
   };
 
-  const tabs: { id: AuthMode; label: string }[] = [
-    { id: 'login',  label: 'Sign In' },
-    { id: 'signup', label: 'Create'  },
-    { id: 'org',    label: 'Org'     },
-    { id: 'invite', label: 'Invite'  },
+  // Wizard steps shown only during signup flow (login is standalone)
+  const signupSteps: { id: AuthMode; label: string }[] = [
+    { id: 'signup', label: 'Account'  },
+    { id: 'org',    label: 'Org'      },
+    { id: 'invite', label: 'Invite'   },
   ];
+  const currentStep = signupSteps.findIndex(s => s.id === mode);
 
   return (
     <div
@@ -180,25 +192,60 @@ export function SignIn() {
               </NavLink>
             </div>
 
-            {/* mode tabs */}
-            <div
-              className="flex gap-1 mx-8 mt-5 p-1 rounded-xl relative z-10"
-              style={{ background: 'rgba(245,240,232,0.03)' }}
-            >
-              {tabs.map(tab => (
-                <button
-                  key={tab.id}
-                  onClick={() => setMode(tab.id)}
-                  className="flex-1 py-2 rounded-lg text-[8px] font-mono uppercase tracking-widest transition-all"
-                  style={{
-                    background: mode === tab.id ? `${GOLD}22` : 'transparent',
-                    color: mode === tab.id ? GOLD : 'rgba(245,240,232,0.25)',
-                  }}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+            {/* Login / Create toggle — only shown at top level */}
+            {(mode === 'login' || mode === 'signup') && (
+              <div
+                className="flex gap-1 mx-8 mt-5 p-1 rounded-xl relative z-10"
+                style={{ background: 'rgba(245,240,232,0.03)' }}
+              >
+                {(['login', 'signup'] as const).map(m => (
+                  <button
+                    key={m}
+                    onClick={() => setMode(m)}
+                    className="flex-1 py-2 rounded-lg text-[8px] font-mono uppercase tracking-widest transition-all"
+                    style={{
+                      background: mode === m ? `${GOLD}22` : 'transparent',
+                      color: mode === m ? GOLD : 'rgba(245,240,232,0.25)',
+                    }}
+                  >
+                    {m === 'login' ? 'Sign In' : 'Create Account'}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Wizard step indicator — only shown during signup flow */}
+            {currentStep >= 0 && (
+              <div className="flex items-center gap-2 mx-8 mt-5 relative z-10">
+                {signupSteps.map((step, i) => (
+                  <div key={step.id} className="flex items-center gap-2">
+                    <div
+                      className="flex items-center gap-1.5"
+                    >
+                      <div
+                        className="w-4 h-4 rounded-full flex items-center justify-center text-[7px] font-mono font-bold transition-all"
+                        style={{
+                          background: i < currentStep ? GOLD : i === currentStep ? `${GOLD}33` : 'rgba(245,240,232,0.05)',
+                          border: `1px solid ${i <= currentStep ? GOLD + '60' : 'rgba(245,240,232,0.08)'}`,
+                          color: i <= currentStep ? GOLD : 'rgba(245,240,232,0.2)',
+                        }}
+                      >
+                        {i < currentStep ? '✓' : i + 1}
+                      </div>
+                      <span
+                        className="text-[7px] font-mono uppercase tracking-widest"
+                        style={{ color: i === currentStep ? 'rgba(245,240,232,0.5)' : 'rgba(245,240,232,0.2)' }}
+                      >
+                        {step.label}
+                      </span>
+                    </div>
+                    {i < signupSteps.length - 1 && (
+                      <div className="flex-1 h-px w-6" style={{ background: i < currentStep ? GOLD + '40' : 'rgba(245,240,232,0.07)' }} />
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* form body */}
             <AnimatePresence mode="wait">
@@ -404,6 +451,11 @@ export function SignIn() {
                 )}
 
                 {/* submit */}
+                {error && (
+                  <p className="text-[9px] font-mono text-rose-400/80 text-center uppercase tracking-widest -mb-1">
+                    {error}
+                  </p>
+                )}
                 <button
                   onClick={handleSuccess}
                   className="w-full mt-1 py-3.5 rounded-2xl flex items-center justify-between px-6 hover:opacity-90 transition-opacity"

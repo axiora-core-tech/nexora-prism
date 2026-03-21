@@ -1,105 +1,84 @@
-import React, { useState, useEffect } from 'react';
-import { motion, useMotionValue, useSpring } from 'motion/react';
+import { motion, useMotionValue, useSpring } from "motion/react";
+import { useEffect, useState } from "react";
 
 export function CustomCursor() {
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
+  
+  const springConfig = { damping: 30, stiffness: 400, mass: 0.1 };
+  const cursorXSpring = useSpring(cursorX, springConfig);
+  const cursorYSpring = useSpring(cursorY, springConfig);
+  
+  const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [isHovering, setIsHovering] = useState(false);
-  const [hoverText, setHoverText] = useState("");
-
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const springConfig = { damping: 25, stiffness: 200, mass: 0.5 };
-  const cursorX = useSpring(mouseX, springConfig);
-  const cursorY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
-    const updateMousePosition = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
+    // We only want custom cursor on non-touch devices
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+
+    document.body.style.cursor = 'none';
+    
+    const moveCursor = (e: MouseEvent) => {
+      cursorX.set(e.clientX - 4); // Offset half the default 8px cursor size
+      cursorY.set(e.clientY - 4);
       if (!isVisible) setIsVisible(true);
     };
-
+    
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      // Check if we're hovering over something clickable or significant
-      const isClickable = window.getComputedStyle(target).cursor === 'pointer' || 
-                          target.tagName.toLowerCase() === 'button' ||
-                          target.tagName.toLowerCase() === 'a' ||
-                          target.closest('button') || 
-                          target.closest('a');
-      
-      setIsHovering(!!isClickable);
-
-      // Extract optional text for the cursor
-      const dataCursor = target.getAttribute('data-cursor') || target.closest('[data-cursor]')?.getAttribute('data-cursor');
-      if (dataCursor) {
-        setHoverText(dataCursor);
+      if (
+        target.tagName.toLowerCase() === 'button' || 
+        target.tagName.toLowerCase() === 'a' || 
+        target.closest('button') || 
+        target.closest('a')
+      ) {
+        setIsHovered(true);
       } else {
-        setHoverText("");
+        setIsHovered(false);
       }
     };
 
-    const handleMouseOut = () => {
-      setIsHovering(false);
-      setHoverText("");
-    };
+    const handleMouseLeave = () => setIsVisible(false);
+    const handleMouseEnter = () => setIsVisible(true);
 
-    window.addEventListener('mousemove', updateMousePosition);
+    window.addEventListener('mousemove', moveCursor);
     window.addEventListener('mouseover', handleMouseOver);
-    window.addEventListener('mouseout', handleMouseOut);
-
+    document.body.addEventListener('mouseleave', handleMouseLeave);
+    document.body.addEventListener('mouseenter', handleMouseEnter);
+    
     return () => {
-      window.removeEventListener('mousemove', updateMousePosition);
+      window.removeEventListener('mousemove', moveCursor);
       window.removeEventListener('mouseover', handleMouseOver);
-      window.removeEventListener('mouseout', handleMouseOut);
+      document.body.removeEventListener('mouseleave', handleMouseLeave);
+      document.body.removeEventListener('mouseenter', handleMouseEnter);
+      document.body.style.cursor = 'auto';
     };
-  }, [mouseX, mouseY, isVisible]);
+  }, [cursorX, cursorY, isVisible]);
 
-  // Hide on touch devices
-  if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) {
-    return null;
-  }
+  if (!isVisible) return null;
 
   return (
     <motion.div
-      className="fixed top-0 left-0 pointer-events-none z-[100] flex items-center justify-center"
-      style={{
-        x: cursorX,
-        y: cursorY,
-        opacity: isVisible ? 1 : 0,
-        translateX: '-50%',
-        translateY: '-50%'
-      }}
+      className="fixed top-0 left-0 w-2 h-2 pointer-events-none z-[9999] mix-blend-difference flex items-center justify-center"
+      style={{ x: cursorXSpring, y: cursorYSpring }}
     >
-      {/* Outer Ring */}
-      <motion.div
-        animate={{
-          width: isHovering ? (hoverText ? 80 : 48) : 24,
-          height: isHovering ? (hoverText ? 80 : 48) : 24,
-          backgroundColor: isHovering ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0)',
-          borderColor: isHovering ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.5)',
-          backdropFilter: isHovering ? 'blur(4px)' : 'blur(0px)',
+      <motion.div 
+        className="w-full h-full bg-white rounded-full"
+        animate={{ 
+          scale: isHovered ? 4 : 1,
+          opacity: isHovered ? 0 : 1 
         }}
-        transition={{ type: "spring", stiffness: 300, damping: 25 }}
-        className="absolute rounded-full border border-white/50 flex items-center justify-center mix-blend-difference"
-      >
-        <motion.span 
-          animate={{ opacity: hoverText ? 1 : 0, scale: hoverText ? 1 : 0.5 }}
-          className="text-[10px] font-mono uppercase tracking-widest text-white whitespace-nowrap"
-        >
-          {hoverText}
-        </motion.span>
-      </motion.div>
-
-      {/* Center Dot */}
-      <motion.div
-        animate={{
-          scale: isHovering && !hoverText ? 0 : 1,
-          opacity: isHovering && hoverText ? 0 : 1
+        transition={{ duration: 0.2, ease: "easeOut" }}
+      />
+      {/* Hollow ring that appears on hover */}
+      <motion.div 
+        className="absolute inset-0 border border-white rounded-full"
+        initial={{ scale: 0.5, opacity: 0 }}
+        animate={{ 
+          scale: isHovered ? 6 : 0.5,
+          opacity: isHovered ? 1 : 0 
         }}
-        transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        className="w-1.5 h-1.5 bg-white rounded-full mix-blend-difference"
+        transition={{ duration: 0.2, ease: "easeOut" }}
       />
     </motion.div>
   );

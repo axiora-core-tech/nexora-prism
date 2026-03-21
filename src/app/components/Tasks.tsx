@@ -40,7 +40,7 @@ const priorityConfig: Record<Priority, { color: string; label: string }> = {
 };
 
 // ─── Task Card ──────────────────────────────────────────────────────────────
-function TaskCard({ task, onMove }: { task: Task; onMove: (id: string, dir: 'right') => void }) {
+function TaskCard({ task, onMove }: { task: Task; onMove: (id: string, dir: 'left' | 'right') => void }) {
   const pCfg  = priorityConfig[task.priority];
   const col   = columns.find(c => c.id === task.status)!;
   const emp   = employees.find(e => e.id === task.ownerId);
@@ -138,7 +138,16 @@ function TaskCard({ task, onMove }: { task: Task; onMove: (id: string, dir: 'rig
             )}
             <span className="text-[10px] text-white/40 font-light">{task.owner}</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
+            {!done && task.status !== 'backlog' && (
+              <button
+                onClick={e => { e.stopPropagation(); onMove(task.id, 'left'); }}
+                className="w-5 h-5 rounded-full border border-white/10 flex items-center justify-center text-white/30 hover:border-white/30 hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                data-cursor="Revert"
+              >
+                <ChevronRight size={9} className="rotate-180" />
+              </button>
+            )}
             {!done && (
               <button
                 onClick={e => { e.stopPropagation(); onMove(task.id, 'right'); }}
@@ -325,12 +334,14 @@ export function Tasks() {
   const [filterPriority, setFilterPriority] = useState<Priority | null>(null);
   const [view, setView]                 = useState<'board' | 'list'>('board');
 
-  const moveTask = (id: string, dir: 'right') => {
+  const moveTask = (id: string, dir: 'left' | 'right') => {
     const order: Status[] = ['backlog', 'active', 'review', 'resolved'];
     setTasks(prev => prev.map(t => {
       if (t.id !== id) return t;
       const idx    = order.indexOf(t.status);
-      const newIdx = Math.min(idx + 1, 3);
+      const newIdx = dir === 'right'
+        ? Math.min(idx + 1, order.length - 1)
+        : Math.max(idx - 1, 0);
       return { ...t, status: order[newIdx] };
     }));
   };

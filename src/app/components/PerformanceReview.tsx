@@ -47,6 +47,17 @@ export function PerformanceReview() {
   const emp = employees.find(e => e.id === selectedEmp);
   const composite = Math.round(Object.values(scores).reduce((s,v)=>s+v,0) / scoreLabels.length);
 
+  // CSS keyframe for pulse rings — same visual, zero JS frames
+  const pulseStyle = `
+    @keyframes pr-pulse {
+      0%,100% { transform: scale(1);   opacity: 0.5; }
+      50%      { transform: scale(1.4); opacity: 0;   }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      [style*="pr-pulse"] { animation: none !important; }
+    }
+  `;
+
   if (transmitted && emp) {
     return (
       <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 py-24 md:py-32">
@@ -56,12 +67,12 @@ export function PerformanceReview() {
           transition={{ duration: 0.8, ease: [0.16,1,0.3,1] }}
           className="flex flex-col items-center justify-center min-h-[60vh] text-center"
         >
+          <style dangerouslySetInnerHTML={{ __html: pulseStyle }} />
           {/* Pulsing ring */}
           <div className="relative w-28 h-28 mb-12">
-            <motion.div
-              animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }}
-              transition={{ duration: 2.5, repeat: Infinity }}
+<div
               className="absolute inset-0 rounded-full border border-emerald-500/30"
+              style={{ animation: 'pr-pulse 2.5s ease-in-out infinite', willChange: 'transform, opacity' }}
             />
             <div className="absolute inset-0 rounded-full bg-emerald-500/10 border border-emerald-500/40 flex items-center justify-center">
               <CheckCircle2 size={32} className="text-emerald-400" />
@@ -169,10 +180,9 @@ export function PerformanceReview() {
                       <img src={e.avatar} alt={e.name}
                         className="w-16 h-16 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 relative z-10"/>
                       {selectedEmp === e.id && (
-                        <motion.div
-                          animate={{ scale: [1, 1.3, 1], opacity: [0.6, 0, 0.6] }}
-                          transition={{ duration: 2, repeat: Infinity }}
+<div
                           className="absolute inset-0 rounded-full border border-cyan-400/50"
+                          style={{ animation: 'pr-pulse 2s ease-in-out infinite', willChange: 'transform, opacity' }}
                         />
                       )}
                     </div>

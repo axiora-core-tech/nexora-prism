@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
+import { useAuth } from '../auth/AuthContext';
 import { motion, AnimatePresence } from 'motion/react';
-import { Settings as SettingsIcon, Terminal, Bell, Shield, Users, BarChart2, RefreshCw, ChevronRight, Check, AlertTriangle, Zap, Moon, Globe, Lock, Eye, Sliders } from 'lucide-react';
+import { Settings as SettingsIcon, Terminal, Bell, Shield, Users, BarChart2, RefreshCw, ChevronRight, Check, AlertTriangle, Zap, Moon, Globe, Lock, Eye, Sliders, LogOut } from 'lucide-react';
 
 function Toggle({ on, onChange }: { on: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -42,8 +44,20 @@ const navItems = [
 type Section = 'performance' | 'notifications' | 'team' | 'security' | 'integrations' | 'terminal';
 
 export function Settings() {
+  const navigate = useNavigate();
+  const { logout, user } = useAuth();
   const [activeSection, setActiveSection] = useState<Section>('performance');
   const [saved, setSaved] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
+  const SETTINGS_KEY = 'prism_settings';
+  const savedSettings = (() => {
+    try { return JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}'); } catch { return {}; }
+  })();
 
   // Performance settings
   const [perf, setPerf] = useState({
@@ -55,6 +69,7 @@ export function Settings() {
     kpiWeighting: 'Balanced',
     ratingScale: '100-point',
     benchmarkMode: 'Internal',
+    ...(savedSettings.perf || {}),
   });
 
   // Notification settings
@@ -68,6 +83,7 @@ export function Settings() {
     slackIntegration: false,
     emailAlerts: true,
     channels: 'Email',
+    ...(savedSettings.notifs || {}),
   });
 
   // Team settings
@@ -92,6 +108,9 @@ export function Settings() {
   });
 
   const handleSave = () => {
+    try {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify({ perf, notifs, team, sec }));
+    } catch {}
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };
@@ -165,6 +184,22 @@ export function Settings() {
                 {activeSection === item.id && <ChevronRight size={12} className="ml-auto text-white/40" />}
               </button>
             ))}
+          </div>
+
+          {/* Account info + logout — always visible at bottom of sidebar */}
+          <div className="mt-8 pt-6 border-t border-white/[0.06]">
+            {user && (
+              <p className="text-[10px] font-mono text-white/25 uppercase tracking-widest px-4 mb-3 truncate">
+                {user.email}
+              </p>
+            )}
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-light text-rose-400/60 hover:text-rose-400 hover:bg-rose-500/5 border border-transparent hover:border-rose-500/10 transition-all text-left"
+            >
+              <LogOut size={14} />
+              Sign Out
+            </button>
           </div>
         </div>
 

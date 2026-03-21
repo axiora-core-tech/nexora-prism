@@ -15,6 +15,7 @@ export function Demo() {
   const [phone,   setPhone]   = useState('');
   const [website, setWebsite] = useState('');
   const [done,    setDone]    = useState(false);
+  const [error,   setError]   = useState('');
 
   const inp =
     'w-full rounded-2xl text-sm font-light outline-none transition-colors' +
@@ -91,6 +92,13 @@ export function Demo() {
               style={{ background: GOLD, color: INK }}
             >
               Back to Home
+            </NavLink>
+            <NavLink
+              to="/sign-in"
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-xs font-mono uppercase tracking-widest transition-colors mt-3"
+              style={{ border: `1px solid rgba(245,240,232,0.1)`, color: 'rgba(245,240,232,0.4)' }}
+            >
+              Create an account →
             </NavLink>
           </motion.div>
         ) : (
@@ -282,8 +290,20 @@ export function Demo() {
               </div>
 
               {/* submit */}
+              {error && (
+                <p className="text-[9px] font-mono text-rose-400/80 text-center uppercase tracking-widest -mb-1">
+                  {error}
+                </p>
+              )}
               <button
-                onClick={() => setDone(true)}
+                onClick={() => {
+                  setError('');
+                  if (!name.trim())    { setError('Full name is required.');   return; }
+                  if (!email.trim())   { setError('Work email is required.');  return; }
+                  if (!company.trim()) { setError('Company is required.');     return; }
+                  if (!size)           { setError('Please select a team size.'); return; }
+                  setDone(true);
+                }}
                 className="w-full mt-1 py-3.5 rounded-2xl flex items-center justify-between px-6 hover:opacity-90 transition-opacity"
                 style={{ background: GOLD }}
               >

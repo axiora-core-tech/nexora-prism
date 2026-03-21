@@ -47,6 +47,7 @@ export function JourneySection() {
 
   return (
     <section
+      id="forecasting"
       ref={containerRef}
       className="relative w-full bg-black border-y border-white/5"
       style={{ minHeight: "220vh" }}

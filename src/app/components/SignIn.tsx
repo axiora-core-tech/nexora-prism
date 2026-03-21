@@ -21,7 +21,7 @@ export function SignIn() {
   const { login }  = useAuth();
 
   // If we were redirected here from a protected route, go back there after login
-  const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? '/enter';
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? '/app';
 
   const [mode, setMode]       = useState<AuthMode>('login');
   const [sp, setSp]           = useState(false);
@@ -53,7 +53,9 @@ export function SignIn() {
   };
 
   const handleEnterDashboard = () => {
-    navigate(from === '/sign-in' ? '/enter' : from);
+    // Always route through /enter so ThresholdTransition plays,
+    // then it auto-navigates to /app after the animation completes.
+    navigate('/enter');
   };
 
   // Wizard steps shown only during signup flow (login is standalone)

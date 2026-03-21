@@ -1,4 +1,5 @@
 import React from 'react';
+import { CustomCursor } from './ui/CustomCursor';
 import { ThresholdTransition } from './ThresholdTransition';
 import { employees } from '../mockData';
 import { useAuth } from '../auth/AuthContext';
@@ -12,10 +13,11 @@ export function EnterApp() {
   const displayName =
     user?.name?.split(' ')[0] ??
     fallbackEmployee?.name ??
-    'Alex Mercer';
+    'Arjun Sharma';
 
   return (
-    <div style={{ width: '100vw', height: '100vh', background: '#f4f2ed' }}>
+    <div style={{ width: '100vw', height: '100vh', background: 'var(--p-bg)', cursor: 'none' }}>
+      <CustomCursor />
       <ThresholdTransition name={displayName} />
     </div>
   );

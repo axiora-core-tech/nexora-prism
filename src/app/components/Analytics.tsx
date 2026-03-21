@@ -2,19 +2,19 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router';
 import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
-import { Activity, TrendingUp, AlertTriangle, BrainCircuit, DollarSign, Target, Users, Zap } from 'lucide-react';
+import { Activity, TrendingUp, AlertTriangle, BrainCircuit, DollarSign, Target, Users, Zap, ArrowLeft } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, Tooltip, XAxis, YAxis, CartesianGrid, ComposedChart, Line, Bar, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from 'recharts';
 import { performanceData, globalRevenueForecast, globalLearningData, orgROIData, employees } from '../mockData';
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-[#050505] border border-white/10 rounded-xl p-3 text-xs">
-      <p className="text-white/40 mb-2 uppercase tracking-widest">{label}</p>
+    <div className="p-bg-surface border p-border-mid rounded-xl p-3 text-xs">
+      <p className="p-text-lo mb-2 uppercase tracking-widest">{label}</p>
       {payload.map((p: any, i: number) => (
         <div key={i} className="flex items-center gap-2 mt-1">
           <div className="w-2 h-2 rounded-full" style={{ background: p.stroke || p.fill }} />
-          <span className="text-white/60">{p.name}:</span>
+          <span className="p-text-mid">{p.name}:</span>
           <span className="text-white font-mono">{p.value}</span>
         </div>
       ))}
@@ -49,30 +49,37 @@ export function Analytics() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
+        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b p-border pb-12"
       >
         <div>
-          <p className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
+                    <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 p-text-dim hover:p-text-hi text-sm mb-4 transition-colors group"
+          >
+            <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
+            Back
+          </button>
+          <p className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
             <Activity size={14} className="text-cyan-400" /> Economic & System Telemetry
           </p>
           <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
-            Global <span className="text-white/30 italic font-serif">Models</span>
+            Global <span className="p-text-dim italic font-serif">Models</span>
           </h1>
         </div>
         <div className="text-right flex gap-12">
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-xs mb-2">System Health</p>
-            <p className="text-4xl font-light text-white">98.9<span className="text-xl text-white/30">%</span></p>
+            <p className="p-text-lo uppercase tracking-[0.2em] text-xs mb-2">System Health</p>
+            <p className="text-4xl font-light text-white">98.9<span className="text-xl p-text-dim">%</span></p>
           </div>
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-xs mb-2">Global ROI</p>
-            <p className="text-4xl font-light text-white">246<span className="text-xl text-white/30">%</span></p>
+            <p className="p-text-lo uppercase tracking-[0.2em] text-xs mb-2">Global ROI</p>
+            <p className="text-4xl font-light text-white">246<span className="text-xl p-text-dim">%</span></p>
           </div>
         </div>
       </motion.div>
 
       {/* View tabs */}
-      <div className="flex gap-1 p-1 bg-white/5 rounded-xl border border-white/5 w-fit mb-12">
+      <div className="flex gap-1 p-1 p-bg-card rounded-xl border p-border w-fit mb-12">
         {(['overview', 'roi', 'health'] as const).map(v => (
           <button
             key={v}
@@ -96,11 +103,11 @@ export function Analytics() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.2 }}
-              className="lg:col-span-2 bg-white/5 border border-white/5 rounded-[2rem] p-8 md:p-12 relative overflow-hidden group"
+              className="lg:col-span-2 p-bg-card border p-border rounded-[2rem] p-8 md:p-12 relative overflow-hidden group"
             >
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none" />
               <div className="flex justify-between items-center mb-12">
-                <h3 className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold flex items-center gap-4 border-b border-white/10 pb-4">Revenue vs Human Capital Cost ($M)</h3>
+                <h3 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold flex items-center gap-4 border-b p-border-mid pb-4">Revenue vs Human Capital Cost ($M)</h3>
                 <TrendingUp size={16} className="text-emerald-400" />
               </div>
               <div className="h-[300px] w-full -ml-4">
@@ -130,15 +137,15 @@ export function Analytics() {
                 whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.4 }}
-                className="bg-white/5 border border-white/5 rounded-[2rem] p-8 relative overflow-hidden"
+                className="p-bg-card border p-border rounded-[2rem] p-8 relative overflow-hidden"
               >
                 <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold flex items-center gap-4 border-b border-white/10 pb-4">Global Attrition Risk</h3>
+                  <h3 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold flex items-center gap-4 border-b p-border-mid pb-4">Global Attrition Risk</h3>
                   <AlertTriangle size={16} className="text-rose-400" />
                 </div>
                 <div className="flex items-end justify-between gap-2 h-24">
                   {attritionRiskBars.map((val, i) => (
-                    <div key={i} className="w-full bg-white/5 rounded-t-sm relative group overflow-hidden" style={{ height: '100%' }}>
+                    <div key={i} className="w-full p-bg-card rounded-t-sm relative group overflow-hidden" style={{ height: '100%' }}>
                       <motion.div
                         initial={{ height: 0 }}
                         whileInView={{ height: `${val}%` }}
@@ -149,7 +156,7 @@ export function Analytics() {
                     </div>
                   ))}
                 </div>
-                <div className="flex justify-between text-sm uppercase tracking-[0.12em] text-white/20 mt-3 font-mono">
+                <div className="flex justify-between text-sm uppercase tracking-[0.12em] p-text-ghost mt-3 font-mono">
                   <span>T-8wk</span><span>Now</span>
                 </div>
               </motion.div>
@@ -160,9 +167,9 @@ export function Analytics() {
                 whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="bg-white/5 border border-white/5 rounded-[2rem] p-8"
+                className="p-bg-card border p-border rounded-[2rem] p-8"
               >
-                <h3 className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-4 border-b border-white/10 pb-4">Performance Trend (6M)</h3>
+                <h3 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-4 border-b p-border-mid pb-4">Performance Trend (6M)</h3>
                 <div className="h-28">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={performanceData}>
@@ -183,14 +190,14 @@ export function Analytics() {
           </div>
 
           {/* Employee comparison grid */}
-          <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-            <h3 className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-4 border-b border-white/10 pb-4">Employee Performance Matrix</h3>
+          <div className="p-bg-card border p-border rounded-[2rem] p-8">
+            <h3 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-4 border-b p-border-mid pb-4">Employee Performance Matrix</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/5">
+                  <tr className="border-b p-border">
                     {['Employee', 'Score', 'ROI', 'Motivation', 'Welfare', 'Attrition Risk', 'Next Promo'].map(h => (
-                      <th key={h} className="text-left text-sm uppercase tracking-widest text-white/30 font-mono pb-4 pr-8">{h}</th>
+                      <th key={h} className="text-left text-sm uppercase tracking-widest p-text-dim font-mono pb-4 pr-8">{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -202,7 +209,7 @@ export function Analytics() {
                           <img src={emp.avatar} alt={emp.name} className="w-7 h-7 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                           <div>
                             <p className="text-white text-sm font-light">{emp.name}</p>
-                            <p className="text-white/30 text-sm uppercase tracking-[0.12em]">{emp.department}</p>
+                            <p className="p-text-dim text-sm uppercase tracking-[0.12em]">{emp.department}</p>
                           </div>
                         </div>
                       </td>
@@ -218,18 +225,18 @@ export function Analytics() {
                       </td>
                       <td className="py-4 pr-8">
                         <div className="flex items-center gap-2">
-                          <div className="w-16 h-1 bg-white/5 rounded-full">
+                          <div className="w-16 h-1 p-bg-card rounded-full">
                             <div className="h-full rounded-full bg-amber-400" style={{ width: `${emp.motivationScore}%` }} />
                           </div>
-                          <span className="text-white/50 text-sm font-mono">{emp.motivationScore}</span>
+                          <span className="p-text-mid text-sm font-mono">{emp.motivationScore}</span>
                         </div>
                       </td>
                       <td className="py-4 pr-8">
                         <div className="flex items-center gap-2">
-                          <div className="w-16 h-1 bg-white/5 rounded-full">
+                          <div className="w-16 h-1 p-bg-card rounded-full">
                             <div className="h-full rounded-full bg-rose-400" style={{ width: `${emp.welfareScore}%` }} />
                           </div>
-                          <span className="text-white/50 text-sm font-mono">{emp.welfareScore}</span>
+                          <span className="p-text-mid text-sm font-mono">{emp.welfareScore}</span>
                         </div>
                       </td>
                       <td className="py-4 pr-8">
@@ -239,7 +246,7 @@ export function Analytics() {
                           'border-emerald-500/30 text-emerald-400 bg-emerald-500/10'
                         }`}>{emp.attritionRisk}</span>
                       </td>
-                      <td className="py-4 pr-8 text-white/40 text-sm font-mono">{emp.nextPromotionEligibility}</td>
+                      <td className="py-4 pr-8 p-text-lo text-sm font-mono">{emp.nextPromotionEligibility}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -253,8 +260,8 @@ export function Analytics() {
       {activeView === 'roi' && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-              <h3 className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-4 border-b border-white/10 pb-4">Organisation ROI Trajectory</h3>
+            <div className="p-bg-card border p-border rounded-[2rem] p-8">
+              <h3 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-4 border-b p-border-mid pb-4">Organisation ROI Trajectory</h3>
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <ComposedChart data={orgROIData}>
@@ -274,18 +281,18 @@ export function Analytics() {
               </div>
             </div>
 
-            <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-              <h3 className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-4 border-b border-white/10 pb-4">Individual ROI Comparison</h3>
+            <div className="p-bg-card border p-border rounded-[2rem] p-8">
+              <h3 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-4 border-b p-border-mid pb-4">Individual ROI Comparison</h3>
               <div className="space-y-5">
                 {employees.map(emp => (
                   <div key={emp.id}>
                     <div className="flex justify-between text-xs mb-2">
-                      <span className="text-white/70">{emp.name}</span>
+                      <span className="p-text-body">{emp.name}</span>
                       <span className={`font-mono ${emp.roi >= 200 ? 'text-emerald-400' : emp.roi >= 150 ? 'text-cyan-400' : emp.roi >= 110 ? 'text-amber-400' : 'text-rose-400'}`}>
                         {emp.roi}%
                       </span>
                     </div>
-                    <div className="h-[3px] bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-[3px] p-bg-card rounded-full overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
                         whileInView={{ width: `${Math.min((emp.roi / 400) * 100, 100)}%` }}
@@ -306,8 +313,8 @@ export function Analytics() {
       {/* Org Health View */}
       {activeView === 'health' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-            <h3 className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-4 border-b border-white/10 pb-4">Org Health Radar</h3>
+          <div className="p-bg-card border p-border rounded-[2rem] p-8">
+            <h3 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-4 border-b p-border-mid pb-4">Org Health Radar</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
@@ -320,8 +327,8 @@ export function Analytics() {
             </div>
           </div>
 
-          <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-            <h3 className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-4 border-b border-white/10 pb-4">Learning Domain Completion</h3>
+          <div className="p-bg-card border p-border rounded-[2rem] p-8">
+            <h3 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-4 border-b p-border-mid pb-4">Learning Domain Completion</h3>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={globalLearningData} layout="vertical">
@@ -336,13 +343,13 @@ export function Analytics() {
           </div>
 
           {/* Burnout heatmap */}
-          <div className="lg:col-span-2 bg-white/5 border border-white/5 rounded-[2rem] p-8">
-            <h3 className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-4 border-b border-white/10 pb-4">Wellbeing & Burnout Matrix</h3>
+          <div className="lg:col-span-2 p-bg-card border p-border rounded-[2rem] p-8">
+            <h3 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-4 border-b p-border-mid pb-4">Wellbeing & Burnout Matrix</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {employees.map(emp => (
                 <NavLink key={emp.id} to={`/app/employee/${emp.id}`} className="relative group block">
                   <div
-                    className="rounded-2xl p-5 border border-white/5 transition-all hover:border-white/20"
+                    className="rounded-2xl p-5 border p-border transition-all hover:p-border-hi"
                     style={{
                       background: emp.bioRhythm.burnoutProbability > 60
                         ? 'rgba(244,63,94,0.05)'
@@ -353,22 +360,22 @@ export function Analytics() {
                   >
                     <div className="flex items-center gap-2 mb-4">
                       <img src={emp.avatar} alt={emp.name} className="w-7 h-7 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
-                      <p className="text-white/70 text-sm font-light">{emp.name.split(' ')[0]}</p>
+                      <p className="p-text-body text-sm font-light">{emp.name.split(' ')[0]}</p>
                     </div>
                     <div className="space-y-2">
                       <div className="flex justify-between text-xs">
-                        <span className="text-white/30">Stress</span>
+                        <span className="p-text-dim">Stress</span>
                         <span className="font-mono" style={{ color: emp.bioRhythm.stressIndex > 60 ? '#f43f5e' : '#10b981' }}>{emp.bioRhythm.stressIndex}</span>
                       </div>
                       <div className="flex justify-between text-xs">
-                        <span className="text-white/30">Burnout risk</span>
+                        <span className="p-text-dim">Burnout risk</span>
                         <span className="font-mono" style={{ color: emp.bioRhythm.burnoutProbability > 60 ? '#f43f5e' : emp.bioRhythm.burnoutProbability > 35 ? '#f59e0b' : '#10b981' }}>
                           {emp.bioRhythm.burnoutProbability}%
                         </span>
                       </div>
                       <div className="flex justify-between text-xs">
-                        <span className="text-white/30">Sleep</span>
-                        <span className="font-mono text-white/60">{emp.bioRhythm.sleepQuality}%</span>
+                        <span className="p-text-dim">Sleep</span>
+                        <span className="font-mono p-text-mid">{emp.bioRhythm.sleepQuality}%</span>
                       </div>
                     </div>
                   </div>

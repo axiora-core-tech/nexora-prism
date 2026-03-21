@@ -58,7 +58,7 @@ export function CustomCursor() {
     <>
       {/* Ring — only appears on nav links and clickables */}
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9998] rounded-full flex items-center justify-center mix-blend-difference"
+        className="fixed top-0 left-0 pointer-events-none z-[9998] rounded-full flex items-center justify-center mix-blend-[var(--p-cursor-blend)]"
         style={{
           x: ringX, y: ringY,
           translateX: '-50%', translateY: '-50%',
@@ -90,8 +90,8 @@ export function CustomCursor() {
 
       {/* Breathing dot — always present */}
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full mix-blend-difference bg-white"
-        style={{ x: dotX, y: dotY, translateX: '-50%', translateY: '-50%', width: 9, height: 9 }}
+        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full mix-blend-[var(--p-cursor-blend)] bg-white"
+        style={{ x: dotX, y: dotY, translateX: '-50%', translateY: '-50%', width: 6, height: 6 }}
         animate={{
           scale:   (isHovering && hoverText) ? 0 : [1, 2.0, 1],
           opacity: isVisible ? 1 : 0,

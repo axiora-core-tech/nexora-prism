@@ -133,7 +133,7 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
         className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4" onClick={onClose}>
         <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-md bg-[#0a0a0b] border border-white/10 rounded-[2rem] p-10 relative overflow-hidden text-center"
+          className="w-full max-w-md bg-[#0a0a0b] border p-border-mid rounded-[2rem] p-10 relative overflow-hidden text-center"
           onClick={e => e.stopPropagation()}>
           <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/8 blur-[80px] rounded-full pointer-events-none" />
           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 200, damping: 18, delay: 0.1 }}
@@ -141,15 +141,15 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
             <CheckCircle2 size={24} className="text-emerald-400" />
           </motion.div>
           <h3 className="text-2xl font-light text-white mb-2">
-            {mode === 'invite' ? 'Invitations' : 'Signal'} <span className="italic font-serif text-white/40">Transmitted</span>
+            {mode === 'invite' ? 'Invitations' : 'Signal'} <span className="italic font-serif p-text-lo">Transmitted</span>
           </h3>
-          <p className="text-white/40 text-sm uppercase tracking-[0.12em] font-mono mb-8">
+          <p className="p-text-lo text-sm uppercase tracking-[0.12em] font-mono mb-8">
             {mode === 'login' ? 'Redirecting to dashboard...' :
              mode === 'signup' || mode === 'org' ? 'Organisation node initialised' :
              `${invites.filter(Boolean).length} team nodes invited`}
           </p>
           <NavLink to="/enter" onClick={onClose}
-            className="inline-flex items-center gap-3 px-8 py-3 rounded-2xl bg-white/5 border border-white/10 text-white text-sm font-light hover:bg-white/[0.04] hover:border-white/20 transition-all"
+            className="inline-flex items-center gap-3 px-8 py-3 rounded-2xl p-bg-card border p-border-mid text-white text-sm font-light hover:bg-white/[0.04] hover:p-border-hi transition-all"
             data-cursor="Enter App">
             Enter Dashboard <ArrowUpRight size={14} />
           </NavLink>
@@ -173,7 +173,7 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
         animate={{ opacity: 1, y: 0,  scale: 1    }}
         exit={{ opacity: 0, y: 20,  scale: 0.97 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-lg bg-[#0a0a0b] border border-white/10 rounded-[2rem] overflow-hidden relative"
+        className="w-full max-w-lg bg-[#0a0a0b] border p-border-mid rounded-[2rem] overflow-hidden relative"
         onClick={e => e.stopPropagation()}>
 
         {/* Ambient glow */}
@@ -183,12 +183,12 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
         {/* Header */}
         <div className="flex items-start justify-between p-8 pb-0 relative z-10">
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-2">Prism Intelligence</p>
+            <p className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-2">Prism Intelligence</p>
             <h3 className="text-2xl font-light text-white">
               {mode === 'login'  ? 'Welcome' :
                mode === 'signup' ? 'New' :
                mode === 'org'    ? 'Organisation' :
-               'Team'} <span className="font-serif italic text-white/40">
+               'Team'} <span className="font-serif italic p-text-lo">
                 {mode === 'login'  ? 'Back'    :
                  mode === 'signup' ? 'Node'    :
                  mode === 'org'    ? 'Protocol':
@@ -197,14 +197,14 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
             </h3>
           </div>
           <button onClick={onClose}
-            className="p-2.5 rounded-full bg-white/5 border border-white/5 text-white/40 hover:text-white hover:bg-white/[0.04] transition-all"
+            className="p-2.5 rounded-full p-bg-card border p-border p-text-lo hover:p-text-hi hover:bg-white/[0.04] transition-all"
             data-cursor="Close">
             <X size={14} />
           </button>
         </div>
 
         {/* Mode tabs */}
-        <div className="flex gap-1 mx-8 mt-6 p-1 bg-white/5 border border-white/5 rounded-xl relative z-10">
+        <div className="flex gap-1 mx-8 mt-6 p-1 p-bg-card border p-border rounded-xl relative z-10">
           {tabs.map(tab => (
             <button key={tab.id} onClick={() => setMode(tab.id)}
               className={`flex-1 py-2 rounded-lg text-xs uppercase tracking-widest font-medium transition-all ${
@@ -225,26 +225,26 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
             {/* LOGIN */}
             {mode === 'login' && (<>
               <div>
-                <label className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono block mb-2">Email Address</label>
+                <label className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono block mb-2">Email Address</label>
                 <div className="relative">
-                  <Mail size={13} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
+                  <Mail size={13} className="absolute left-4 top-1/2 -translate-y-1/2 p-text-dim" />
                   <input value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="you@company.com"
-                    className="w-full bg-white/5 border border-white/5 rounded-2xl pl-10 pr-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20" />
+                    className="w-full p-bg-card border p-border rounded-2xl pl-10 pr-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20" />
                 </div>
               </div>
               <div>
-                <label className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono block mb-2">Passphrase</label>
+                <label className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono block mb-2">Passphrase</label>
                 <div className="relative">
-                  <Lock size={13} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
+                  <Lock size={13} className="absolute left-4 top-1/2 -translate-y-1/2 p-text-dim" />
                   <input value={pass} onChange={e => setPass(e.target.value)} type={showPass ? 'text' : 'password'} placeholder="••••••••••••"
-                    className="w-full bg-white/5 border border-white/5 rounded-2xl pl-10 pr-12 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20" />
-                  <button onClick={() => setShowPass(!showPass)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors" data-cursor="Toggle">
+                    className="w-full p-bg-card border p-border rounded-2xl pl-10 pr-12 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20" />
+                  <button onClick={() => setShowPass(!showPass)} className="absolute right-4 top-1/2 -translate-y-1/2 p-text-dim hover:text-white/60 transition-colors" data-cursor="Toggle">
                     {showPass ? <EyeOff size={13} /> : <Eye size={13} />}
                   </button>
                 </div>
               </div>
               <div className="flex items-center justify-between pt-1">
-                <span className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono">Forgot passphrase?</span>
+                <span className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono">Forgot passphrase?</span>
                 <button onClick={() => setMode('signup')} className="text-sm uppercase tracking-[0.12em] text-cyan-400/70 hover:text-cyan-400 transition-colors font-mono" data-cursor="Create">
                   New account →
                 </button>
@@ -254,28 +254,28 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
             {/* SIGNUP */}
             {mode === 'signup' && (<>
               <div>
-                <label className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono block mb-2">Full Name</label>
+                <label className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono block mb-2">Full Name</label>
                 <div className="relative">
-                  <Users size={13} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
+                  <Users size={13} className="absolute left-4 top-1/2 -translate-y-1/2 p-text-dim" />
                   <input value={name} onChange={e => setName(e.target.value)} type="text" placeholder="Your full name"
-                    className="w-full bg-white/5 border border-white/5 rounded-2xl pl-10 pr-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20" />
+                    className="w-full p-bg-card border p-border rounded-2xl pl-10 pr-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20" />
                 </div>
               </div>
               <div>
-                <label className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono block mb-2">Email Address</label>
+                <label className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono block mb-2">Email Address</label>
                 <div className="relative">
-                  <Mail size={13} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
+                  <Mail size={13} className="absolute left-4 top-1/2 -translate-y-1/2 p-text-dim" />
                   <input value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="you@company.com"
-                    className="w-full bg-white/5 border border-white/5 rounded-2xl pl-10 pr-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20" />
+                    className="w-full p-bg-card border p-border rounded-2xl pl-10 pr-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20" />
                 </div>
               </div>
               <div>
-                <label className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono block mb-2">Passphrase</label>
+                <label className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono block mb-2">Passphrase</label>
                 <div className="relative">
-                  <Lock size={13} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
+                  <Lock size={13} className="absolute left-4 top-1/2 -translate-y-1/2 p-text-dim" />
                   <input value={pass} onChange={e => setPass(e.target.value)} type={showPass ? 'text' : 'password'} placeholder="Min 12 characters"
-                    className="w-full bg-white/5 border border-white/5 rounded-2xl pl-10 pr-12 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20" />
-                  <button onClick={() => setShowPass(!showPass)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors" data-cursor="Toggle">
+                    className="w-full p-bg-card border p-border rounded-2xl pl-10 pr-12 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20" />
+                  <button onClick={() => setShowPass(!showPass)} className="absolute right-4 top-1/2 -translate-y-1/2 p-text-dim hover:text-white/60 transition-colors" data-cursor="Toggle">
                     {showPass ? <EyeOff size={13} /> : <Eye size={13} />}
                   </button>
                 </div>
@@ -288,34 +288,34 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
             {/* ORG SETUP */}
             {mode === 'org' && (<>
               <div>
-                <label className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono block mb-2">Organisation Name</label>
+                <label className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono block mb-2">Organisation Name</label>
                 <div className="relative">
-                  <Building2 size={13} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
+                  <Building2 size={13} className="absolute left-4 top-1/2 -translate-y-1/2 p-text-dim" />
                   <input value={org} onChange={e => setOrg(e.target.value)} type="text" placeholder="Acme Corp"
-                    className="w-full bg-white/5 border border-white/5 rounded-2xl pl-10 pr-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20" />
+                    className="w-full p-bg-card border p-border rounded-2xl pl-10 pr-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20" />
                 </div>
               </div>
               <div>
-                <label className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono block mb-2">Organisation Domain</label>
+                <label className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono block mb-2">Organisation Domain</label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 text-sm font-mono">@</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 p-text-ghost text-sm font-mono">@</span>
                   <input type="text" placeholder="acme.com"
-                    className="w-full bg-white/5 border border-white/5 rounded-2xl pl-10 pr-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20" />
+                    className="w-full p-bg-card border p-border rounded-2xl pl-10 pr-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20" />
                 </div>
               </div>
               <div>
-                <label className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono block mb-2">Team Size</label>
-                <select className="w-full bg-white/5 border border-white/5 rounded-2xl px-4 py-3 text-white text-sm outline-none focus:border-white/20">
+                <label className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono block mb-2">Team Size</label>
+                <select className="w-full p-bg-card border p-border rounded-2xl px-4 py-3 text-white text-sm outline-none focus:border-white/20">
                   {['1–10 nodes', '11–50 nodes', '51–200 nodes', '201–500 nodes', '500+ nodes'].map(s => (
                     <option key={s} className="bg-[#0a0a0b]">{s}</option>
                   ))}
                 </select>
               </div>
               <div className="flex items-center gap-3 pt-1">
-                <button onClick={() => setMode('signup')} className="px-5 py-2.5 rounded-2xl border border-white/5 text-white/40 text-xs hover:text-white hover:bg-white/[0.04] transition-all" data-cursor="Back">
+                <button onClick={() => setMode('signup')} className="px-5 py-2.5 rounded-2xl border p-border p-text-lo text-xs hover:p-text-hi hover:bg-white/[0.04] transition-all" data-cursor="Back">
                   <ArrowLeft size={13} />
                 </button>
-                <button onClick={() => setMode('invite')} className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl bg-white/5 border border-white/10 text-white text-sm font-light hover:bg-white/[0.04] hover:border-white/20 transition-all" data-cursor="Invite Team">
+                <button onClick={() => setMode('invite')} className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl p-bg-card border p-border-mid text-white text-sm font-light hover:bg-white/[0.04] hover:p-border-hi transition-all" data-cursor="Invite Team">
                   Continue to Invitations <ChevronRight size={12} />
                 </button>
               </div>
@@ -325,23 +325,23 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
             {mode === 'invite' && (<>
               <div className="flex items-center gap-3 mb-2">
                 <UserPlus size={12} className="text-cyan-400" />
-                <p className="text-white/40 text-sm font-light">Invite team members by email. They'll receive a secure onboarding link.</p>
+                <p className="p-text-lo text-sm font-light">Invite team members by email. They'll receive a secure onboarding link.</p>
               </div>
               {invites.map((inv, i) => (
                 <div key={i}>
-                  <label className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono block mb-2">
+                  <label className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono block mb-2">
                     Node {String(i + 1).padStart(2, '0')} — Email
                   </label>
                   <div className="relative">
-                    <Mail size={13} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
+                    <Mail size={13} className="absolute left-4 top-1/2 -translate-y-1/2 p-text-dim" />
                     <input value={inv} onChange={e => { const n = [...invites]; n[i] = e.target.value; setInvites(n); }}
                       type="email" placeholder={`colleague${i + 1}@company.com`}
-                      className="w-full bg-white/5 border border-white/5 rounded-2xl pl-10 pr-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20" />
+                      className="w-full p-bg-card border p-border rounded-2xl pl-10 pr-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20" />
                   </div>
                 </div>
               ))}
               <button onClick={() => setInvites([...invites, ''])}
-                className="text-sm uppercase tracking-[0.12em] text-white/30 hover:text-white/60 font-mono transition-colors flex items-center gap-1"
+                className="text-sm uppercase tracking-[0.12em] p-text-dim hover:text-white/60 font-mono transition-colors flex items-center gap-1"
                 data-cursor="Add Node">
                 + Add another node
               </button>
@@ -352,18 +352,18 @@ function AuthModal({ mode: initialMode, onClose }: { mode: AuthMode; onClose: ()
               className="w-full relative group overflow-hidden rounded-2xl mt-2"
               data-cursor={mode === 'login' ? 'Transmit' : mode === 'invite' ? 'Send Invitations' : 'Continue'}>
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-sm" />
-              <div className="relative bg-white/5 border border-white/10 rounded-2xl px-6 py-3.5 flex items-center justify-between group-hover:bg-white/[0.04] group-hover:border-white/20 transition-all">
+              <div className="relative p-bg-card border p-border-mid rounded-2xl px-6 py-3.5 flex items-center justify-between group-hover:bg-white/[0.04] group-hover:border-white/20 transition-all">
                 <span className="text-white text-sm font-light">
                   {mode === 'login'  ? 'Transmit Credentials' :
                    mode === 'signup' ? 'Initialise Node'      :
                    mode === 'org'    ? 'Deploy Organisation'  :
                    'Broadcast Invitations'}
                 </span>
-                <Send size={14} className="text-white/40 group-hover:text-cyan-400 transition-colors" />
+                <Send size={14} className="p-text-lo group-hover:text-cyan-400 transition-colors" />
               </div>
             </button>
 
-            <p className="text-xs text-white/20 text-center font-mono uppercase tracking-widest">
+            <p className="text-xs p-text-ghost text-center font-mono uppercase tracking-widest">
               End-to-end encrypted · SOC 2 Type II · GDPR compliant
             </p>
           </motion.div>

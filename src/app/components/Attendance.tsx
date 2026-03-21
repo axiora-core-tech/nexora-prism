@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { CalendarDays, Clock, MapPin, AlertTriangle, ArrowUpRight } from 'lucide-react';
+import { CalendarDays, Clock, MapPin, AlertTriangle, ArrowUpRight, ArrowLeft } from 'lucide-react';
 import { employees } from '../mockData';
 import { NavLink } from 'react-router';
+import { useNavigate } from 'react-router';
 
 type DayType = 'present' | 'wfh' | 'leave' | 'absent' | 'weekend';
 
@@ -24,8 +25,8 @@ function TemporalGrid({ calendar }: { calendar: any[] }) {
           <div key={t} className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-sm" style={{ background: dayConfig[t].color }} />
             <div>
-              <span className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono">{dayConfig[t].label}</span>
-              <span className="text-xs text-white/15 font-light ml-1.5">
+              <span className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono">{dayConfig[t].label}</span>
+              <span className="text-xs p-text-whisper font-light ml-1.5">
                 {({'In Orbit':'present','Remote':'work from home','Leave':'on leave','Dark':'absent','Standby':'weekend'} as Record<string,string>)[dayConfig[t].label]}
               </span>
             </div>
@@ -35,7 +36,7 @@ function TemporalGrid({ calendar }: { calendar: any[] }) {
 
       <div className="grid grid-cols-7 gap-2">
         {['M','T','W','T','F','S','S'].map((d, i) => (
-          <div key={i} className="text-center text-sm uppercase tracking-[0.12em] text-white/20 font-mono pb-2">{d}</div>
+          <div key={i} className="text-center text-sm uppercase tracking-[0.12em] p-text-ghost font-mono pb-2">{d}</div>
         ))}
         {calendar.map((day, i) => {
           const type = (day.type in dayConfig ? day.type : 'weekend') as DayType;
@@ -61,14 +62,14 @@ function TemporalGrid({ calendar }: { calendar: any[] }) {
 
               {hoveredDay === day && type !== 'weekend' && (
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-none">
-                  <div className="bg-[#0a0a0c] border border-white/10 rounded-xl p-3 whitespace-nowrap shadow-2xl">
+                  <div className="bg-[#0a0a0c] border p-border-mid rounded-xl p-3 whitespace-nowrap shadow-2xl">
                     <p className="text-sm uppercase tracking-[0.12em] font-mono mb-1.5" style={{ color: cfg.color }}>{cfg.label}</p>
                     {day.checkIn && (
-                      <div className="flex items-center gap-2 text-xs text-white/50">
+                      <div className="flex items-center gap-2 text-xs p-text-mid">
                         <Clock size={8} /><span>{day.checkIn} — {day.checkOut}</span>
                       </div>
                     )}
-                    {day.leaveType && <p className="text-xs text-white/30 mt-1 capitalize font-mono">{day.leaveType} protocol</p>}
+                    {day.leaveType && <p className="text-xs p-text-dim mt-1 capitalize font-mono">{day.leaveType} protocol</p>}
                   </div>
                 </div>
               )}
@@ -81,6 +82,7 @@ function TemporalGrid({ calendar }: { calendar: any[] }) {
 }
 
 export function Attendance() {
+  const navigate = useNavigate();
   const [selectedEmp, setSelectedEmp] = useState(employees[0].id);
   const emp = employees.find(e => e.id === selectedEmp)!;
   const att = emp.attendance;
@@ -96,23 +98,30 @@ export function Attendance() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
+        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b p-border pb-12"
       >
         <div>
-          <p className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
+                    <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 p-text-dim hover:p-text-hi text-sm mb-4 transition-colors group"
+          >
+            <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
+            Back
+          </button>
+          <p className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
             <CalendarDays size={14} className="text-cyan-400" /> Workforce Temporal Dynamics
           </p>
           <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
-            Orbital <span className="text-white/30 italic font-serif">Presence</span>
+            Orbital <span className="p-text-dim italic font-serif">Presence</span>
           </h1>
         </div>
         <div className="flex gap-16 text-right">
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-xs mb-2">Org Presence Rate</p>
+            <p className="p-text-lo uppercase tracking-[0.2em] text-xs mb-2">Org Presence Rate</p>
             <p className="text-4xl font-light text-emerald-400">94.2%</p>
           </div>
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-xs mb-2">Remote Ratio</p>
+            <p className="p-text-lo uppercase tracking-[0.2em] text-xs mb-2">Remote Ratio</p>
             <p className="text-4xl font-light text-cyan-400">31%</p>
           </div>
         </div>
@@ -132,7 +141,7 @@ export function Attendance() {
               viewport={{ once: true }}
               transition={{ delay: empIdx * 0.07, duration: 0.5 }}
               onClick={() => setSelectedEmp(e.id)}
-              className={`relative p-5 rounded-[2rem] border text-left transition-all duration-500 overflow-hidden group hover:border-white/10 ${
+              className={`relative p-5 rounded-[2rem] border text-left transition-all duration-500 overflow-hidden group hover:p-border-mid ${
                 selectedEmp === e.id ? 'bg-white/10 border-white/20' : 'bg-white/5 border-white/5'
               }`}
               data-cursor="Set Node"
@@ -144,8 +153,8 @@ export function Attendance() {
                 <img src={e.avatar} alt={e.name} className="w-8 h-8 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                 {flag && <AlertTriangle size={10} className="text-rose-400" />}
               </div>
-              <p className="text-white/80 text-sm font-light truncate relative z-10">{e.name.split(' ')[0]}</p>
-              <p className="text-sm uppercase tracking-[0.12em] text-white/20 mt-0.5 truncate font-mono relative z-10">{e.department}</p>
+              <p className="p-text-body text-sm font-light truncate relative z-10">{e.name.split(' ')[0]}</p>
+              <p className="text-sm uppercase tracking-[0.12em] p-text-ghost mt-0.5 truncate font-mono relative z-10">{e.department}</p>
               <div className="mt-3 flex items-end justify-between relative z-10">
                 <span className={`text-xl font-light ${rate >= 90 ? 'text-emerald-400' : rate >= 80 ? 'text-amber-400' : 'text-rose-400'}`}>
                   {rate}%
@@ -154,7 +163,7 @@ export function Attendance() {
                   <span className="text-xs text-rose-400 font-mono">{a.absent} dark</span>
                 )}
               </div>
-              <div className="mt-2 h-px bg-white/5 relative z-10">
+              <div className="mt-2 h-px p-bg-card relative z-10">
                 <div className="h-full" style={{
                   width: `${rate}%`,
                   background: rate >= 90 ? '#10b981' : rate >= 80 ? '#f59e0b' : '#f43f5e'
@@ -176,26 +185,26 @@ export function Attendance() {
           className="grid grid-cols-1 lg:grid-cols-3 gap-6"
         >
           {/* Calendar */}
-          <div className="lg:col-span-2 relative bg-white/5 border border-white/5 rounded-[2rem] p-8 overflow-hidden group">
+          <div className="lg:col-span-2 relative p-bg-card border p-border rounded-[2rem] p-8 overflow-hidden group">
             <div className="absolute top-0 right-0 w-80 h-80 bg-cyan-500/5 blur-[100px] rounded-full pointer-events-none group-hover:bg-cyan-500/8 transition-all duration-1000" />
             <div className="flex items-center justify-between mb-8 relative z-10">
               <div>
                 <div className="flex items-center gap-3">
                   <div>
                     <h2 className="text-white text-xl font-light leading-none">{emp.name.split(' ')[0]}</h2>
-                    <h2 className="text-white/30 font-serif italic text-sm leading-none mt-0.5">{emp.name.split(' ')[1]}</h2>
+                    <h2 className="p-text-dim font-serif italic text-sm leading-none mt-0.5">{emp.name.split(' ')[1]}</h2>
                   </div>
                   <NavLink
                     to={`/app/employee/${emp.id}`}
-                    className="flex-shrink-0 p-1.5 rounded-full bg-white/5 border border-white/10 text-white/30 hover:text-cyan-400 hover:border-cyan-400/30 transition-all"
+                    className="flex-shrink-0 p-1.5 rounded-full p-bg-card border p-border-mid p-text-dim hover:text-cyan-400 hover:border-cyan-400/30 transition-all"
                   >
                     <ArrowUpRight size={12} />
                   </NavLink>
                 </div>
-                <p className="text-sm uppercase tracking-[0.12em] text-white/20 mt-2 font-mono">{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })} — Temporal Log</p>
+                <p className="text-sm uppercase tracking-[0.12em] p-text-ghost mt-2 font-mono">{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })} — Temporal Log</p>
               </div>
               <div className="text-right">
-                <p className="text-sm uppercase tracking-[0.12em] text-white/30 mb-1">Presence Rate</p>
+                <p className="text-sm uppercase tracking-[0.12em] p-text-dim mb-1">Presence Rate</p>
                 <p className={`text-3xl font-light ${presenceRate >= 90 ? 'text-emerald-400' : presenceRate >= 80 ? 'text-amber-400' : 'text-rose-400'}`}>
                   {presenceRate}%
                 </p>
@@ -209,9 +218,9 @@ export function Attendance() {
           {/* Stats column */}
           <div className="space-y-4">
             {/* Breakdown */}
-            <div className="relative bg-white/5 border border-white/5 rounded-[2rem] p-6 overflow-hidden group">
+            <div className="relative p-bg-card border p-border rounded-[2rem] p-6 overflow-hidden group">
               <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-purple-500/8 blur-[40px] rounded-full pointer-events-none" />
-              <h3 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-3 border-b border-white/10 pb-3"><CalendarDays size={10} className="text-cyan-400" /> Temporal Breakdown</h3>
+              <h3 className="p-text-dim uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-3 border-b p-border-mid pb-3"><CalendarDays size={10} className="text-cyan-400" /> Temporal Breakdown</h3>
               <div className="space-y-4 relative z-10">
                 {[
                   { label: 'In Orbit', val: att.present, color: '#10b981' },
@@ -221,10 +230,10 @@ export function Attendance() {
                 ].map(s => (
                   <div key={s.label}>
                     <div className="flex justify-between text-xs mb-2">
-                      <span className="text-white/50">{s.label}</span>
+                      <span className="p-text-mid">{s.label}</span>
                       <span className="font-mono" style={{ color: s.color }}>{s.val}d</span>
                     </div>
-                    <div className="h-px bg-white/5">
+                    <div className="h-px p-bg-card">
                       <div className="h-full transition-all" style={{ width: `${(s.val / totalDays) * 100}%`, background: s.color }} />
                     </div>
                   </div>
@@ -233,9 +242,9 @@ export function Attendance() {
             </div>
 
             {/* Leave balance */}
-            <div className="relative bg-white/5 border border-white/5 rounded-[2rem] p-6 overflow-hidden group">
+            <div className="relative p-bg-card border p-border rounded-[2rem] p-6 overflow-hidden group">
               <div className="absolute top-0 right-0 w-28 h-28 bg-amber-500/5 blur-[40px] rounded-full pointer-events-none" />
-              <h3 className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-3 border-b border-white/10 pb-3">
+              <h3 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-3 border-b p-border-mid pb-3">
                 <CalendarDays size={10} className="text-amber-400" /> Leave Matrix
               </h3>
               <div className="space-y-5 relative z-10">
@@ -245,17 +254,17 @@ export function Attendance() {
                 ].map(l => (
                   <div key={l.label}>
                     <div className="flex justify-between items-center text-xs mb-2">
-                      <span className="text-white/50">{l.label}</span>
-                      <span className="font-mono text-white/40">{l.used} / {l.total}</span>
+                      <span className="p-text-mid">{l.label}</span>
+                      <span className="font-mono p-text-lo">{l.used} / {l.total}</span>
                     </div>
-                    <div className="h-px bg-white/5">
+                    <div className="h-px p-bg-card">
                       <div className="h-full" style={{ width: `${(l.used / l.total) * 100}%`, background: l.color }} />
                     </div>
-                    <p className="text-xs text-white/20 mt-1 font-mono">{l.total - l.used} units remaining</p>
+                    <p className="text-xs p-text-ghost mt-1 font-mono">{l.total - l.used} units remaining</p>
                   </div>
                 ))}
                 {lb.sabbaticalEligible && (
-                  <div className="pt-3 border-t border-white/5 flex items-center gap-2">
+                  <div className="pt-3 border-t p-border flex items-center gap-2">
                     <span className="text-sm uppercase tracking-[0.12em] text-purple-400 font-mono flex items-center gap-1.5"><span className="w-1 h-1 rounded-full bg-purple-400 inline-block"/>Sabbatical Protocol Available</span>
                   </div>
                 )}
@@ -263,9 +272,9 @@ export function Attendance() {
             </div>
 
             {/* Work pattern */}
-            <div className="relative bg-white/5 border border-white/5 rounded-[2rem] p-6 overflow-hidden group" data-cursor="Scan Pattern">
+            <div className="relative p-bg-card border p-border rounded-[2rem] p-6 overflow-hidden group" data-cursor="Scan Pattern">
               <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-emerald-500/5 blur-[30px] rounded-full pointer-events-none" />
-              <h3 className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-3 border-b border-white/10 pb-3">
+              <h3 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-3 border-b p-border-mid pb-3">
                 <MapPin size={10} className="text-rose-400" /> Location Pattern
               </h3>
               <div className="flex items-center gap-4 relative z-10">
@@ -282,11 +291,11 @@ export function Attendance() {
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"/>
-                    <span className="text-xs text-white/50">Office {Math.round(att.present / (att.present + att.wfh) * 100)}%</span>
+                    <span className="text-xs p-text-mid">Office {Math.round(att.present / (att.present + att.wfh) * 100)}%</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"/>
-                    <span className="text-xs text-white/50">Remote {Math.round(att.wfh / (att.present + att.wfh) * 100)}%</span>
+                    <span className="text-xs p-text-mid">Remote {Math.round(att.wfh / (att.present + att.wfh) * 100)}%</span>
                   </div>
                 </div>
               </div>

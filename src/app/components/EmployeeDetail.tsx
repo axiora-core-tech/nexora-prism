@@ -51,7 +51,7 @@ export function EmployeeDetail() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  if (!employee) return <div className="p-8 text-center text-white/50 h-screen flex items-center justify-center">Node Not Found</div>;
+  if (!employee) return <div className="p-8 text-center p-text-mid h-screen flex items-center justify-center">Node Not Found</div>;
 
   const sections = [
     { id: 'telemetry', icon: Diamond, label: 'Telemetry' },
@@ -79,21 +79,21 @@ export function EmployeeDetail() {
         initial={{ opacity: 0, x: -100 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full xl:w-[40%] h-[60vh] xl:h-screen sticky top-0 overflow-hidden hidden xl:block"
+        className="w-full xl:w-[40%] h-[60vh] xl:h-screen sticky top-0 overflow-hidden hidden xl:block" style={{ backgroundColor: '#111' }}
       >
         <motion.img
           style={{ scale, y }}
           src={employee.avatar}
           alt={employee.name}
           fetchPriority="high"
-          className="absolute inset-0 w-full h-full object-cover z-0 grayscale opacity-80 mix-blend-screen"
+          className="absolute inset-0 w-full h-full object-cover z-0 grayscale opacity-90"
         />
         
         {/* Dynamic Gradient Overlays */}
         <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#030303] via-[#030303]/60 to-transparent" />
         <div className="absolute inset-0 z-10 bg-gradient-to-r from-transparent to-[#030303]" />
         
-        <NavLink to="/app" className="absolute top-12 left-12 z-50 text-white/40 hover:text-white transition-colors p-4 rounded-full bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10" data-cursor="Return">
+        <NavLink to="/app" className="absolute top-12 left-12 z-50 p-text-lo hover:p-text-hi transition-colors p-4 rounded-full p-bg-card backdrop-blur-md border p-border-mid hover:bg-white/10" data-cursor="Return">
           <ArrowLeft size={20} />
         </NavLink>
 
@@ -107,13 +107,13 @@ export function EmployeeDetail() {
                 Risk: {employee.attritionRiskPercentage}%
               </span>
             </div>
-            <h1 className="text-6xl md:text-8xl font-light tracking-tighter text-white leading-none mix-blend-difference">{employee.name.split(' ')[0]}</h1>
-            <h1 className="text-6xl md:text-8xl font-serif italic text-white/50 leading-none mb-6">{employee.name.split(' ')[1]}</h1>
-            <p className="text-lg md:text-xl text-white/80 font-light mb-4">{employee.role}</p>
+            <h1 className="text-6xl md:text-8xl font-light tracking-tighter text-white leading-none">{employee.name.split(' ')[0]}</h1>
+            <h1 className="text-6xl md:text-8xl font-serif italic p-text-mid leading-none mb-6">{employee.name.split(' ')[1]}</h1>
+            <p className="text-lg md:text-xl p-text-body font-light mb-4">{employee.role}</p>
             
             <div className="flex flex-wrap gap-2">
               {employee.skills.map(skill => (
-                <span key={skill} className="px-3 py-1 rounded-full border border-white/10 text-sm uppercase tracking-[0.12em] text-white/60 backdrop-blur-sm bg-white/5">
+                <span key={skill} className="px-3 py-1 rounded-full border p-border-mid text-sm uppercase tracking-[0.12em] p-text-mid backdrop-blur-sm p-bg-card">
                   {skill}
                 </span>
               ))}
@@ -131,10 +131,10 @@ export function EmployeeDetail() {
             className="group relative flex items-center justify-end"
             data-cursor={section.label}
           >
-            <span className={`absolute right-12 text-xs uppercase tracking-widest whitespace-nowrap transition-all duration-300 ${activeSection === section.id ? 'opacity-100 text-white translate-x-0' : 'opacity-0 text-white/40 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0'}`}>
+            <span className={`absolute right-12 text-xs uppercase tracking-widest whitespace-nowrap transition-all duration-300 ${activeSection === section.id ? 'opacity-100 text-white translate-x-0' : 'opacity-0 p-text-lo translate-x-4 group-hover:opacity-100 group-hover:translate-x-0'}`}>
               {section.label}
             </span>
-            <div className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-500 backdrop-blur-md ${activeSection === section.id ? 'border-cyan-400/50 bg-cyan-400/10 text-cyan-400 scale-110' : 'border-white/10 bg-white/5 text-white/40 hover:bg-white/10'}`}>
+            <div className={`w-10 h-10 rounded-full border flex items-center justify-center transition-all duration-500 backdrop-blur-md ${activeSection === section.id ? 'border-cyan-400/50 bg-cyan-400/10 text-cyan-400 scale-110' : 'border-white/10 p-bg-card p-text-lo hover:bg-white/10'}`}>
               <section.icon size={14} />
             </div>
           </button>
@@ -146,7 +146,7 @@ export function EmployeeDetail() {
         
         {/* Mobile Header (Hidden on Desktop) */}
         <div className="xl:hidden mb-12 pt-12">
-          <NavLink to="/app" className="inline-flex text-white/40 hover:text-white transition-colors mb-8" data-cursor="Return">
+          <NavLink to="/app" className="inline-flex p-text-lo hover:p-text-hi transition-colors mb-8" data-cursor="Return">
             <ArrowLeft size={20} />
           </NavLink>
           <div className="flex items-center gap-4 mb-4">
@@ -155,8 +155,8 @@ export function EmployeeDetail() {
             </span>
           </div>
           <h1 className="text-5xl font-light tracking-tighter text-white leading-none">{employee.name.split(' ')[0]}</h1>
-          <h1 className="text-5xl font-serif italic text-white/50 leading-none mb-4">{employee.name.split(' ')[1]}</h1>
-          <p className="text-lg text-white/80 font-light mb-6">{employee.role}</p>
+          <h1 className="text-5xl font-serif italic p-text-mid leading-none mb-4">{employee.name.split(' ')[1]}</h1>
+          <p className="text-lg p-text-body font-light mb-6">{employee.role}</p>
 
           {/* Mobile horizontal section nav — scrollable pill strip */}
           <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
@@ -167,7 +167,7 @@ export function EmployeeDetail() {
                 className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs uppercase tracking-widest font-mono transition-all ${
                   activeSection === section.id
                     ? 'border-cyan-400/50 bg-cyan-400/10 text-cyan-400'
-                    : 'border-white/10 text-white/40 hover:text-white hover:border-white/20'
+                    : 'border-white/10 p-text-lo hover:p-text-hi hover:border-white/20'
                 }`}
               >
                 <section.icon size={9} />
@@ -186,7 +186,7 @@ export function EmployeeDetail() {
           
           {/* SEC 1: TELEMETRY */}
           <section id="telemetry" className="relative pt-12 scroll-mt-24">
-            <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-12 flex items-center gap-4 border-b border-white/10 pb-4">
+            <h2 className="p-text-dim uppercase tracking-[0.2em] text-sm font-semibold mb-12 flex items-center gap-4 border-b p-border-mid pb-4">
               <Diamond size={12} className="text-purple-400" /> Core Telemetry
             </h2>
             
@@ -223,7 +223,7 @@ export function EmployeeDetail() {
                       <span className="text-2xl md:text-3xl font-light text-white leading-none">{stat.val}</span>
                     </div>
                   </div>
-                  <span className="block text-sm uppercase tracking-[0.12em] text-white/40 mt-6 flex items-center gap-2">
+                  <span className="block text-sm uppercase tracking-[0.12em] p-text-lo mt-6 flex items-center gap-2">
                     <stat.icon size={10} /> {stat.label}
                   </span>
                 </div>
@@ -234,7 +234,7 @@ export function EmployeeDetail() {
 
           {/* SEC 1.5: KPI GOALS */}
           <section id="kpis" className="relative scroll-mt-24">
-            <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">
+            <h2 className="p-text-dim uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b p-border-mid pb-4">
               <Target size={12} className="text-amber-400" /> KPI Performance
             </h2>
             
@@ -245,59 +245,59 @@ export function EmployeeDetail() {
                 const pct = Math.min((kpi.current / kpi.target) * 100, 100);
                 const color = good ? '#10b981' : kpi.current / kpi.target > 0.8 ? '#f59e0b' : '#f43f5e';
                 return (
-                  <div key={i} className="bg-white/[0.02] border border-white/5 rounded-2xl p-5 hover:bg-white/[0.04] transition-colors">
+                  <div key={i} className="bg-white/[0.02] border p-border rounded-2xl p-5 hover:bg-white/[0.04] transition-colors">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        {kpi.trend === 'up' ? <TrendingUp size={12} className="text-emerald-400" /> : kpi.trend === 'down' ? <TrendingDown size={12} className="text-rose-400" /> : <Minus size={12} className="text-white/40" />}
-                        <span className="text-base text-white/80 font-light">{kpi.name}</span>
+                        {kpi.trend === 'up' ? <TrendingUp size={12} className="text-emerald-400" /> : kpi.trend === 'down' ? <TrendingDown size={12} className="text-rose-400" /> : <Minus size={12} className="p-text-lo" />}
+                        <span className="text-base p-text-body font-light">{kpi.name}</span>
                       </div>
                       <div className="flex items-center gap-4">
-                        <span className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono">Weight: {kpi.weight}%</span>
+                        <span className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono">Weight: {kpi.weight}%</span>
                         <span className="text-sm font-mono" style={{ color }}>
                           {kpi.current}{kpi.unit}
-                          <span className="text-white/30"> / {kpi.target}{kpi.unit}</span>
+                          <span className="p-text-dim"> / {kpi.target}{kpi.unit}</span>
                         </span>
                       </div>
                     </div>
-                    <div className="w-full h-[2px] bg-white/5 rounded-full overflow-hidden">
+                    <div className="w-full h-[2px] p-bg-card rounded-full overflow-hidden">
                       <motion.div initial={{ width: 0 }} whileInView={{ width: `${pct}%` }} viewport={{ once: true }} transition={{ duration: 1 }} className="h-full rounded-full" style={{ background: color }} />
                     </div>
                   </div>
                 );
               })}
               {(!employee.kpis || employee.kpis.length === 0) && (
-                <p className="text-white/30 text-sm text-center py-8">No KPIs defined for this role.</p>
+                <p className="p-text-dim text-sm text-center py-8">No KPIs defined for this role.</p>
               )}
             </div>
           </section>
 
           {/* SEC 2: CAPITAL MATRIX */}
           <section id="capital" className="relative scroll-mt-24">
-            <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">
+            <h2 className="p-text-dim uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b p-border-mid pb-4">
               <Coins size={12} className="text-emerald-400" /> Capital & Compensation Matrix
             </h2>
 
             {/* ROI Overview */}
-            <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8 md:p-10 relative overflow-hidden group mb-6">
+            <div className="p-bg-card border p-border rounded-[2rem] p-8 md:p-10 relative overflow-hidden group mb-6">
               <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 blur-[80px] rounded-full pointer-events-none" />
               
               <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-12 relative z-10">
                 <div>
-                  <p className="text-sm uppercase tracking-[0.12em] text-white/40 mb-2">Cost Investment</p>
+                  <p className="text-sm uppercase tracking-[0.12em] p-text-lo mb-2">Cost Investment</p>
                   <p className="text-3xl font-light text-white">${(employee.costInvestment / 1000)}k</p>
                 </div>
                 <div>
-                  <p className="text-sm uppercase tracking-[0.12em] text-white/40 mb-2">Revenue Generated</p>
+                  <p className="text-sm uppercase tracking-[0.12em] p-text-lo mb-2">Revenue Generated</p>
                   <p className="text-3xl font-light text-emerald-400">${(employee.revenueContribution / 1000)}k</p>
                 </div>
                 <div className="col-span-2 md:col-span-1">
-                  <p className="text-sm uppercase tracking-[0.12em] text-white/40 mb-2">Human Capital ROI</p>
+                  <p className="text-sm uppercase tracking-[0.12em] p-text-lo mb-2">Human Capital ROI</p>
                   <p className="text-3xl font-light text-white">{employee.roi}%</p>
                 </div>
               </div>
 
               {/* Visual Bar for ROI */}
-              <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden relative z-10 flex">
+              <div className="w-full h-2 p-bg-card rounded-full overflow-hidden relative z-10 flex">
                 <motion.div 
                   initial={{ width: 0 }}
                   whileInView={{ width: '100%' }}
@@ -316,7 +316,7 @@ export function EmployeeDetail() {
                   className="h-full bg-gradient-to-r from-emerald-500/50 to-emerald-400 flex-1"
                 />
               </div>
-              <div className="flex justify-between text-sm uppercase tracking-[0.12em] text-white/30 mt-3 relative z-10">
+              <div className="flex justify-between text-sm uppercase tracking-[0.12em] p-text-dim mt-3 relative z-10">
                 <span>Base Cost Vector</span>
                 <span>Surplus Value Generated</span>
               </div>
@@ -324,38 +324,38 @@ export function EmployeeDetail() {
 
             {/* Total Comp Breakdown */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-                <h3 className="text-sm uppercase tracking-[0.12em] text-white/40 mb-6">Payroll Ledger (Annual)</h3>
+              <div className="p-bg-card border p-border rounded-[2rem] p-8">
+                <h3 className="text-sm uppercase tracking-[0.12em] p-text-lo mb-6">Payroll Ledger (Annual)</h3>
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center text-sm border-b border-white/5 pb-3">
-                    <span className="text-white/60">Base Salary</span>
+                  <div className="flex justify-between items-center text-sm border-b p-border pb-3">
+                    <span className="p-text-mid">Base Salary</span>
                     <span className="text-white font-mono">${employee.compensation.base.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between items-center text-sm border-b border-white/5 pb-3">
-                    <span className="text-white/60">Target Bonus</span>
+                  <div className="flex justify-between items-center text-sm border-b p-border pb-3">
+                    <span className="p-text-mid">Target Bonus</span>
                     <span className="text-emerald-400 font-mono">+${employee.compensation.bonus.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between items-center text-sm pb-1">
-                    <span className="text-white/60">Wellness Stipend</span>
+                    <span className="p-text-mid">Wellness Stipend</span>
                     <span className="text-cyan-400 font-mono">${employee.compensation.utilizedStipend.toLocaleString()} / ${employee.compensation.wellnessStipend.toLocaleString()}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8 relative overflow-hidden group">
+              <div className="p-bg-card border p-border rounded-[2rem] p-8 relative overflow-hidden group">
                 <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-purple-500/10 blur-[40px] rounded-full" />
-                <h3 className="text-sm uppercase tracking-[0.12em] text-white/40 mb-6">Equity Vectors</h3>
+                <h3 className="text-sm uppercase tracking-[0.12em] p-text-lo mb-6">Equity Vectors</h3>
                 <div className="space-y-6 relative z-10">
                   <div>
-                    <span className="block text-sm uppercase tracking-[0.12em] text-white/40 mb-1">Vested Value</span>
+                    <span className="block text-sm uppercase tracking-[0.12em] p-text-lo mb-1">Vested Value</span>
                     <span className="text-2xl font-light text-white">${employee.compensation.equityVested.toLocaleString()}</span>
                   </div>
                   <div>
-                    <span className="block text-sm uppercase tracking-[0.12em] text-white/40 mb-1">Unvested (Golden Handcuff)</span>
+                    <span className="block text-sm uppercase tracking-[0.12em] p-text-lo mb-1">Unvested (Golden Handcuff)</span>
                     <span className="text-xl font-light text-purple-400">${employee.compensation.equityUnvested.toLocaleString()}</span>
                   </div>
-                  <div className="pt-4 border-t border-white/5">
-                    <span className="text-sm uppercase tracking-[0.12em] text-white/30">Next Vesting Node: {employee.compensation.nextVestDate}</span>
+                  <div className="pt-4 border-t p-border">
+                    <span className="text-sm uppercase tracking-[0.12em] p-text-dim">Next Vesting Node: {employee.compensation.nextVestDate}</span>
                   </div>
                 </div>
               </div>
@@ -364,7 +364,7 @@ export function EmployeeDetail() {
 
           {/* SEC 3: NEURAL PATHWAYS (LMS) */}
           <section id="neural" className="relative scroll-mt-24">
-            <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">
+            <h2 className="p-text-dim uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b p-border-mid pb-4">
               <Brain size={12} className="text-cyan-400" /> Neural Pathways (LMS)
             </h2>
 
@@ -376,7 +376,7 @@ export function EmployeeDetail() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1, duration: 0.6 }}
-                  className="p-6 bg-white/[0.02] border border-white/5 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-white/[0.04] transition-colors group cursor-crosshair"
+                  className="p-6 bg-white/[0.02] border p-border rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-white/[0.04] transition-colors group cursor-crosshair"
                   data-cursor="Review Module"
                 >
                   <div className="flex items-center gap-6">
@@ -399,14 +399,14 @@ export function EmployeeDetail() {
                     </div>
                     <div>
                       <h4 className="text-white text-base font-light tracking-wide">{module.title}</h4>
-                      <p className="text-sm uppercase tracking-[0.12em] text-white/40 mt-1">{module.status.replace('_', ' ')} • {module.date}</p>
+                      <p className="text-sm uppercase tracking-[0.12em] p-text-lo mt-1">{module.status.replace('_', ' ')} • {module.date}</p>
                     </div>
                   </div>
                   
                   {module.score && (
                     <div className="text-right">
                       <span className="block text-2xl font-light text-emerald-400">{module.score}%</span>
-                      <span className="text-sm uppercase tracking-[0.12em] text-white/30">Acquisition Score</span>
+                      <span className="text-sm uppercase tracking-[0.12em] p-text-dim">Acquisition Score</span>
                     </div>
                   )}
                 </motion.div>
@@ -416,19 +416,19 @@ export function EmployeeDetail() {
 
           {/* SEC 4: TEMPORAL DYNAMICS */}
           <section id="temporal" className="relative scroll-mt-24">
-            <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">
+            <h2 className="p-text-dim uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b p-border-mid pb-4">
               <Clock size={12} className="text-blue-400" /> Temporal Dynamics (WFM)
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               {/* Daily Performance Chart */}
-              <div className="bg-white/5 border border-white/5 rounded-[2rem] p-6">
-                <h3 className="text-sm uppercase tracking-[0.12em] text-white/40 mb-6">Daily Output Velocity</h3>
+              <div className="p-bg-card border p-border rounded-[2rem] p-6">
+                <h3 className="text-sm uppercase tracking-[0.12em] p-text-lo mb-6">Daily Output Velocity</h3>
                 <div className="h-40 w-full -ml-4" data-cursor="Trace">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={employee.dailyPerformance}>
                       <Tooltip 
-                        contentStyle={{ backgroundColor: '#050505', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', fontSize: '12px' }}
+                        contentStyle={{ backgroundColor: 'var(--p-surface)', border: '1px solid var(--p-border-mid)', borderRadius: '0.5rem', fontSize: '12px' }}
                         itemStyle={{ color: '#60a5fa' }}
                       />
                       <Line type="monotone" dataKey="score" stroke="#60a5fa" strokeWidth={2} dot={{ r: 3, fill: '#60a5fa' }} />
@@ -438,14 +438,14 @@ export function EmployeeDetail() {
               </div>
 
               {/* Weekly Timesheets */}
-              <div className="bg-white/5 border border-white/5 rounded-[2rem] p-6">
-                <h3 className="text-sm uppercase tracking-[0.12em] text-white/40 mb-6">Timesheet Matrix (Hours vs Billable)</h3>
+              <div className="p-bg-card border p-border rounded-[2rem] p-6">
+                <h3 className="text-sm uppercase tracking-[0.12em] p-text-lo mb-6">Timesheet Matrix (Hours vs Billable)</h3>
                 <div className="h-40 w-full -ml-4" data-cursor="Trace">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={employee.timesheets}>
                       <Tooltip 
                         cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                        contentStyle={{ backgroundColor: '#050505', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '0.5rem', fontSize: '12px' }}
+                        contentStyle={{ backgroundColor: 'var(--p-surface)', border: '1px solid var(--p-border-mid)', borderRadius: '0.5rem', fontSize: '12px' }}
                       />
                       <XAxis dataKey="week" axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} dy={10} />
                       <Bar dataKey="hoursLogged" fill="#818cf8" radius={[4, 4, 0, 0]} barSize={12} stackId="a" />
@@ -458,40 +458,40 @@ export function EmployeeDetail() {
 
             {/* Leave Balances & Assets */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-                <h3 className="text-sm uppercase tracking-[0.12em] text-white/40 mb-6 flex items-center gap-2"><CalendarDays size={12}/> Leave Matrix</h3>
+              <div className="p-bg-card border p-border rounded-[2rem] p-8">
+                <h3 className="text-sm uppercase tracking-[0.12em] p-text-lo mb-6 flex items-center gap-2"><CalendarDays size={12}/> Leave Matrix</h3>
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between text-xs mb-2">
-                      <span className="text-white/60">PTO (Used / Total)</span>
+                      <span className="p-text-mid">PTO (Used / Total)</span>
                       <span className="text-white font-mono">{employee.leaveBalance.ptoUsed} / {employee.leaveBalance.ptoTotal}</span>
                     </div>
-                    <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                    <div className="w-full h-1 p-bg-pill rounded-full overflow-hidden">
                       <div className="h-full bg-cyan-400" style={{ width: `${(employee.leaveBalance.ptoUsed / employee.leaveBalance.ptoTotal) * 100}%` }} />
                     </div>
                   </div>
                   <div>
                     <div className="flex justify-between text-xs mb-2">
-                      <span className="text-white/60">Sick Leave</span>
+                      <span className="p-text-mid">Sick Leave</span>
                       <span className="text-white font-mono">{employee.leaveBalance.sickUsed} / {employee.leaveBalance.sickTotal}</span>
                     </div>
-                    <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                    <div className="w-full h-1 p-bg-pill rounded-full overflow-hidden">
                       <div className="h-full bg-amber-400" style={{ width: `${(employee.leaveBalance.sickUsed / employee.leaveBalance.sickTotal) * 100}%` }} />
                     </div>
                   </div>
                   {employee.leaveBalance.sabbaticalEligible && (
-                    <div className="pt-4 mt-2 border-t border-white/5 text-sm uppercase tracking-[0.12em] text-purple-400">
+                    <div className="pt-4 mt-2 border-t p-border text-sm uppercase tracking-[0.12em] text-purple-400">
                       · Sabbatical Protocol Available
                     </div>
                   )}
                 </div>
               </div>
 
-              <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8">
-                <h3 className="text-sm uppercase tracking-[0.12em] text-white/40 mb-6 flex items-center gap-2"><Monitor size={12}/> Assigned Hardware Assets</h3>
+              <div className="p-bg-card border p-border rounded-[2rem] p-8">
+                <h3 className="text-sm uppercase tracking-[0.12em] p-text-lo mb-6 flex items-center gap-2"><Monitor size={12}/> Assigned Hardware Assets</h3>
                 <ul className="space-y-3">
                   {employee.equipment.map((item, i) => (
-                    <li key={i} className="flex items-center gap-3 text-sm text-white/70">
+                    <li key={i} className="flex items-center gap-3 text-sm p-text-body">
                       <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
                       {item}
                     </li>
@@ -503,18 +503,18 @@ export function EmployeeDetail() {
 
           {/* SEC 5: IMPACT NODES (OKRs) */}
           <section id="nodes" className="relative scroll-mt-24">
-            <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">
+            <h2 className="p-text-dim uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b p-border-mid pb-4">
               <Target size={12} className="text-rose-400" /> Impact Nodes (OKRs & Promos)
             </h2>
             
             <div className="space-y-6 mb-12">
               {employee.okrs.map((okr, i) => (
-                <div key={i} className="bg-white/5 border border-white/5 rounded-2xl p-6 relative overflow-hidden">
+                <div key={i} className="p-bg-card border p-border rounded-2xl p-6 relative overflow-hidden">
                    <div className={`absolute top-0 left-0 w-1 h-full ${okr.status === 'completed' ? 'bg-emerald-500' : okr.status === 'on_track' ? 'bg-cyan-500' : okr.status === 'at_risk' ? 'bg-amber-500' : 'bg-rose-500'}`} />
                    
                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                      <div>
-                       <span className="px-2 py-0.5 rounded text-sm uppercase tracking-[0.12em] bg-white/5 text-white/50 mb-2 inline-block">Weight: {okr.weight}</span>
+                       <span className="px-2 py-0.5 rounded text-sm uppercase tracking-[0.12em] p-bg-card p-text-mid mb-2 inline-block">Weight: {okr.weight}</span>
                        <h4 className="text-white text-lg font-light">{okr.objective}</h4>
                      </div>
                      <div className="text-right">
@@ -522,7 +522,7 @@ export function EmployeeDetail() {
                      </div>
                    </div>
 
-                   <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                   <div className="w-full h-1 p-bg-pill rounded-full overflow-hidden">
                      <motion.div 
                        initial={{ width: 0 }}
                        whileInView={{ width: `${okr.progress}%` }}
@@ -536,28 +536,28 @@ export function EmployeeDetail() {
             </div>
 
             {/* Abstract Journey Path (Promotions) */}
-            <div className="relative pl-12 border-l border-white/5 space-y-16 before:absolute before:inset-0 before:bg-gradient-to-b before:from-rose-500/0 before:via-rose-500/20 before:to-purple-500/0 before:-left-[1px] before:w-[2px] before:h-full">
+            <div className="relative pl-12 border-l p-border space-y-16 before:absolute before:inset-0 before:bg-gradient-to-b before:from-rose-500/0 before:via-rose-500/20 before:to-purple-500/0 before:-left-[1px] before:w-[2px] before:h-full">
               <div className="relative">
                 <div className="absolute -left-[3.25rem] w-6 h-6 rounded-full bg-[#030303] border border-rose-400 flex items-center justify-center shadow-[0_0_15px_rgba(251,113,133,0.3)]">
                   <div className="w-2 h-2 rounded-full bg-rose-400 animate-pulse" />
                 </div>
                 <h3 className="text-xl font-light text-white mb-2 tracking-wide">Current State</h3>
-                <p className="text-sm text-white/40 leading-relaxed font-light font-serif italic">"{employee.recentFeedback}"</p>
+                <p className="text-sm p-text-lo leading-relaxed font-light font-serif italic">"{employee.recentFeedback}"</p>
               </div>
 
               {employee.projectedPromotions.map((promo, i) => (
                 <div key={i} className="relative opacity-60 hover:opacity-100 transition-opacity duration-500 cursor-crosshair" data-cursor="Forecast">
-                  <div className="absolute -left-[3.25rem] w-6 h-6 rounded-full bg-[#030303] border border-white/20 flex items-center justify-center">
+                  <div className="absolute -left-[3.25rem] w-6 h-6 rounded-full bg-[#030303] border p-border-hi flex items-center justify-center">
                     <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
                   </div>
                   <h3 className="text-xl font-light text-white mb-2 tracking-wide">Projected Evolution: {promo.role}</h3>
                   <div className="flex items-center gap-6 mt-4">
                     <div>
-                      <span className="block text-sm uppercase tracking-[0.12em] text-white/40 mb-1">Timeframe</span>
+                      <span className="block text-sm uppercase tracking-[0.12em] p-text-lo mb-1">Timeframe</span>
                       <span className="text-sm text-purple-400 font-mono">{promo.timeframe}</span>
                     </div>
                     <div>
-                      <span className="block text-sm uppercase tracking-[0.12em] text-white/40 mb-1">Probability</span>
+                      <span className="block text-sm uppercase tracking-[0.12em] p-text-lo mb-1">Probability</span>
                       <span className="text-sm text-rose-400 font-mono">{promo.probability}%</span>
                     </div>
                   </div>
@@ -568,12 +568,12 @@ export function EmployeeDetail() {
 
           {/* SEC 6: BIO-RHYTHM */}
           <section id="biorhythm" className="relative scroll-mt-24">
-            <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">
+            <h2 className="p-text-dim uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b p-border-mid pb-4">
               <Heart size={12} className="text-rose-500" /> Bio-Rhythm & Psychometrics
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="col-span-1 md:col-span-2 bg-white/5 border border-white/5 rounded-[2rem] p-8 flex items-center gap-8 relative overflow-hidden group">
+              <div className="col-span-1 md:col-span-2 p-bg-card border p-border rounded-[2rem] p-8 flex items-center gap-8 relative overflow-hidden group">
                 <div className={`absolute top-0 right-0 w-40 h-40 rounded-full blur-[60px] pointer-events-none transition-colors duration-1000 ${employee.bioRhythm.burnoutProbability > 50 ? 'bg-rose-500/20' : 'bg-emerald-500/10'}`} />
                 
                 <div className="relative w-32 h-32 flex-shrink-0" data-cursor="Scan Bio">
@@ -608,13 +608,13 @@ export function EmployeeDetail() {
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <span className="text-2xl font-light text-white">{employee.bioRhythm.stressIndex}</span>
-                    <span className="text-sm uppercase tracking-[0.12em] text-white/40">Stress</span>
+                    <span className="text-sm uppercase tracking-[0.12em] p-text-lo">Stress</span>
                   </div>
                 </div>
 
                 <div>
                   <h3 className="text-white text-lg font-light mb-2">Cognitive Load Telemetry</h3>
-                  <p className="text-sm text-white/60 font-light leading-relaxed mb-4">
+                  <p className="text-sm p-text-mid font-light leading-relaxed mb-4">
                     Based on focus block density ({employee.bioRhythm.focusBlocksAvg} hrs/day) and work log sentiment, systemic burnout probability is at {employee.bioRhythm.burnoutProbability}%.
                   </p>
                   <div className="flex gap-4">
@@ -625,17 +625,17 @@ export function EmployeeDetail() {
                 </div>
               </div>
 
-              <div className="bg-white/5 border border-white/5 rounded-[2rem] p-8 flex flex-col justify-center text-center">
-                <span className="block text-sm uppercase tracking-[0.12em] text-white/40 mb-4">Sleep & Recovery Quality</span>
-                <span className="text-5xl font-light text-white mb-2">{employee.bioRhythm.sleepQuality}<span className="text-2xl text-white/30">%</span></span>
-                <span className="text-xs text-white/60 font-light">Index Score</span>
+              <div className="p-bg-card border p-border rounded-[2rem] p-8 flex flex-col justify-center text-center">
+                <span className="block text-sm uppercase tracking-[0.12em] p-text-lo mb-4">Sleep & Recovery Quality</span>
+                <span className="text-5xl font-light text-white mb-2">{employee.bioRhythm.sleepQuality}<span className="text-2xl p-text-dim">%</span></span>
+                <span className="text-xs p-text-mid font-light">Index Score</span>
               </div>
             </div>
           </section>
 
           {/* SEC 7: 360 REVIEWS */}
           <section id="resonance" className="relative scroll-mt-24">
-            <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">
+            <h2 className="p-text-dim uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b p-border-mid pb-4">
               <Network size={12} className="text-indigo-400" /> 360° Feedback Matrix
             </h2>
             
@@ -644,14 +644,14 @@ export function EmployeeDetail() {
                 const scoreKeys = ['communication', 'technical', 'leadership', 'collaboration', 'innovation'];
                 const scoreColors: Record<string, string> = { communication: '#38bdf8', technical: '#c084fc', leadership: '#f59e0b', collaboration: '#10b981', innovation: '#f43f5e' };
                 return (
-                  <div key={i} className="bg-white/[0.02] border border-white/5 rounded-[2rem] p-6 hover:bg-white/[0.04] transition-colors">
+                  <div key={i} className="bg-white/[0.02] border p-border rounded-[2rem] p-6 hover:bg-white/[0.04] transition-colors">
                     <div className="flex items-start justify-between mb-6">
                       <div>
                         <h4 className="text-white font-light">{review.reviewer}</h4>
-                        <p className="text-sm uppercase tracking-[0.12em] text-white/40 mt-1">{review.relation} • {review.date}</p>
+                        <p className="text-sm uppercase tracking-[0.12em] p-text-lo mt-1">{review.relation} • {review.date}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm uppercase tracking-[0.12em] text-white/30 mb-1">Overall</p>
+                        <p className="text-sm uppercase tracking-[0.12em] p-text-dim mb-1">Overall</p>
                         <p className="text-3xl font-light text-white">{review.overall}</p>
                       </div>
                     </div>
@@ -660,35 +660,35 @@ export function EmployeeDetail() {
                       {scoreKeys.map(k => (
                         <div key={k} className="flex items-center gap-3">
                           <span className="text-sm uppercase tracking-[0.12em] w-24 capitalize flex-shrink-0" style={{ color: scoreColors[k] }}>{k}</span>
-                          <div className="flex-1 h-[2px] bg-white/5 rounded-full overflow-hidden">
+                          <div className="flex-1 h-[2px] p-bg-card rounded-full overflow-hidden">
                             <div className="h-full rounded-full" style={{ width: `${review.scores[k]}%`, background: scoreColors[k] }} />
                           </div>
-                          <span className="text-sm font-mono text-white/50 w-8 text-right">{review.scores[k]}</span>
+                          <span className="text-sm font-mono p-text-mid w-8 text-right">{review.scores[k]}</span>
                         </div>
                       ))}
                     </div>
                     
-                    <div className="space-y-3 border-t border-white/5 pt-4">
+                    <div className="space-y-3 border-t p-border pt-4">
                       <div>
                         <div className="flex items-center gap-2 mb-1.5">
                           <Star size={9} className="text-emerald-400" />
                           <span className="text-sm uppercase tracking-[0.12em] text-emerald-400">Strengths</span>
                         </div>
-                        <p className="text-white/60 text-sm font-light font-serif italic leading-relaxed">"{review.strengths}"</p>
+                        <p className="p-text-mid text-sm font-light font-serif italic leading-relaxed">"{review.strengths}"</p>
                       </div>
                       <div>
                         <div className="flex items-center gap-2 mb-1.5">
                           <MessageSquare size={9} className="text-amber-400" />
                           <span className="text-sm uppercase tracking-[0.12em] text-amber-400">Growth Areas</span>
                         </div>
-                        <p className="text-white/60 text-sm font-light font-serif italic leading-relaxed">"{review.improvements}"</p>
+                        <p className="p-text-mid text-sm font-light font-serif italic leading-relaxed">"{review.improvements}"</p>
                       </div>
                     </div>
                   </div>
                 );
               })}
               {(!employee.reviews360 || employee.reviews360.length === 0) && (
-                <div className="text-center py-12 text-white/30">
+                <div className="text-center py-12 p-text-dim">
                   <Network size={28} className="mx-auto mb-3 opacity-30" />
                   <p className="text-sm">No reviews submitted yet</p>
                 </div>
@@ -697,24 +697,24 @@ export function EmployeeDetail() {
           </section>
 
           {/* Action Module */}
-          <section className="pt-12 border-t border-white/5">
+          <section className="pt-12 border-t p-border">
             <button
               onClick={() => setSyncOpen(true)}
               className="w-full relative group overflow-hidden rounded-[2rem] p-1"
               data-cursor="Sync"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-purple-500 to-cyan-500 opacity-20 group-hover:opacity-100 blur transition-opacity duration-1000" />
-              <div className="relative bg-[#050505] rounded-[1.8rem] px-8 py-6 flex items-center justify-between border border-white/10 group-hover:bg-white/[0.02] transition-colors">
+              <div className="relative p-bg-surface rounded-[1.8rem] px-8 py-6 flex items-center justify-between border p-border-mid group-hover:bg-white/[0.02] transition-colors">
                 <div className="flex items-center gap-6 text-left">
-                  <div className="p-3 bg-white/5 rounded-full text-cyan-400">
+                  <div className="p-3 p-bg-card rounded-full text-cyan-400">
                     <BarChart2 size={24} />
                   </div>
                   <div>
                     <h4 className="text-white text-lg font-light tracking-wide">Generate Profile Report</h4>
-                    <p className="text-white/40 text-sm uppercase tracking-[0.12em] mt-1">Export full data matrix for HR review or 1:1 prep</p>
+                    <p className="p-text-lo text-sm uppercase tracking-[0.12em] mt-1">Export full data matrix for HR review or 1:1 prep</p>
                   </div>
                 </div>
-                <ArrowUpRight className="text-white/40 group-hover:text-cyan-400 transition-colors" size={24} />
+                <ArrowUpRight className="p-text-lo group-hover:text-cyan-400 transition-colors" size={24} />
               </div>
             </button>
 
@@ -734,17 +734,17 @@ export function EmployeeDetail() {
                     exit={{ opacity: 0, scale: 0.95, y: 20 }}
                     transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                     onClick={e => e.stopPropagation()}
-                    className="w-full max-w-md bg-[#0a0a0a] border border-white/10 rounded-[2rem] p-8 relative overflow-hidden"
+                    className="w-full max-w-md p-bg-surface border p-border-mid rounded-[2rem] p-8 relative overflow-hidden"
                   >
                     <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 blur-[80px] rounded-full pointer-events-none" />
 
                     <div className="flex items-center justify-between mb-8">
                       <div>
-                        <p className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono mb-2">Profile Export</p>
+                        <p className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono mb-2">Profile Export</p>
                         <h3 className="text-xl font-light text-white">{employee.name}</h3>
-                        <p className="text-white/40 text-sm">{employee.role}</p>
+                        <p className="p-text-lo text-sm">{employee.role}</p>
                       </div>
-                      <button onClick={() => setSyncOpen(false)} className="p-2 rounded-full bg-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-all">
+                      <button onClick={() => setSyncOpen(false)} className="p-2 rounded-full p-bg-card p-text-lo hover:p-text-hi hover:bg-white/10 transition-all">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 4L12 12M12 4L4 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
                       </button>
                     </div>
@@ -762,22 +762,22 @@ export function EmployeeDetail() {
                             setSyncComplete(label);
                             setTimeout(() => { setSyncComplete(''); setSyncOpen(false); }, 2000);
                           }}
-                          className="w-full flex items-center gap-4 p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.06] hover:border-white/10 transition-all text-left group"
+                          className="w-full flex items-center gap-4 p-4 rounded-2xl bg-white/[0.03] border p-border hover:bg-white/[0.06] hover:p-border-mid transition-all text-left group"
                         >
                           <span className="text-xl">{icon}</span>
                           <div className="flex-1">
-                            <p className="text-white/80 text-sm font-light group-hover:text-white transition-colors">{label}</p>
-                            <p className="text-white/30 text-sm mt-0.5">{desc}</p>
+                            <p className="p-text-body text-sm font-light group-hover:text-white transition-colors">{label}</p>
+                            <p className="p-text-dim text-sm mt-0.5">{desc}</p>
                           </div>
                           {syncComplete === label
                             ? <span className="text-emerald-400 text-sm font-mono">✓ Done</span>
-                            : <ArrowUpRight size={14} className="text-white/20 group-hover:text-white/60 transition-colors" />
+                            : <ArrowUpRight size={14} className="p-text-ghost group-hover:text-white/60 transition-colors" />
                           }
                         </button>
                       ))}
                     </div>
 
-                    <p className="text-xs text-white/20 font-mono uppercase tracking-widest text-center">
+                    <p className="text-xs p-text-ghost font-mono uppercase tracking-widest text-center">
                       End-to-end encrypted · Access logged
                     </p>
                   </motion.div>

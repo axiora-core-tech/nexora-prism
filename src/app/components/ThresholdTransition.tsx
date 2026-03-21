@@ -109,7 +109,7 @@ const FRAGMENTS = [
 
 // Spectrum lines that emerge and converge to mark
 
-export function ThresholdTransition({ name = 'Alex Mercer' }: Props) {
+export function ThresholdTransition({ name = 'Arjun Sharma' }: Props) {
   const navigate = useNavigate();
   const [phase, setPhase]                 = useState<Phase>('white');
   const [cracksVisible, setCracksVisible] = useState<boolean[]>(

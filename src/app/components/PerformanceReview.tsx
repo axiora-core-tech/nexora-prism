@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Crosshair, Star, MessageSquare, Target, Brain, Heart, Users, Zap, ArrowUpRight, CheckCircle2, ChevronRight, ArrowLeft } from 'lucide-react';
 import { NavLink } from 'react-router';
+import { useNavigate } from 'react-router';
 import { employees } from '../mockData';
 
 const scoreLabels = [
@@ -34,6 +35,7 @@ function ScoreArc({ value, color, size = 80 }: { value: number; color: string; s
 }
 
 export function PerformanceReview() {
+  const navigate = useNavigate();
   const [phase, setPhase] = useState<Phase>('orbit');
   const [selectedEmp, setSelectedEmp] = useState<string | null>(null);
   const [relation, setRelation] = useState<string>('peer');
@@ -78,25 +80,25 @@ export function PerformanceReview() {
               <CheckCircle2 size={32} className="text-emerald-400" />
             </div>
           </div>
-          <p className="text-sm uppercase tracking-[0.2em] text-white/30 mb-6 font-mono">Review Submitted</p>
+          <p className="text-sm uppercase tracking-[0.2em] p-text-dim mb-6 font-mono">Review Submitted</p>
           <h2 className="text-5xl md:text-7xl font-light tracking-tighter text-white leading-[0.9] mb-4">
-            Review <span className="text-white/30 font-serif italic">Recorded</span>
+            Review <span className="p-text-dim font-serif italic">Recorded</span>
           </h2>
-          <p className="text-white/40 text-sm mb-2 font-light">
-            Your review for <span className="text-white/80">{emp.name}</span> has been saved.
+          <p className="p-text-lo text-sm mb-2 font-light">
+            Your review for <span className="p-text-body">{emp.name}</span> has been saved.
           </p>
-          <p className="text-white/20 text-sm font-mono uppercase tracking-widest mb-16">
+          <p className="p-text-ghost text-sm font-mono uppercase tracking-widest mb-16">
             Composite Score: <span style={{ color: composite >= 85 ? '#10b981' : composite >= 70 ? '#f59e0b' : '#f43f5e' }}>{composite}</span>
           </p>
           <div className="flex gap-4">
             <button
               onClick={() => { setTransmitted(false); setPhase('orbit'); setSelectedEmp(null); setStrengths(''); setImprovements(''); }}
-              className="px-8 py-3 rounded-full bg-white/5 border border-white/10 text-white/50 text-sm hover:bg-white/10 hover:text-white transition-all"
+              className="px-8 py-3 rounded-full p-bg-card border p-border-mid p-text-mid text-sm hover:bg-white/10 hover:p-text-hi transition-all"
               data-cursor="New Review"
             >
               Submit Another
             </button>
-            <NavLink to="/app" className="px-8 py-3 rounded-full bg-white/5 border border-white/10 text-white/50 text-sm hover:bg-white/10 hover:text-white transition-all" data-cursor="Home">
+            <NavLink to="/app" className="px-8 py-3 rounded-full p-bg-card border p-border-mid p-text-mid text-sm hover:bg-white/10 hover:p-text-hi transition-all" data-cursor="Home">
               Back to Dashboard
             </NavLink>
           </div>
@@ -113,14 +115,21 @@ export function PerformanceReview() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
+        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b p-border pb-12"
       >
         <div>
-          <p className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
+                    <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 p-text-dim hover:p-text-hi text-sm mb-4 transition-colors group"
+          >
+            <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
+            Back
+          </button>
+          <p className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
             <Crosshair size={14} className="text-cyan-400" /> Performance Transmission Protocol
           </p>
           <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
-            Signal <span className="text-white/30 italic font-serif">Encode</span>
+            Signal <span className="p-text-dim italic font-serif">Encode</span>
           </h1>
         </div>
         {/* Phase trail */}
@@ -155,7 +164,7 @@ export function PerformanceReview() {
           {/* PHASE 1: ORBIT — select target node */}
           {phase === 'orbit' && (
             <div>
-              <p className="text-sm uppercase tracking-[0.2em] text-white/20 mb-12 font-mono">01 &nbsp;·&nbsp; Select Target Node</p>
+              <p className="text-sm uppercase tracking-[0.2em] p-text-ghost mb-12 font-mono">01 &nbsp;·&nbsp; Select Target Node</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                 {employees.map((e, i) => (
                   <motion.button
@@ -168,7 +177,7 @@ export function PerformanceReview() {
                     className={`relative flex items-center gap-6 p-7 rounded-[2rem] border text-left transition-all duration-500 overflow-hidden group ${
                       selectedEmp === e.id
                         ? 'bg-white/10 border-white/25'
-                        : 'bg-white/5 border-white/5 hover:border-white/15 hover:bg-white/8'
+                        : 'bg-white/5 p-border hover:p-border-mid hover:bg-white/8'
                     }`}
                     data-cursor="Acquire Target"
                   >
@@ -189,12 +198,12 @@ export function PerformanceReview() {
 
                     <div className="flex-1 relative z-10">
                       <h3 className="text-white text-xl font-light leading-none">{e.name.split(' ')[0]}</h3>
-                      <h3 className="text-white/30 font-serif italic text-sm leading-none mt-0.5">{e.name.split(' ')[1]}</h3>
-                      <p className="text-sm uppercase tracking-[0.12em] text-white/30 mt-2 font-mono">{e.role} // {e.department}</p>
+                      <h3 className="p-text-dim font-serif italic text-sm leading-none mt-0.5">{e.name.split(' ')[1]}</h3>
+                      <p className="text-sm uppercase tracking-[0.12em] p-text-dim mt-2 font-mono">{e.role} // {e.department}</p>
                     </div>
 
                     <div className="text-right flex-shrink-0 relative z-10">
-                      <p className="text-sm uppercase tracking-[0.12em] text-white/20 mb-1">Efficiency</p>
+                      <p className="text-sm uppercase tracking-[0.12em] p-text-ghost mb-1">Efficiency</p>
                       <p className={`text-3xl font-light ${e.performanceScore >= 90 ? 'text-emerald-400' : e.performanceScore >= 80 ? 'text-cyan-400' : 'text-amber-400'}`}>
                         {e.performanceScore}
                       </p>
@@ -205,7 +214,7 @@ export function PerformanceReview() {
 
               {/* Relation selector */}
               <div className="mb-12">
-                <p className="text-sm uppercase tracking-[0.12em] text-white/20 mb-5 font-mono">Review Context</p>
+                <p className="text-sm uppercase tracking-[0.12em] p-text-ghost mb-5 font-mono">Review Context</p>
                 <div className="flex flex-wrap gap-3">
                   {[
                     { val: 'manager',       label: 'Direct Manager' },
@@ -219,7 +228,7 @@ export function PerformanceReview() {
                       className={`px-5 py-2.5 rounded-full border text-xs uppercase tracking-widest transition-all ${
                         relation === r.val
                           ? 'bg-white/10 border-white/25 text-white'
-                          : 'border-white/5 text-white/30 hover:border-white/10'
+                          : 'border-white/5 p-text-dim hover:border-white/10'
                       }`}
                       data-cursor={r.label}
                     >
@@ -232,7 +241,7 @@ export function PerformanceReview() {
               <button
                 onClick={() => setPhase('calibrate')}
                 disabled={!selectedEmp}
-                className="flex items-center gap-3 px-10 py-4 rounded-full bg-white/5 border border-white/10 text-white/60 text-sm hover:bg-white/10 hover:text-white hover:border-white/20 transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+                className="flex items-center gap-3 px-10 py-4 rounded-full p-bg-card border p-border-mid p-text-mid text-sm hover:bg-white/10 hover:p-text-hi hover:p-border-hi transition-all disabled:opacity-20 disabled:cursor-not-allowed"
                 data-cursor="Calibrate"
               >
                 Begin Calibration <ChevronRight size={16} />
@@ -243,15 +252,15 @@ export function PerformanceReview() {
           {/* PHASE 2: CALIBRATE — score sliders as abstract arcs */}
           {phase === 'calibrate' && emp && (
             <div>
-              <p className="text-sm uppercase tracking-[0.2em] text-white/20 mb-4 font-mono">02 &nbsp;·&nbsp; Calibrate Signal Vectors</p>
+              <p className="text-sm uppercase tracking-[0.2em] p-text-ghost mb-4 font-mono">02 &nbsp;·&nbsp; Calibrate Signal Vectors</p>
               <div className="flex items-center gap-4 mb-16">
                 <img src={emp.avatar} alt={emp.name} className="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"/>
                 <div>
                   <span className="text-white font-light">{emp.name.split(' ')[0]} </span>
-                  <span className="text-white/30 font-serif italic">{emp.name.split(' ')[1]}</span>
+                  <span className="p-text-dim font-serif italic">{emp.name.split(' ')[1]}</span>
                 </div>
                 <div className="ml-auto flex items-center gap-3">
-                  <p className="text-sm uppercase tracking-[0.12em] text-white/20 font-mono">Composite</p>
+                  <p className="text-sm uppercase tracking-[0.12em] p-text-ghost font-mono">Composite</p>
                   <p className={`text-4xl font-light ${composite >= 85 ? 'text-emerald-400' : composite >= 70 ? 'text-amber-400' : 'text-rose-400'}`}>
                     {composite}
                   </p>
@@ -266,7 +275,7 @@ export function PerformanceReview() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.08 }}
-                    className={`relative bg-white/5 border border-white/5 rounded-[2rem] p-7 overflow-hidden group hover:border-white/10 transition-all duration-500 ${i === 4 ? 'md:col-span-2' : ''}`}
+                    className={`relative p-bg-card border p-border rounded-[2rem] p-7 overflow-hidden group hover:p-border-mid transition-all duration-500 ${i === 4 ? 'md:col-span-2' : ''}`}
                     data-cursor={`Set ${cat.label}`}
                   >
                     {/* Ambient glow per category */}
@@ -285,8 +294,8 @@ export function PerformanceReview() {
                           <cat.icon size={12} style={{ color: cat.color }}/>
                           <span className="text-sm uppercase tracking-[0.12em] font-mono" style={{ color: cat.color }}>{cat.label}</span>
                         </div>
-                        <p className="text-white/30 text-sm font-light">{cat.desc}</p>
-                        <p className="text-sm uppercase tracking-[0.12em] text-white/20 mt-2 font-mono">
+                        <p className="p-text-dim text-sm font-light">{cat.desc}</p>
+                        <p className="text-sm uppercase tracking-[0.12em] p-text-ghost mt-2 font-mono">
                           {scores[cat.key] >= 90 ? 'Exceptional' : scores[cat.key] >= 75 ? 'Strong' : scores[cat.key] >= 60 ? 'Nominal' : scores[cat.key] >= 40 ? 'Degraded' : 'Critical'}
                         </p>
                       </div>
@@ -299,7 +308,7 @@ export function PerformanceReview() {
                       className="w-full relative z-10"
                       style={{ accentColor: cat.color }}
                     />
-                    <div className="flex justify-between text-sm font-mono text-white/15 mt-1 relative z-10">
+                    <div className="flex justify-between text-sm font-mono p-text-whisper mt-1 relative z-10">
                       <span>Critical — 1</span><span>Exceptional — 100</span>
                     </div>
                   </motion.div>
@@ -308,12 +317,12 @@ export function PerformanceReview() {
 
               <div className="flex gap-4">
                 <button onClick={() => setPhase('orbit')}
-                  className="px-8 py-3 rounded-full border border-white/5 text-white/30 text-sm hover:text-white hover:border-white/15 transition-all"
+                  className="px-8 py-3 rounded-full border p-border p-text-dim text-sm hover:p-text-hi hover:p-border-mid transition-all"
                   data-cursor="Return">
                   <ArrowLeft size={16} />
                 </button>
                 <button onClick={() => setPhase('transmit')}
-                  className="flex items-center gap-3 px-10 py-3 rounded-full bg-white/5 border border-white/10 text-white/60 text-sm hover:bg-white/10 hover:text-white hover:border-white/20 transition-all"
+                  className="flex items-center gap-3 px-10 py-3 rounded-full p-bg-card border p-border-mid p-text-mid text-sm hover:bg-white/10 hover:p-text-hi hover:p-border-hi transition-all"
                   data-cursor="Transmit">
                   Transmit Signals <ChevronRight size={14}/>
                 </button>
@@ -324,11 +333,11 @@ export function PerformanceReview() {
           {/* PHASE 3: TRANSMIT — qualitative narrative */}
           {phase === 'transmit' && emp && (
             <div>
-              <p className="text-sm uppercase tracking-[0.2em] text-white/20 mb-4 font-mono">03 &nbsp;·&nbsp; Encode Qualitative Signals</p>
+              <p className="text-sm uppercase tracking-[0.2em] p-text-ghost mb-4 font-mono">03 &nbsp;·&nbsp; Encode Qualitative Signals</p>
               <div className="flex items-center gap-4 mb-16">
                 <img src={emp.avatar} alt={emp.name} className="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"/>
-                <span className="text-white/60 font-light">{emp.name}</span>
-                <span className="text-white/20 text-sm font-mono ml-auto uppercase tracking-widest">Composite // {composite}</span>
+                <span className="p-text-mid font-light">{emp.name}</span>
+                <span className="p-text-ghost text-sm font-mono ml-auto uppercase tracking-widest">Composite // {composite}</span>
               </div>
 
               <div className="space-y-8 mb-12">
@@ -336,7 +345,7 @@ export function PerformanceReview() {
                   { key: 'strengths', label: 'Key Strengths', sub: `What does ${emp.name.split(' ')[0]} do better than anyone on the team?`, color: '#10b981', icon: Star },
                   { key: 'improvements', label: 'Growth Nodes', sub: 'Which vectors, if amplified, yield highest system gain?', color: '#f59e0b', icon: Zap },
                 ].map(({ key, label, sub, color, icon: Icon }) => (
-                  <div key={key} className={`relative bg-white/5 border border-white/5 rounded-[2rem] p-8 overflow-hidden group transition-all duration-500 ${
+                  <div key={key} className={`relative p-bg-card border p-border rounded-[2rem] p-8 overflow-hidden group transition-all duration-500 ${
                     (key === 'strengths' ? strengths : improvements) ? 'border-white/10' : ''
                   }`}>
                     <div className="absolute top-0 right-0 w-48 h-48 rounded-full blur-[70px] pointer-events-none opacity-20 group-focus-within:opacity-60 transition-opacity duration-700"
@@ -345,12 +354,12 @@ export function PerformanceReview() {
                       <Icon size={12} style={{ color }}/>
                       <span className="text-sm uppercase tracking-[0.12em] font-mono" style={{ color }}>{label}</span>
                     </div>
-                    <p className="text-white/30 text-sm font-light mb-4 relative z-10 font-serif italic">"{sub}"</p>
+                    <p className="p-text-dim text-sm font-light mb-4 relative z-10 font-serif italic">"{sub}"</p>
                     <textarea
                       value={key === 'strengths' ? strengths : improvements}
                       onChange={e => key === 'strengths' ? setStrengths(e.target.value) : setImprovements(e.target.value)}
                       rows={3}
-                      className="w-full bg-transparent text-white/70 text-sm font-light font-serif italic outline-none resize-none placeholder:text-white/15 relative z-10 leading-relaxed"
+                      className="w-full bg-transparent p-text-body text-sm font-light font-serif italic outline-none resize-none placeholder:text-white/15 relative z-10 leading-relaxed"
                       placeholder="Encode your observations..."
                     />
                   </div>
@@ -359,12 +368,12 @@ export function PerformanceReview() {
 
               <div className="flex gap-4">
                 <button onClick={() => setPhase('calibrate')}
-                  className="px-8 py-3 rounded-full border border-white/5 text-white/30 text-sm hover:text-white hover:border-white/15 transition-all"
+                  className="px-8 py-3 rounded-full border p-border p-text-dim text-sm hover:p-text-hi hover:p-border-mid transition-all"
                   data-cursor="Return">
                   <ArrowLeft size={16} />
                 </button>
                 <button onClick={() => setPhase('confirm')}
-                  className="flex items-center gap-3 px-10 py-3 rounded-full bg-white/5 border border-white/10 text-white/60 text-sm hover:bg-white/10 hover:text-white hover:border-white/20 transition-all"
+                  className="flex items-center gap-3 px-10 py-3 rounded-full p-bg-card border p-border-mid p-text-mid text-sm hover:bg-white/10 hover:p-text-hi hover:p-border-hi transition-all"
                   data-cursor="Confirm">
                   Review Transmission <ChevronRight size={14}/>
                 </button>
@@ -375,20 +384,20 @@ export function PerformanceReview() {
           {/* PHASE 4: CONFIRM */}
           {phase === 'confirm' && emp && (
             <div>
-              <p className="text-sm uppercase tracking-[0.2em] text-white/20 mb-4 font-mono">04 &nbsp;·&nbsp; Confirm Transmission</p>
-              <div className="relative bg-white/5 border border-white/5 rounded-[2rem] p-8 md:p-12 overflow-hidden mb-8 group">
+              <p className="text-sm uppercase tracking-[0.2em] p-text-ghost mb-4 font-mono">04 &nbsp;·&nbsp; Confirm Transmission</p>
+              <div className="relative p-bg-card border p-border rounded-[2rem] p-8 md:p-12 overflow-hidden mb-8 group">
                 <div className="absolute top-0 right-0 w-80 h-80 bg-cyan-500/5 blur-[100px] rounded-full pointer-events-none group-hover:bg-cyan-500/10 transition-all duration-1000" />
 
                 {/* Subject */}
-                <div className="flex items-center gap-6 mb-10 pb-10 border-b border-white/5 relative z-10">
+                <div className="flex items-center gap-6 mb-10 pb-10 border-b p-border relative z-10">
                   <img src={emp.avatar} alt={emp.name} className="w-16 h-16 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"/>
                   <div>
                     <h2 className="text-white text-2xl font-light leading-none">{emp.name.split(' ')[0]}</h2>
-                    <h2 className="text-white/30 font-serif italic text-xl leading-none mt-0.5">{emp.name.split(' ')[1]}</h2>
-                    <p className="text-sm uppercase tracking-[0.12em] text-white/20 mt-2 font-mono">{relation} signal // {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                    <h2 className="p-text-dim font-serif italic text-xl leading-none mt-0.5">{emp.name.split(' ')[1]}</h2>
+                    <p className="text-sm uppercase tracking-[0.12em] p-text-ghost mt-2 font-mono">{relation} signal // {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
                   </div>
                   <div className="ml-auto text-right relative z-10">
-                    <p className="text-sm uppercase tracking-[0.12em] text-white/20 mb-2 font-mono">Composite Signal</p>
+                    <p className="text-sm uppercase tracking-[0.12em] p-text-ghost mb-2 font-mono">Composite Signal</p>
                     <p className={`text-6xl font-light ${composite >= 85 ? 'text-emerald-400' : composite >= 70 ? 'text-amber-400' : 'text-rose-400'}`}>
                       {composite}
                     </p>
@@ -405,21 +414,21 @@ export function PerformanceReview() {
                           <span className="text-sm font-light text-white">{scores[cat.key]}</span>
                         </div>
                       </div>
-                      <span className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono text-center">{cat.label}</span>
+                      <span className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono text-center">{cat.label}</span>
                     </div>
                   ))}
                 </div>
 
                 {/* Narratives */}
                 {(strengths || improvements) && (
-                  <div className="space-y-5 pt-8 border-t border-white/5 relative z-10">
+                  <div className="space-y-5 pt-8 border-t p-border relative z-10">
                     {strengths && (
                       <div>
                         <div className="flex items-center gap-2 mb-3">
                           <Star size={9} className="text-emerald-400"/>
                           <span className="text-sm uppercase tracking-[0.12em] text-emerald-400 font-mono">Strength Vectors</span>
                         </div>
-                        <p className="text-white/50 text-sm font-light font-serif italic leading-relaxed">"{strengths}"</p>
+                        <p className="p-text-mid text-sm font-light font-serif italic leading-relaxed">"{strengths}"</p>
                       </div>
                     )}
                     {improvements && (
@@ -428,7 +437,7 @@ export function PerformanceReview() {
                           <Zap size={9} className="text-amber-400"/>
                           <span className="text-sm uppercase tracking-[0.12em] text-amber-400 font-mono">Growth Nodes</span>
                         </div>
-                        <p className="text-white/50 text-sm font-light font-serif italic leading-relaxed">"{improvements}"</p>
+                        <p className="p-text-mid text-sm font-light font-serif italic leading-relaxed">"{improvements}"</p>
                       </div>
                     )}
                   </div>
@@ -437,18 +446,18 @@ export function PerformanceReview() {
 
               <div className="flex gap-4">
                 <button onClick={() => setPhase('transmit')}
-                  className="px-8 py-4 rounded-full border border-white/5 text-white/30 text-sm hover:text-white hover:border-white/15 transition-all"
+                  className="px-8 py-4 rounded-full border p-border p-text-dim text-sm hover:p-text-hi hover:p-border-mid transition-all"
                   data-cursor="Edit">
                   Back
                 </button>
                 <button
                   onClick={() => setTransmitted(true)}
-                  className="group relative flex items-center gap-4 px-12 py-4 rounded-full overflow-hidden border border-white/10 text-sm transition-all hover:border-white/25"
+                  className="group relative flex items-center gap-4 px-12 py-4 rounded-full overflow-hidden border p-border-mid text-sm transition-all hover:border-white/25"
                   data-cursor="Transmit"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  <span className="relative z-10 text-white/70 group-hover:text-white transition-colors">Submit Review</span>
-                  <ArrowUpRight size={16} className="relative z-10 text-white/30 group-hover:text-cyan-400 transition-colors"/>
+                  <span className="relative z-10 p-text-body group-hover:text-white transition-colors">Submit Review</span>
+                  <ArrowUpRight size={16} className="relative z-10 p-text-dim group-hover:text-cyan-400 transition-colors"/>
                 </button>
               </div>
             </div>

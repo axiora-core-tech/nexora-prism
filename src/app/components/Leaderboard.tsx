@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Diamond, TrendingUp, TrendingDown, Minus, ArrowUpRight } from 'lucide-react';
+import { Diamond, TrendingUp, TrendingDown, Minus, ArrowUpRight, ArrowLeft } from 'lucide-react';
 import { NavLink } from 'react-router';
+import { useNavigate } from 'react-router';
 import { employees } from '../mockData';
 
 type Metric = 'performance' | 'roi' | 'learning' | 'motivation' | 'welfare';
@@ -33,6 +34,7 @@ function ranked(metric: Metric) {
 }
 
 export function Leaderboard() {
+  const navigate = useNavigate();
   const [metric, setMetric] = useState<Metric>('performance');
   const rankedEmps = ranked(metric);
   const cfg = metricConfig[metric];
@@ -46,14 +48,21 @@ export function Leaderboard() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
+        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b p-border pb-12"
       >
         <div>
-          <p className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
+                    <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 p-text-dim hover:p-text-hi text-sm mb-4 transition-colors group"
+          >
+            <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
+            Back
+          </button>
+          <p className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
             <Diamond size={14} className="text-amber-400" /> Performance Rankings
           </p>
           <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
-            Signal <span className="text-white/30 italic font-serif">Ranking</span>
+            Signal <span className="p-text-dim italic font-serif">Ranking</span>
           </h1>
         </div>
       </motion.div>
@@ -65,7 +74,7 @@ export function Leaderboard() {
             key={m}
             onClick={() => setMetric(m)}
             className={`px-6 py-2.5 rounded-full border text-xs uppercase tracking-widest font-medium transition-all ${
-              metric === m ? 'text-white' : 'text-white/30 border-white/5 hover:border-white/10 hover:text-white/60'
+              metric === m ? 'text-white' : 'text-white/30 p-border hover:p-border-mid hover:text-white/60'
             }`}
             style={metric === m ? {
               borderColor: metricConfig[m].color + '50',
@@ -107,7 +116,7 @@ export function Leaderboard() {
                       {rank + 1}
                     </div>
                   </div>
-                  <p className="text-white/80 text-sm font-light text-center">{emp.name.split(' ')[0]}</p>
+                  <p className="p-text-body text-sm font-light text-center">{emp.name.split(' ')[0]}</p>
                   <p className="text-sm uppercase tracking-[0.12em] text-center mt-0.5 font-mono" style={{ color: cfg.color }}>
                     {score}{cfg.suffix}
                   </p>
@@ -126,13 +135,13 @@ export function Leaderboard() {
       </div>
 
       {/* Full ranking table */}
-      <div className="relative bg-white/5 border border-white/5 rounded-[2rem] overflow-hidden group">
+      <div className="relative p-bg-card border p-border rounded-[2rem] overflow-hidden group">
         <div className="absolute top-0 right-0 w-96 h-96 blur-[120px] rounded-full pointer-events-none transition-all duration-1000"
           style={{ background: cfg.color + '05' }} />
 
-        <div className="px-8 py-5 border-b border-white/5 flex items-center justify-between relative z-10">
-          <p className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono">Full Ranking · {cfg.label}</p>
-          <p className="text-sm uppercase tracking-[0.12em] text-white/20 font-mono">{employees.length} nodes</p>
+        <div className="px-8 py-5 border-b p-border flex items-center justify-between relative z-10">
+          <p className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono">Full Ranking · {cfg.label}</p>
+          <p className="text-sm uppercase tracking-[0.12em] p-text-ghost font-mono">{employees.length} nodes</p>
         </div>
 
         <AnimatePresence mode="wait">
@@ -153,7 +162,7 @@ export function Leaderboard() {
                   <div className="w-8 text-center flex-shrink-0">
                     {i < 3
                       ? <span className="text-sm font-mono font-light" style={{ color: i === 0 ? '#FCD34D' : i === 1 ? '#94A3B8' : '#B45309' }}>{String(i+1).padStart(2,'0')}</span>
-                      : <span className="text-white/20 text-sm font-mono">{i+1}</span>}
+                      : <span className="p-text-ghost text-sm font-mono">{i+1}</span>}
                   </div>
 
                   {/* Employee */}
@@ -161,19 +170,19 @@ export function Leaderboard() {
                     <img src={emp.avatar} alt={emp.name}
                       className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 group-hover/row:grayscale group-hover:grayscale-0-0 transition-all duration-500" />
                     <div>
-                      <p className="text-white/80 text-base font-light leading-none">{emp.name.split(' ')[0]}</p>
-                      <p className="text-white/30 font-serif italic text-sm leading-none mt-0.5">{emp.name.split(' ')[1]}</p>
+                      <p className="p-text-body text-base font-light leading-none">{emp.name.split(' ')[0]}</p>
+                      <p className="p-text-dim font-serif italic text-sm leading-none mt-0.5">{emp.name.split(' ')[1]}</p>
                     </div>
                   </div>
 
                   {/* Score */}
                   <div className="w-24 flex-shrink-0 text-right">
                     <span className="text-2xl font-light" style={{ color: cfg.color }}>{score}</span>
-                    <span className="text-white/20 text-sm">{cfg.suffix}</span>
+                    <span className="p-text-ghost text-sm">{cfg.suffix}</span>
                   </div>
 
                   {/* Bar */}
-                  <div className="flex-1 h-px bg-white/5">
+                  <div className="flex-1 h-px p-bg-card">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${pct}%` }}
@@ -196,7 +205,7 @@ export function Leaderboard() {
                   </div>
 
                   <NavLink to={`/app/employee/${emp.id}`}
-                    className="opacity-0 group-hover/row:opacity-100 transition-opacity p-2 rounded-full bg-white/5 text-white/30 hover:text-white hover:bg-white/10">
+                    className="opacity-0 group-hover/row:opacity-100 transition-opacity p-2 rounded-full p-bg-card p-text-dim hover:p-text-hi hover:bg-white/10">
                     <ArrowUpRight size={11}/>
                   </NavLink>
                 </motion.div>
@@ -214,10 +223,10 @@ export function Leaderboard() {
           { label: 'Signal Spread',      val: (topScore-(Number(rankedEmps[rankedEmps.length-1]?.[cfg.key])||0))+cfg.suffix, color: '#c084fc' },
           { label: 'Above Threshold',    val: employees.filter(e=>(Number(e[cfg.key])||0)>=85).length+' / '+employees.length, color: '#10b981' },
         ].map(s => (
-          <div key={s.label} className="relative bg-white/5 border border-white/5 rounded-[2rem] p-5 overflow-hidden group hover:border-white/10 transition-colors" data-cursor="Stat">
+          <div key={s.label} className="relative p-bg-card border p-border rounded-[2rem] p-5 overflow-hidden group hover:p-border-mid transition-colors" data-cursor="Stat">
             <div className="absolute -bottom-4 -right-4 w-20 h-20 rounded-full blur-[30px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
               style={{ background: s.color + '20' }} />
-            <p className="text-sm uppercase tracking-[0.12em] text-white/20 mb-2 font-mono">{s.label}</p>
+            <p className="text-sm uppercase tracking-[0.12em] p-text-ghost mb-2 font-mono">{s.label}</p>
             <p className="text-2xl font-light relative z-10" style={{ color: s.color }}>{s.val}</p>
           </div>
         ))}

@@ -12,8 +12,8 @@ export function Layout() {
 
   return (
     <div
-      className={`prism-shell min-h-screen font-sans overflow-hidden relative cursor-none ${isLight ? 'prism-light selection:bg-indigo-500/20 selection:text-indigo-900' : 'prism-dark selection:bg-purple-500/30 selection:text-white'}`}
-      style={{ backgroundColor: 'var(--prism-bg)', color: 'var(--prism-text-hi)' }}
+      className={`prism-shell min-h-screen font-sans overflow-hidden relative cursor-none p-bg ${isLight ? 'prism-light' : 'prism-dark'}`}
+      style={{ backgroundColor: 'var(--p-bg)', color: 'var(--p-text-hi)' }}
     >
       <CustomCursor />
       
@@ -57,7 +57,7 @@ export function Layout() {
       {/* Main Content Area */}
       <main
         className="relative z-10 h-screen overflow-y-auto overflow-x-hidden pb-40"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', backgroundColor: 'var(--prism-bg)' }}
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', backgroundColor: 'var(--p-bg)' }}
       >
         <style dangerouslySetInnerHTML={{__html: `main::-webkit-scrollbar { display: none; }`}} />
         <AnimatePresence mode="wait">

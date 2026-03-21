@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Target, TrendingUp, TrendingDown, Minus, ChevronRight, Filter, CheckCircle2, AlertCircle, XCircle, Crosshair } from 'lucide-react';
+import { Target, TrendingUp, TrendingDown, Minus, ChevronRight, Filter, CheckCircle2, AlertCircle, XCircle, Crosshair, ArrowLeft } from 'lucide-react';
 import { NavLink } from 'react-router';
+import { useNavigate } from 'react-router';
 import { employees } from '../mockData';
 
 const statusConfig: Record<string, { label: string; color: string; bg: string; glow: string }> = {
@@ -23,18 +24,18 @@ function KPIVector({ kpi }: { kpi: any }) {
         <div className="flex items-center gap-3">
           {kpi.trend === 'up'   ? <TrendingUp size={11} className="text-emerald-400" />
           : kpi.trend === 'down' ? <TrendingDown size={11} className="text-rose-400" />
-          : <Minus size={11} className="text-white/30" />}
-          <span className="text-sm text-white/70 font-light">{kpi.name}</span>
+          : <Minus size={11} className="p-text-dim" />}
+          <span className="text-sm p-text-body font-light">{kpi.name}</span>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-sm uppercase tracking-[0.12em] text-white/20 font-mono">Weight {kpi.weight}%</span>
+          <span className="text-sm uppercase tracking-[0.12em] p-text-ghost font-mono">Weight {kpi.weight}%</span>
           <span className="text-sm font-mono" style={{ color }}>
             {kpi.current}{kpi.unit}
-            <span className="text-white/20"> / {kpi.target}{kpi.unit}</span>
+            <span className="p-text-ghost"> / {kpi.target}{kpi.unit}</span>
           </span>
         </div>
       </div>
-      <div className="w-full h-px bg-white/5 overflow-hidden">
+      <div className="w-full h-px p-bg-card overflow-hidden">
         <motion.div
           initial={{ width: 0 }}
           whileInView={{ width: `${pct}%` }}
@@ -52,7 +53,7 @@ function ObjectiveNode({ okr }: { okr: any }) {
   const cfg = statusConfig[okr.status] || statusConfig.on_track;
   return (
     <div
-      className="relative bg-white/5 border border-white/5 rounded-[2rem] p-6 overflow-hidden group hover:border-white/10 transition-all duration-500 cursor-crosshair"
+      className="relative p-bg-card border p-border rounded-[2rem] p-6 overflow-hidden group hover:p-border-mid transition-all duration-500 cursor-crosshair"
       data-cursor={cfg.label}
     >
       {/* Ambient glow */}
@@ -69,17 +70,17 @@ function ObjectiveNode({ okr }: { okr: any }) {
               style={{ background: cfg.bg, color: cfg.color, borderColor: cfg.color + '30' }}>
               {cfg.label}
             </span>
-            <span className="text-sm uppercase tracking-[0.12em] text-white/20 font-mono">{okr.weight}</span>
+            <span className="text-sm uppercase tracking-[0.12em] p-text-ghost font-mono">{okr.weight}</span>
           </div>
-          <p className="text-white/80 text-base font-light leading-relaxed">{okr.objective}</p>
+          <p className="p-text-body text-base font-light leading-relaxed">{okr.objective}</p>
         </div>
         <div className="text-right flex-shrink-0">
           <span className="text-3xl font-light text-white">{okr.progress}</span>
-          <span className="text-sm text-white/20">%</span>
+          <span className="text-sm p-text-ghost">%</span>
         </div>
       </div>
 
-      <div className="w-full h-px bg-white/5 overflow-hidden relative z-10">
+      <div className="w-full h-px p-bg-card overflow-hidden relative z-10">
         <motion.div
           initial={{ width: 0 }}
           whileInView={{ width: `${okr.progress}%` }}
@@ -94,6 +95,7 @@ function ObjectiveNode({ okr }: { okr: any }) {
 }
 
 export function KPIGoals() {
+  const navigate = useNavigate();
   const [selectedDept, setSelectedDept] = useState('All');
   const [activeTab, setActiveTab] = useState<'kpis' | 'okrs'>('kpis');
 
@@ -126,24 +128,31 @@ export function KPIGoals() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
+        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b p-border pb-12"
       >
         <div>
-          <p className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
+                    <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 p-text-dim hover:p-text-hi text-sm mb-4 transition-colors group"
+          >
+            <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
+            Back
+          </button>
+          <p className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
             <Crosshair size={14} className="text-amber-400" /> Performance Intelligence
           </p>
           <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
-            Signal <span className="text-white/30 italic font-serif">Matrix</span>
+            Signal <span className="p-text-dim italic font-serif">Matrix</span>
           </h1>
         </div>
         <div className="flex gap-16 text-right">
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-xs mb-2">On Track</p>
-            <p className="text-4xl font-light text-emerald-400">{onTargetKPIs}<span className="text-xl text-white/30">/{totalKPIs}</span></p>
+            <p className="p-text-lo uppercase tracking-[0.2em] text-xs mb-2">On Track</p>
+            <p className="text-4xl font-light text-emerald-400">{onTargetKPIs}<span className="text-xl p-text-dim">/{totalKPIs}</span></p>
           </div>
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-xs mb-2">Objectives Resolved</p>
-            <p className="text-4xl font-light text-cyan-400">{completedOKRs}<span className="text-xl text-white/30">/{totalOKRs}</span></p>
+            <p className="p-text-lo uppercase tracking-[0.2em] text-xs mb-2">Objectives Resolved</p>
+            <p className="text-4xl font-light text-cyan-400">{completedOKRs}<span className="text-xl p-text-dim">/{totalOKRs}</span></p>
           </div>
         </div>
       </motion.div>
@@ -168,12 +177,12 @@ export function KPIGoals() {
               <NavLink
                 key={`kpi-${i}`}
                 to={`/app/employee/${emp.id}`}
-                className="flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-rose-500/20 hover:bg-rose-500/5 transition-all group"
+                className="flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border p-border hover:border-rose-500/20 hover:bg-rose-500/5 transition-all group"
               >
                 <div className="flex items-center gap-3">
                   <img src={emp.avatar} alt={emp.name} className="w-7 h-7 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all" />
                   <div>
-                    <p className="text-white/80 text-sm font-light">{emp.name.split(' ')[0]} · {kpi.name}</p>
+                    <p className="p-text-body text-sm font-light">{emp.name.split(' ')[0]} · {kpi.name}</p>
                     <p className="text-rose-400 text-sm font-mono uppercase tracking-widest">
                       {kpi.current}{kpi.unit} vs {kpi.target}{kpi.unit} target
                     </p>
@@ -186,12 +195,12 @@ export function KPIGoals() {
               <NavLink
                 key={`okr-${i}`}
                 to={`/app/employee/${emp.id}`}
-                className="flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-amber-500/20 hover:bg-amber-500/5 transition-all group"
+                className="flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border p-border hover:border-amber-500/20 hover:bg-amber-500/5 transition-all group"
               >
                 <div className="flex items-center gap-3">
                   <img src={emp.avatar} alt={emp.name} className="w-7 h-7 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all" />
                   <div>
-                    <p className="text-white/80 text-sm font-light">{emp.name.split(' ')[0]} · {okr.objective.slice(0, 35)}{okr.objective.length > 35 ? '…' : ''}</p>
+                    <p className="p-text-body text-sm font-light">{emp.name.split(' ')[0]} · {okr.objective.slice(0, 35)}{okr.objective.length > 35 ? '…' : ''}</p>
                     <p className="text-amber-400 text-sm font-mono uppercase tracking-widest">{okr.progress}% complete · {okr.status.replace('_', ' ')}</p>
                   </div>
                 </div>
@@ -204,7 +213,7 @@ export function KPIGoals() {
 
       {/* Controls */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-16">
-        <div className="flex gap-px p-px bg-white/5 rounded-full border border-white/5">
+        <div className="flex gap-px p-px p-bg-card rounded-full border p-border">
           {(['kpis', 'okrs'] as const).map(tab => (
             <button
               key={tab}
@@ -219,7 +228,7 @@ export function KPIGoals() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Filter size={10} className="text-white/20" />
+          <Filter size={10} className="p-text-ghost" />
           <div className="flex gap-2 flex-wrap">
             {departments.map(d => (
               <button
@@ -227,8 +236,8 @@ export function KPIGoals() {
                 onClick={() => setSelectedDept(d)}
                 className={`px-4 py-1.5 rounded-full text-xs uppercase tracking-widest transition-all border ${
                   selectedDept === d
-                    ? 'bg-white/10 border-white/20 text-white'
-                    : 'border-white/5 text-white/30 hover:border-white/10 hover:text-white/60'
+                    ? 'bg-white/10 p-border-hi text-white'
+                    : 'border-white/5 p-text-dim hover:p-border-mid hover:text-white/60'
                 }`}
               >
                 {d}
@@ -254,7 +263,7 @@ export function KPIGoals() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.08, duration: 0.6 }}
-              className="relative bg-white/5 border border-white/5 rounded-[2rem] p-8 overflow-hidden group hover:border-white/10 transition-all duration-500"
+              className="relative p-bg-card border p-border rounded-[2rem] p-8 overflow-hidden group hover:p-border-mid transition-all duration-500"
             >
               {/* Ambient glow top-right */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 blur-[80px] rounded-full pointer-events-none group-hover:bg-cyan-500/10 transition-all duration-1000" />
@@ -266,16 +275,16 @@ export function KPIGoals() {
                     className="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
                   <div>
                     <h3 className="text-white font-light text-sm">{emp.name.split(' ')[0]}</h3>
-                    <h3 className="text-white/30 font-serif italic text-sm leading-none mt-0.5">{emp.name.split(' ')[1]}</h3>
+                    <h3 className="p-text-dim font-serif italic text-sm leading-none mt-0.5">{emp.name.split(' ')[1]}</h3>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="text-right">
-                    <p className="text-sm uppercase tracking-[0.12em] text-white/30 mb-1">Efficiency</p>
+                    <p className="text-sm uppercase tracking-[0.12em] p-text-dim mb-1">Efficiency</p>
                     <p className="text-2xl font-light text-white">{emp.performanceScore}</p>
                   </div>
                   <NavLink to={`/app/employee/${emp.id}`}
-                    className="p-2 rounded-full bg-white/5 text-white/30 hover:bg-white/10 hover:text-white transition-all"
+                    className="p-2 rounded-full p-bg-card p-text-dim hover:bg-white/10 hover:p-text-hi transition-all"
                     data-cursor="Deep Dive">
                     <ChevronRight size={14} />
                   </NavLink>
@@ -289,7 +298,7 @@ export function KPIGoals() {
                   : (emp.okrs || []).map((okr: any, i: number) => <ObjectiveNode key={i} okr={okr} />)
                 }
                 {(activeTab === 'kpis' ? (!emp.kpis || emp.kpis.length === 0) : (!emp.okrs || emp.okrs.length === 0)) && (
-                  <p className="text-white/20 text-xs text-center py-4 font-mono uppercase tracking-widest">No signals defined</p>
+                  <p className="p-text-ghost text-xs text-center py-4 font-mono uppercase tracking-widest">No signals defined</p>
                 )}
               </div>
             </motion.div>

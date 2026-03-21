@@ -1,0 +1,378 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   PRISM DESIGN SYSTEM — CSS CUSTOM PROPERTIES
+   Applied to <html> via .prism-dark / .prism-light class (set by ThemeContext)
+   All component colours reference these variables, never raw hex.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Dark theme (default) ──────────────────────────────────────────────────── */
+:root,
+.prism-dark {
+  /* Backgrounds */
+  --p-bg:           #030303;
+  --p-bg-card:      rgba(255,255,255,0.025);
+  --p-bg-card-hover:rgba(255,255,255,0.045);
+  --p-bg-card-2:    rgba(255,255,255,0.05);
+  --p-bg-input:     rgba(255,255,255,0.05);
+  --p-bg-pill:      rgba(255,255,255,0.05);
+  --p-bg-overlay:   rgba(0,0,0,0.80);
+
+  /* Surfaces used for modals / popovers */
+  --p-surface:      #0a0a0a;
+  --p-surface-2:    #111111;
+
+  /* Borders */
+  --p-border:       rgba(255,255,255,0.05);
+  --p-border-mid:   rgba(255,255,255,0.10);
+  --p-border-hi:    rgba(255,255,255,0.20);
+  --p-border-emp:   rgba(255,255,255,0.30);
+
+  /* Text */
+  --p-text-hi:      rgba(255,255,255,1.00);
+  --p-text-body:    rgba(255,255,255,0.80);
+  --p-text-mid:     rgba(255,255,255,0.60);
+  --p-text-lo:      rgba(255,255,255,0.40);
+  --p-text-dim:     rgba(255,255,255,0.30);
+  --p-text-ghost:   rgba(255,255,255,0.20);
+  --p-text-whisper: rgba(255,255,255,0.15);
+
+  /* Accent colours */
+  --p-cyan:    #22d3ee;
+  --p-purple:  #c084fc;
+  --p-emerald: #10b981;
+  --p-rose:    #f43f5e;
+  --p-amber:   #f59e0b;
+  --p-indigo:  #818cf8;
+  --p-blue:    #60a5fa;
+
+  /* Accent at low opacity (for backgrounds/borders) */
+  --p-cyan-lo:    rgba(34,211,238,0.10);
+  --p-purple-lo:  rgba(192,132,252,0.10);
+  --p-emerald-lo: rgba(16,185,129,0.08);
+  --p-rose-lo:    rgba(244,63,94,0.08);
+  --p-amber-lo:   rgba(245,158,11,0.08);
+  --p-indigo-lo:  rgba(99,102,241,0.10);
+
+  /* Accent borders */
+  --p-cyan-border:    rgba(34,211,238,0.30);
+  --p-emerald-border: rgba(16,185,129,0.30);
+  --p-rose-border:    rgba(244,63,94,0.30);
+  --p-amber-border:   rgba(245,158,11,0.30);
+  --p-indigo-border:  rgba(99,102,241,0.30);
+  --p-purple-border:  rgba(192,132,252,0.30);
+
+  /* Chart tooltip */
+  --p-tooltip-bg:     #050505;
+  --p-tooltip-border: rgba(255,255,255,0.10);
+
+  /* Glow / ambient */
+  --p-glow-a: rgba(139,92,246,0.20);
+  --p-glow-b: rgba(6,182,212,0.10);
+
+  /* Gradients */
+  --p-gradient-card: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+
+  /* Dock */
+  --p-dock-bg:     rgba(255,255,255,0.05);
+  --p-dock-border: rgba(255,255,255,0.10);
+
+  /* Cursor */
+  --p-cursor-blend: difference;
+}
+
+/* ── Light theme ───────────────────────────────────────────────────────────── */
+.prism-light {
+  /* Backgrounds — warm off-white system */
+  --p-bg:           #f2f0eb;
+  --p-bg-card:      rgba(0,0,0,0.035);
+  --p-bg-card-hover:rgba(0,0,0,0.055);
+  --p-bg-card-2:    rgba(0,0,0,0.06);
+  --p-bg-input:     rgba(0,0,0,0.05);
+  --p-bg-pill:      rgba(0,0,0,0.06);
+  --p-bg-overlay:   rgba(230,228,222,0.90);
+
+  /* Surfaces */
+  --p-surface:      #eae8e3;
+  --p-surface-2:    #e2e0da;
+
+  /* Borders */
+  --p-border:       rgba(0,0,0,0.07);
+  --p-border-mid:   rgba(0,0,0,0.12);
+  --p-border-hi:    rgba(0,0,0,0.20);
+  --p-border-emp:   rgba(0,0,0,0.30);
+
+  /* Text — warm dark ink */
+  --p-text-hi:      #111010;
+  --p-text-body:    rgba(17,16,16,0.82);
+  --p-text-mid:     rgba(17,16,16,0.60);
+  --p-text-lo:      rgba(17,16,16,0.42);
+  --p-text-dim:     rgba(17,16,16,0.32);
+  --p-text-ghost:   rgba(17,16,16,0.22);
+  --p-text-whisper: rgba(17,16,16,0.14);
+
+  /* Accent colours — slightly deeper for legibility on light bg */
+  --p-cyan:    #0284c7;
+  --p-purple:  #7c3aed;
+  --p-emerald: #059669;
+  --p-rose:    #e11d48;
+  --p-amber:   #d97706;
+  --p-indigo:  #4f46e5;
+  --p-blue:    #2563eb;
+
+  /* Accent low-opacity */
+  --p-cyan-lo:    rgba(2,132,199,0.09);
+  --p-purple-lo:  rgba(124,58,237,0.09);
+  --p-emerald-lo: rgba(5,150,105,0.09);
+  --p-rose-lo:    rgba(225,29,72,0.08);
+  --p-amber-lo:   rgba(217,119,6,0.09);
+  --p-indigo-lo:  rgba(79,70,229,0.09);
+
+  /* Accent borders */
+  --p-cyan-border:    rgba(2,132,199,0.28);
+  --p-emerald-border: rgba(5,150,105,0.28);
+  --p-rose-border:    rgba(225,29,72,0.28);
+  --p-amber-border:   rgba(217,119,6,0.28);
+  --p-indigo-border:  rgba(79,70,229,0.28);
+  --p-purple-border:  rgba(124,58,237,0.28);
+
+  /* Chart tooltip */
+  --p-tooltip-bg:     #f0eeea;
+  --p-tooltip-border: rgba(0,0,0,0.10);
+
+  /* Glow / ambient */
+  --p-glow-a: rgba(79,70,229,0.07);
+  --p-glow-b: rgba(2,132,199,0.05);
+
+  /* Gradients */
+  --p-gradient-card: linear-gradient(135deg, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0.01) 100%);
+
+  /* Dock */
+  --p-dock-bg:     rgba(255,255,255,0.75);
+  --p-dock-border: rgba(0,0,0,0.10);
+
+  /* Cursor blend — multiply keeps dot visible on light bg */
+  --p-cursor-blend: multiply;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PRISM UTILITY ALIAS CLASSES
+   These replace hardcoded Tailwind colour utilities throughout the app.
+   Each class reads from the --p-* design tokens so theme switching is instant.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Backgrounds ─────────────────────────────────────────────────────────── */
+.p-bg         { background-color: var(--p-bg); }
+.p-bg-card    { background-color: var(--p-bg-card); }
+.p-bg-card-2  { background-color: var(--p-bg-card-2); }
+.p-bg-surface { background-color: var(--p-surface); }
+.p-bg-pill    { background-color: var(--p-bg-pill); }
+.p-bg-input   { background-color: var(--p-bg-input); }
+
+/* hover variants */
+.hover\:p-bg-card-hover:hover { background-color: var(--p-bg-card-hover); }
+
+/* ── Borders ─────────────────────────────────────────────────────────────── */
+.p-border     { border-color: var(--p-border); }
+.p-border-mid { border-color: var(--p-border-mid); }
+.p-border-hi  { border-color: var(--p-border-hi); }
+.hover\:p-border-mid:hover { border-color: var(--p-border-mid); }
+.hover\:p-border-hi:hover  { border-color: var(--p-border-hi); }
+
+/* ── Text ────────────────────────────────────────────────────────────────── */
+.p-text-hi      { color: var(--p-text-hi); }
+.p-text-body    { color: var(--p-text-body); }
+.p-text-mid     { color: var(--p-text-mid); }
+.p-text-lo      { color: var(--p-text-lo); }
+.p-text-dim     { color: var(--p-text-dim); }
+.p-text-ghost   { color: var(--p-text-ghost); }
+.p-text-whisper { color: var(--p-text-whisper); }
+.hover\:p-text-hi:hover   { color: var(--p-text-hi); }
+.hover\:p-text-mid:hover  { color: var(--p-text-mid); }
+
+/* ── Accent colours ──────────────────────────────────────────────────────── */
+.p-text-cyan    { color: var(--p-cyan); }
+.p-text-purple  { color: var(--p-purple); }
+.p-text-emerald { color: var(--p-emerald); }
+.p-text-rose    { color: var(--p-rose); }
+.p-text-amber   { color: var(--p-amber); }
+.p-text-indigo  { color: var(--p-indigo); }
+.p-text-blue    { color: var(--p-blue); }
+
+.p-bg-cyan-lo    { background-color: var(--p-cyan-lo); }
+.p-bg-emerald-lo { background-color: var(--p-emerald-lo); }
+.p-bg-rose-lo    { background-color: var(--p-rose-lo); }
+.p-bg-amber-lo   { background-color: var(--p-amber-lo); }
+.p-bg-purple-lo  { background-color: var(--p-purple-lo); }
+
+.p-border-cyan    { border-color: var(--p-cyan-border); }
+.p-border-emerald { border-color: var(--p-emerald-border); }
+.p-border-rose    { border-color: var(--p-rose-border); }
+.p-border-amber   { border-color: var(--p-amber-border); }
+.p-border-indigo  { border-color: var(--p-indigo-border); }
+.p-border-purple  { border-color: var(--p-purple-border); }
+
+/* ── Dock ────────────────────────────────────────────────────────────────── */
+.p-dock {
+  background-color: var(--p-dock-bg);
+  border-color: var(--p-dock-border);
+}
+
+/* ── Dividers ────────────────────────────────────────────────────────────── */
+.p-divide > * + * { border-top-color: var(--p-border); }
+
+/* ── Light mode accent panel adjustments ───────────────────────────────────── */
+/* Semantic accent panels already use their own colour — they look fine in both  */
+/* themes since rose/emerald etc. are defined per-theme in --p-rose etc.         */
+/* This block handles the few remaining structural overrides needed.             */
+
+/* EmployeeDetail sticky hero column bg */
+.prism-light [style*="background-color: var(--p-bg)"],
+.prism-light .p-bg {
+  background-color: var(--p-bg);
+}
+
+/* Chart tooltips */
+.prism-light .recharts-tooltip-wrapper .recharts-default-tooltip {
+  background-color: var(--p-tooltip-bg) !important;
+  border-color: var(--p-tooltip-border) !important;
+  color: var(--p-text-hi) !important;
+}
+
+/* Gradient overlays on photo cards — lighten in light mode */
+.prism-light .bg-gradient-to-t.from-black {
+  --tw-gradient-from: rgba(0,0,0,0.55);
+  --tw-gradient-to: rgba(0,0,0,0);
+}
+.prism-light .bg-gradient-to-r.to-\[\#030303\] {
+  --tw-gradient-to: var(--p-bg);
+}
+
+/* Backdrop blur pill backgrounds */
+.prism-light .bg-black\/40 {
+  background-color: rgba(255,255,255,0.65) !important;
+  color: var(--p-text-hi) !important;
+}
+.prism-light .bg-black\/60 {
+  background-color: rgba(240,238,234,0.85) !important;
+  color: var(--p-text-hi) !important;
+}
+.prism-light .bg-black\/50 {
+  background-color: rgba(240,238,234,0.80) !important;
+}
+.prism-light .bg-black\/80 {
+  background-color: rgba(230,228,222,0.90) !important;
+}
+
+/* text-white (fully opaque) — highest priority text in light mode */
+.prism-light .text-white {
+  color: var(--p-text-hi) !important;
+}
+.prism-light .text-zinc-100,
+.prism-light .text-zinc-300,
+.prism-light .text-zinc-400 {
+  color: var(--p-text-mid) !important;
+}
+
+/* Separator lines */
+.prism-light .border-white\/5  { border-color: var(--p-border) !important; }
+.prism-light .border-white\/10 { border-color: var(--p-border-mid) !important; }
+.prism-light .border-white\/20 { border-color: var(--p-border-hi) !important; }
+.prism-light .border-white\/30 { border-color: var(--p-border-emp) !important; }
+
+/* Scrollbar */
+.prism-light ::-webkit-scrollbar-track { background: var(--p-bg); }
+.prism-light ::-webkit-scrollbar-thumb { background-color: var(--p-border-mid); border-radius: 3px; }
+
+/* Hover text-white */
+.prism-light .hover\:text-white:hover { color: var(--p-text-hi) !important; }
+
+/* mix-blend-difference → multiply for light bg */
+.prism-light .mix-blend-\[var\(--p-cursor-blend\)\] {
+  mix-blend-mode: multiply;
+}
+.prism-dark .mix-blend-\[var\(--p-cursor-blend\)\] {
+  mix-blend-mode: difference;
+}
+
+/* mix-blend-screen ambient blobs — mute in light mode */
+.prism-light .mix-blend-screen {
+  mix-blend-mode: multiply;
+  opacity: 0.08;
+}
+
+/* ─── Light mode structural fixes ─────────────────────────────────────────── */
+
+/* Photo cards (constellation, leaderboard) — always dark bg regardless of theme */
+.prism-light [style*="background-color: #111"],
+.prism-light [style*="backgroundColor: '#111'"] {
+  background-color: #1a1a1a !important;
+}
+
+/* KPI / OKR progress bars — bg-white/5 used as track → too invisible in light */
+.prism-light .bg-white\/5.rounded-full,
+.prism-light .bg-white\/10.rounded-full {
+  background-color: rgba(0,0,0,0.10) !important;
+}
+
+/* Chart grid lines — stroke rgba(255,255,255,0.05) → invisible in light */
+.prism-light .recharts-cartesian-grid line {
+  stroke: rgba(0,0,0,0.07) !important;
+}
+.prism-light .recharts-cartesian-axis-tick text {
+  fill: var(--p-text-lo) !important;
+}
+.prism-light .recharts-tooltip-wrapper {
+  filter: none !important;
+}
+
+/* Avatar thumbnails — grayscale looks better in dark; in light add slight sepia */
+.prism-light img.grayscale {
+  filter: grayscale(60%) !important;
+}
+.prism-light img.grayscale:hover,
+.prism-light img.grayscale.group-hover\:grayscale-0 {
+  filter: grayscale(0%) !important;
+}
+
+/* EmployeeDetail right panel — needs theme bg, not dark */
+.prism-light .xl\:w-\[60\%\] {
+  background-color: var(--p-bg) !important;
+}
+
+/* Circular SVG stat rings — stroke is hardcoded white/5 */
+.prism-light circle[stroke="currentColor"].text-white\/5,
+.prism-light circle.text-white\/10 {
+  stroke: rgba(0,0,0,0.10) !important;
+}
+.prism-light circle.text-white\/5 {
+  stroke: rgba(0,0,0,0.08) !important;
+}
+
+/* Attendance calendar cells */
+.prism-light .aspect-square.bg-white\/5,
+.prism-light .aspect-square.bg-white\/\[0\.02\] {
+  background-color: rgba(0,0,0,0.05) !important;
+}
+
+/* Leaderboard bar track */
+.prism-light .h-px.bg-white\/5 {
+  background-color: rgba(0,0,0,0.08) !important;
+}
+
+/* Section dividers */
+.prism-light .border-b.border-white\/10,
+.prism-light .border-t.border-white\/5 {
+  border-color: var(--p-border) !important;
+}
+
+/* Gradient overlays that clip content on light bg */
+.prism-light .bg-gradient-to-r.from-transparent.to-\[\#030303\] {
+  background: linear-gradient(to right, transparent, var(--p-bg)) !important;
+}
+.prism-light .bg-gradient-to-l.from-\[\#030303\] {
+  background: linear-gradient(to left, var(--p-bg), transparent) !important;
+}
+
+/* Floating right-edge scroll fade on Team Constellation */
+.prism-light .from-\[\#030303\] {
+  --tw-gradient-from: var(--p-bg);
+}

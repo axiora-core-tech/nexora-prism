@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { useTheme } from '../auth/ThemeContext';
 import { useAuth } from '../auth/AuthContext';
 import { motion, AnimatePresence } from 'motion/react';
-import { Settings as SettingsIcon, Terminal, Bell, Shield, Users, BarChart2, RefreshCw, ChevronRight, Check, AlertTriangle, Zap, Moon, Sun, Globe, Lock, Eye, Sliders, LogOut } from 'lucide-react';
+import { Settings as SettingsIcon, Terminal, Bell, Shield, Users, BarChart2, RefreshCw, ChevronRight, Check, AlertTriangle, Zap, Moon, Sun, Globe, Lock, Eye, Sliders, LogOut, ArrowLeft } from 'lucide-react';
 
 function Toggle({ on, onChange }: { on: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -26,9 +26,9 @@ function SelectInput({ value, options, onChange }: { value: string; options: str
     <select
       value={value}
       onChange={e => onChange(e.target.value)}
-      className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm outline-none focus:border-white/30 transition-colors"
+      className="p-bg-card border p-border-mid rounded-xl px-4 py-2 text-white text-sm outline-none focus:border-white/30 transition-colors"
     >
-      {options.map(o => <option key={o} value={o} className="bg-[#111]">{o}</option>)}
+      {options.map(o => <option key={o} value={o} className="p-bg-surface">{o}</option>)}
     </select>
   );
 }
@@ -121,8 +121,8 @@ export function Settings() {
   const settingRow = (label: string, desc: string, control: React.ReactNode) => (
     <div className="flex items-center justify-between py-5 border-b border-white/[0.04] last:border-0">
       <div>
-        <p className="text-white/80 text-base font-light">{label}</p>
-        <p className="text-white/30 text-sm mt-0.5">{desc}</p>
+        <p className="p-text-body text-base font-light">{label}</p>
+        <p className="p-text-dim text-sm mt-0.5">{desc}</p>
       </div>
       <div className="flex-shrink-0 ml-6">{control}</div>
     </div>
@@ -135,14 +135,21 @@ export function Settings() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
+        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b p-border pb-12"
       >
         <div>
-          <p className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
-            <SettingsIcon size={14} className="text-white/40" /> System Configuration
+                    <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 p-text-dim hover:p-text-hi text-sm mb-4 transition-colors group"
+          >
+            <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
+            Back
+          </button>
+          <p className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
+            <SettingsIcon size={14} className="p-text-lo" /> System Configuration
           </p>
           <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
-            Core <span className="text-white/30 italic font-serif">Parameters</span>
+            Core <span className="p-text-dim italic font-serif">Parameters</span>
           </h1>
         </div>
         <motion.button
@@ -150,7 +157,7 @@ export function Settings() {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           className={`px-8 py-4 rounded-2xl border transition-all duration-300 flex items-center gap-3 text-sm font-light ${
-            saved ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400' : 'bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-white/20'
+            saved ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400' : 'bg-white/5 p-border-mid text-white hover:bg-white/10 hover:border-white/20'
           }`}
         >
           <AnimatePresence mode="wait">
@@ -179,12 +186,12 @@ export function Settings() {
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-light transition-all text-left ${
                   activeSection === item.id
                     ? 'bg-white/10 text-white border border-white/10'
-                    : 'text-white/40 hover:text-white hover:bg-white/5'
+                    : 'text-white/40 hover:p-text-hi hover:bg-white/5'
                 }`}
               >
                 <item.icon size={14} />
                 {item.label}
-                {activeSection === item.id && <ChevronRight size={12} className="ml-auto text-white/40" />}
+                {activeSection === item.id && <ChevronRight size={12} className="ml-auto p-text-lo" />}
               </button>
             ))}
           </div>
@@ -192,10 +199,22 @@ export function Settings() {
           {/* Account info + logout — always visible at bottom of sidebar */}
           <div className="mt-8 pt-6 border-t border-white/[0.06]">
             {user && (
-              <p className="text-sm font-mono text-white/25 uppercase tracking-widest px-4 mb-3 truncate">
+              <p className="text-sm font-mono p-text-dim uppercase tracking-widest px-4 mb-3 truncate">
                 {user.email}
               </p>
             )}
+
+            {/* Theme toggle */}
+            <button
+              onClick={toggleTheme}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-light p-text-mid hover:p-text-hi hover:p-bg-card-hover transition-all text-left mb-1"
+            >
+              {theme === 'dark'
+                ? <><Sun size={14} className="text-amber-400" /> Light Mode</>
+                : <><Moon size={14} className="text-indigo-400" /> Dark Mode</>
+              }
+            </button>
+
             <button
               onClick={handleLogout}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-light text-rose-400/60 hover:text-rose-400 hover:bg-rose-500/5 border border-transparent hover:border-rose-500/10 transition-all text-left"
@@ -215,13 +234,13 @@ export function Settings() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -16 }}
               transition={{ duration: 0.3 }}
-              className="bg-white/[0.02] border border-white/5 rounded-[2rem] p-8 relative overflow-hidden"
+              className="bg-white/[0.02] border p-border rounded-[2rem] p-8 relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-96 h-64 bg-purple-500/5 blur-[100px] rounded-full pointer-events-none" />
               {/* PERFORMANCE */}
               {activeSection === 'performance' && (
                 <div>
-                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Telemetry Engine</h2>
+                  <h2 className="p-text-dim uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b p-border-mid pb-4">Telemetry Engine</h2>
 
                   <div className="space-y-0 mb-8">
                     {settingRow('Live Data Streaming', 'Continuous real-time update of employee vectors', <Toggle on={perf.liveStreaming} onChange={v => setPerf(p => ({ ...p, liveStreaming: v }))} />)}
@@ -230,7 +249,7 @@ export function Settings() {
                     {settingRow('ML-Based Attrition Scoring', 'Machine learning model refreshes attrition risk weekly', <Toggle on={perf.attritionML} onChange={v => setPerf(p => ({ ...p, attritionML: v }))} />)}
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-white/5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t p-border">
                     {[
                       { label: 'Review Cycle', key: 'reviewCycle', opts: ['Monthly', 'Quarterly', 'Bi-Annual', 'Annual'] },
                       { label: 'KPI Weighting', key: 'kpiWeighting', opts: ['Balanced', 'Revenue-Heavy', 'Quality-Heavy', 'Custom'] },
@@ -238,7 +257,7 @@ export function Settings() {
                       { label: 'Benchmark Mode', key: 'benchmarkMode', opts: ['Internal', 'Industry', 'Custom Cohort'] },
                     ].map(({ label, key, opts }) => (
                       <div key={key}>
-                        <p className="text-white/50 text-sm uppercase tracking-[0.12em] mb-2">{label}</p>
+                        <p className="p-text-mid text-sm uppercase tracking-[0.12em] mb-2">{label}</p>
                         <SelectInput
                           value={(perf as any)[key]}
                           options={opts}
@@ -253,17 +272,17 @@ export function Settings() {
               {/* NOTIFICATIONS */}
               {activeSection === 'notifications' && (
                 <div>
-                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Alert Feed</h2>
+                  <h2 className="p-text-dim uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b p-border-mid pb-4">Alert Feed</h2>
 
                   <div className="grid grid-cols-2 gap-4 mb-8">
                     {[
                       { label: 'Attrition Alert Threshold', key: 'attritionThreshold', unit: '%', min: 30, max: 90 },
                       { label: 'Burnout Alert Threshold', key: 'burnoutThreshold', unit: '%', min: 30, max: 95 },
                     ].map(({ label, key, unit, min, max }) => (
-                      <div key={key} className="bg-white/[0.02] border border-white/5 rounded-[2rem] p-5">
-                        <p className="text-white/40 text-sm uppercase tracking-[0.12em] mb-3">{label}</p>
+                      <div key={key} className="bg-white/[0.02] border p-border rounded-[2rem] p-5">
+                        <p className="p-text-lo text-sm uppercase tracking-[0.12em] mb-3">{label}</p>
                         <div className="flex items-center gap-3 mb-3">
-                          <span className="text-3xl font-light text-white">{(notifs as any)[key]}<span className="text-lg text-white/30">{unit}</span></span>
+                          <span className="text-3xl font-light text-white">{(notifs as any)[key]}<span className="text-lg p-text-dim">{unit}</span></span>
                         </div>
                         <input
                           type="range" min={min} max={max}
@@ -271,7 +290,7 @@ export function Settings() {
                           onChange={e => setNotifs(n => ({ ...n, [key]: parseInt(e.target.value) }))}
                           className="w-full accent-amber-400"
                         />
-                        <div className="flex justify-between text-sm font-mono text-white/20 mt-1">
+                        <div className="flex justify-between text-sm font-mono p-text-ghost mt-1">
                           <span>{min}%</span><span>{max}%</span>
                         </div>
                       </div>
@@ -292,7 +311,7 @@ export function Settings() {
               {/* TEAM */}
               {activeSection === 'team' && (
                 <div>
-                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Team Protocol</h2>
+                  <h2 className="p-text-dim uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b p-border-mid pb-4">Team Protocol</h2>
 
                   <div className="space-y-0 mb-8">
                     {settingRow('Self-Reviews', 'Allow employees to submit self-assessments in 360° cycles', <Toggle on={team.selfReviewEnabled} onChange={v => setTeam(t => ({ ...t, selfReviewEnabled: v }))} />)}
@@ -301,14 +320,14 @@ export function Settings() {
                     {settingRow('Goal Cascading', 'Org-level OKRs automatically cascade to team and individual level', <Toggle on={team.goalCascading} onChange={v => setTeam(t => ({ ...t, goalCascading: v }))} />)}
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6 border-t border-white/5">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6 border-t p-border">
                     {[
                       { label: 'KPI Visibility', key: 'kpiVisibility', opts: ['Everyone', 'Managers', 'HR Only', 'Private'] },
                       { label: 'Salary Visibility', key: 'salaryVisibility', opts: ['Everyone', 'Managers', 'HR Only'] },
                       { label: 'Max OKRs / Employee', key: 'maxOKRsPerEmployee', opts: ['3', '4', '5', '6', '7', '10'] },
                     ].map(({ label, key, opts }) => (
                       <div key={key}>
-                        <p className="text-white/50 text-sm uppercase tracking-[0.12em] mb-2">{label}</p>
+                        <p className="p-text-mid text-sm uppercase tracking-[0.12em] mb-2">{label}</p>
                         <SelectInput value={(team as any)[key]} options={opts} onChange={v => setTeam(t => ({ ...t, [key]: v }))} />
                       </div>
                     ))}
@@ -319,7 +338,7 @@ export function Settings() {
               {/* SECURITY */}
               {activeSection === 'security' && (
                 <div>
-                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Security Matrix</h2>
+                  <h2 className="p-text-dim uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b p-border-mid pb-4">Security Matrix</h2>
 
                   <div className="space-y-0 mb-8">
                     {settingRow('Two-Factor Authentication', 'Require 2FA for all HR and manager accounts', <Toggle on={sec.twoFA} onChange={v => setSec(s => ({ ...s, twoFA: v }))} />)}
@@ -328,13 +347,13 @@ export function Settings() {
                     {settingRow('Export Control', 'Restrict bulk data exports to HR Director only', <Toggle on={sec.exportControl} onChange={v => setSec(s => ({ ...s, exportControl: v }))} />)}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 pt-6 border-t border-white/5">
+                  <div className="grid grid-cols-2 gap-4 pt-6 border-t p-border">
                     {[
                       { label: 'Session Timeout', key: 'sessionTimeout', opts: ['1 hour', '4 hours', '8 hours', '24 hours'] },
                       { label: 'Data Retention', key: 'dataRetention', opts: ['12 months', '24 months', '36 months', 'Indefinite'] },
                     ].map(({ label, key, opts }) => (
                       <div key={key}>
-                        <p className="text-white/50 text-sm uppercase tracking-[0.12em] mb-2">{label}</p>
+                        <p className="p-text-mid text-sm uppercase tracking-[0.12em] mb-2">{label}</p>
                         <SelectInput value={(sec as any)[key]} options={opts} onChange={v => setSec(s => ({ ...s, [key]: v }))} />
                       </div>
                     ))}
@@ -344,7 +363,7 @@ export function Settings() {
                     <AlertTriangle size={16} className="text-amber-400 flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="text-amber-400 text-sm font-light">Last Security Scan</p>
-                      <p className="text-white/40 text-xs mt-1">Completed Nov 14, 2025 · 0 vulnerabilities detected · Next scan in 14 days</p>
+                      <p className="p-text-lo text-xs mt-1">Completed Nov 14, 2025 · 0 vulnerabilities detected · Next scan in 14 days</p>
                     </div>
                   </div>
                 </div>
@@ -353,7 +372,7 @@ export function Settings() {
               {/* INTEGRATIONS */}
               {activeSection === 'integrations' && (
                 <div>
-                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">Node Links</h2>
+                  <h2 className="p-text-dim uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b p-border-mid pb-4">Node Links</h2>
 
                   <div className="space-y-4">
                     {[
@@ -369,21 +388,21 @@ export function Settings() {
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: i * 0.06 }}
-                        className="flex items-center justify-between p-5 bg-white/[0.02] border border-white/5 rounded-[2rem] hover:border-white/10 transition-colors"
+                        className="flex items-center justify-between p-5 bg-white/[0.02] border p-border rounded-[2rem] hover:p-border-mid transition-colors"
                       >
                         <div className="flex items-center gap-4">
                           <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold" style={{ background: intg.color + '20', color: intg.color }}>
                             {intg.name[0]}
                           </div>
                           <div>
-                            <p className="text-white/80 text-sm font-light">{intg.name}</p>
-                            <p className="text-white/30 text-xs mt-0.5">{intg.desc}</p>
+                            <p className="p-text-body text-sm font-light">{intg.name}</p>
+                            <p className="p-text-dim text-xs mt-0.5">{intg.desc}</p>
                           </div>
                         </div>
                         <button className={`px-4 py-2 rounded-xl border text-xs uppercase tracking-widest transition-all ${
                           intg.status === 'connected'
                             ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/5 hover:bg-emerald-500/10'
-                            : 'border-white/10 text-white/40 hover:border-white/20 hover:text-white'
+                            : 'border-white/10 p-text-lo hover:p-border-hi hover:text-white'
                         }`}>
                           {intg.status === 'connected' ? 'Connected' : 'Connect'}
                         </button>
@@ -396,20 +415,20 @@ export function Settings() {
               {/* TERMINAL */}
               {activeSection === 'terminal' && (
                 <div>
-                  <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b border-white/10 pb-4">System Override</h2>
+                  <h2 className="p-text-dim uppercase tracking-[0.2em] text-sm font-semibold mb-8 flex items-center gap-4 border-b p-border-mid pb-4">System Override</h2>
 
-                  <div className="bg-black/60 border border-white/10 rounded-2xl p-6 font-mono text-xs space-y-2 mb-6">
-                    <p className="text-white/20">// APEX Performance Intelligence v2.4.1</p>
-                    <p className="text-white/20">// Kernel: Node 20 · Runtime: Edge · Region: ap-south-1</p>
+                  <div className="bg-black/60 border p-border-mid rounded-2xl p-6 font-mono text-xs space-y-2 mb-6">
+                    <p className="p-text-ghost">// APEX Performance Intelligence v2.4.1</p>
+                    <p className="p-text-ghost">// Kernel: Node 20 · Runtime: Edge · Region: ap-south-1</p>
                     <p className="text-emerald-400 mt-4">apex&gt; status --all</p>
-                    <p className="text-white/60">  ● Performance engine    <span className="text-emerald-400">running</span></p>
-                    <p className="text-white/60">  ● ML attrition model    <span className="text-emerald-400">running</span></p>
-                    <p className="text-white/60">  ● Data pipeline         <span className="text-emerald-400">running</span>  last sync: 4m ago</p>
-                    <p className="text-white/60">  ● Burnout detector      <span className="text-amber-400">degraded</span> — model refresh pending</p>
-                    <p className="text-white/60">  ● Slack integration     <span className="text-white/30">disconnected</span></p>
+                    <p className="p-text-mid">  ● Performance engine    <span className="text-emerald-400">running</span></p>
+                    <p className="p-text-mid">  ● ML attrition model    <span className="text-emerald-400">running</span></p>
+                    <p className="p-text-mid">  ● Data pipeline         <span className="text-emerald-400">running</span>  last sync: 4m ago</p>
+                    <p className="p-text-mid">  ● Burnout detector      <span className="text-amber-400">degraded</span> — model refresh pending</p>
+                    <p className="p-text-mid">  ● Slack integration     <span className="p-text-dim">disconnected</span></p>
                     <p className="text-emerald-400 mt-2">apex&gt; db:stats</p>
-                    <p className="text-white/60">  Records: 8 employees · 52 KPIs · 24 OKRs · 8 reviews</p>
-                    <p className="text-white/60">  Storage: 2.1 GB / 50 GB</p>
+                    <p className="p-text-mid">  Records: 8 employees · 52 KPIs · 24 OKRs · 8 reviews</p>
+                    <p className="p-text-mid">  Storage: 2.1 GB / 50 GB</p>
                     <p className="text-emerald-400 mt-2">apex&gt; <span className="animate-pulse">_</span></p>
                   </div>
 
@@ -426,7 +445,7 @@ export function Settings() {
                           ...prev,
                           { cmd: label.toLowerCase().replace(/ /g, '-'), out: response }
                         ])}
-                        className="flex items-center gap-3 px-5 py-4 bg-white/[0.02] border border-white/5 rounded-[2rem] text-sm font-light text-white/50 hover:text-white hover:border-white/15 hover:bg-white/[0.04] transition-all text-left"
+                        className="flex items-center gap-3 px-5 py-4 bg-white/[0.02] border p-border rounded-[2rem] text-sm font-light p-text-mid hover:p-text-hi hover:p-border-mid hover:bg-white/[0.04] transition-all text-left"
                       >
                         <Icon size={14} style={{ color }} />
                         {label}
@@ -434,11 +453,11 @@ export function Settings() {
                     ))}
                   </div>
                   {terminalLog.length > 0 && (
-                    <div className="mt-4 bg-black/60 border border-white/10 rounded-2xl p-4 font-mono text-xs space-y-2">
+                    <div className="mt-4 bg-black/60 border p-border-mid rounded-2xl p-4 font-mono text-xs space-y-2">
                       {terminalLog.map((entry, i) => (
                         <div key={i}>
                           <p className="text-emerald-400">apex&gt; {entry.cmd}</p>
-                          <p className="text-white/60 ml-2">{entry.out}</p>
+                          <p className="p-text-mid ml-2">{entry.out}</p>
                         </div>
                       ))}
                     </div>

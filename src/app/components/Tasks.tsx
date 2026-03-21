@@ -1,6 +1,7 @@
+import { useNavigate } from 'react-router';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Layers, Plus, X, ChevronRight, Calendar } from 'lucide-react';
+import { Layers, Plus, X, ChevronRight, Calendar, ArrowLeft } from 'lucide-react';
 import { employees } from '../mockData';
 
 type Priority = 'critical' | 'high' | 'medium' | 'low';
@@ -57,8 +58,8 @@ function TaskCard({ task, onMove }: { task: Task; onMove: (id: string, dir: 'lef
       transition={{ duration: 0.4 }}
       className={`relative group rounded-[2rem] border overflow-hidden transition-colors duration-300 ${
         done
-          ? 'bg-white/5 border-white/5 opacity-50'
-          : 'bg-white/5 border-white/5 hover:bg-white/[0.04] hover:border-white/10 cursor-crosshair'
+          ? 'bg-white/5 p-border opacity-50'
+          : 'bg-white/5 p-border hover:bg-white/[0.04] hover:p-border-mid cursor-crosshair'
       }`}
       data-cursor={done ? undefined : 'Manage Vector'}
     >
@@ -83,7 +84,7 @@ function TaskCard({ task, onMove }: { task: Task; onMove: (id: string, dir: 'lef
             {task.tags.map(tag => (
               <span
                 key={tag}
-                className="px-2 py-0.5 rounded-full text-sm uppercase tracking-[0.12em] font-mono bg-white/5 text-white/40 border border-white/5"
+                className="px-2 py-0.5 rounded-full text-sm uppercase tracking-[0.12em] font-mono p-bg-card p-text-lo border p-border"
               >
                 {tag}
               </span>
@@ -99,22 +100,22 @@ function TaskCard({ task, onMove }: { task: Task; onMove: (id: string, dir: 'lef
 
         {/* Title */}
         <h4 className={`text-sm font-light leading-snug mb-2 ${
-          done ? 'line-through text-white/25 decoration-white/15' : 'text-white/90'
+          done ? 'line-through p-text-dim decoration-white/15' : 'text-white/90'
         }`}>
           {task.title}
         </h4>
 
         {/* Description */}
-        <p className="text-xs text-white/30 font-light leading-relaxed mb-5">{task.desc}</p>
+        <p className="text-xs p-text-dim font-light leading-relaxed mb-5">{task.desc}</p>
 
         {/* Progress bar — only when in flight */}
         {!done && task.status !== 'backlog' && task.estimate > 0 && (
           <div className="mb-5">
-            <div className="flex justify-between text-sm font-mono text-white/30 mb-1.5">
+            <div className="flex justify-between text-sm font-mono p-text-dim mb-1.5">
               <span>Effort</span>
               <span>{task.effort}h / {task.estimate}h</span>
             </div>
-            <div className="h-[2px] bg-white/5 rounded-full overflow-hidden">
+            <div className="h-[2px] p-bg-card rounded-full overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${pct}%` }}
@@ -127,7 +128,7 @@ function TaskCard({ task, onMove }: { task: Task; onMove: (id: string, dir: 'lef
         )}
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-4 border-t border-white/5">
+        <div className="flex items-center justify-between pt-4 border-t p-border">
           <div className="flex items-center gap-2">
             {emp && (
               <img
@@ -136,13 +137,13 @@ function TaskCard({ task, onMove }: { task: Task; onMove: (id: string, dir: 'lef
                 className="w-5 h-5 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 opacity-70"
               />
             )}
-            <span className="text-xs text-white/40 font-light">{task.owner}</span>
+            <span className="text-xs p-text-lo font-light">{task.owner}</span>
           </div>
           <div className="flex items-center gap-1.5">
             {!done && task.status !== 'backlog' && (
               <button
                 onClick={e => { e.stopPropagation(); onMove(task.id, 'left'); }}
-                className="w-5 h-5 rounded-full border border-white/10 flex items-center justify-center text-white/30 hover:border-white/30 hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                className="w-5 h-5 rounded-full border p-border-mid flex items-center justify-center p-text-dim hover:border-white/30 hover:p-text-hi transition-all opacity-0 group-hover:opacity-100"
                 data-cursor="Revert"
               >
                 <ChevronRight size={9} className="rotate-180" />
@@ -151,13 +152,13 @@ function TaskCard({ task, onMove }: { task: Task; onMove: (id: string, dir: 'lef
             {!done && (
               <button
                 onClick={e => { e.stopPropagation(); onMove(task.id, 'right'); }}
-                className="w-5 h-5 rounded-full border border-white/10 flex items-center justify-center text-white/30 hover:border-white/30 hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                className="w-5 h-5 rounded-full border p-border-mid flex items-center justify-center p-text-dim hover:border-white/30 hover:p-text-hi transition-all opacity-0 group-hover:opacity-100"
                 data-cursor="Advance"
               >
                 <ChevronRight size={9} />
               </button>
             )}
-            <div className="flex items-center gap-1.5 text-sm font-mono text-white/30">
+            <div className="flex items-center gap-1.5 text-sm font-mono p-text-dim">
               <Calendar size={8} />
               <span>{task.due}</span>
             </div>
@@ -205,7 +206,7 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
         animate={{ opacity: 1, y: 0,  scale: 1    }}
         exit={{ opacity: 0, y: 20, scale: 0.97 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-lg bg-[#0a0a0b] border border-white/10 rounded-[2rem] p-8 relative overflow-hidden"
+        className="w-full max-w-lg bg-[#0a0a0b] border p-border-mid rounded-[2rem] p-8 relative overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         {/* Ambient glow */}
@@ -214,12 +215,12 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
         {/* Header */}
         <div className="flex items-center justify-between mb-8 relative z-10">
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-1">Operational Matrix</p>
+            <p className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-1">Operational Matrix</p>
             <h3 className="text-white text-xl font-light">New Task Vector</h3>
           </div>
           <button
             onClick={onClose}
-            className="p-2.5 rounded-full bg-white/5 border border-white/5 text-white/40 hover:bg-white/[0.04] hover:text-white transition-all"
+            className="p-2.5 rounded-full p-bg-card border p-border p-text-lo hover:bg-white/[0.04] hover:p-text-hi transition-all"
             data-cursor="Close"
           >
             <X size={14} />
@@ -229,37 +230,37 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
         <div className="space-y-4 relative z-10">
           {/* Title */}
           <div>
-            <label className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono block mb-2">Vector Label</label>
+            <label className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono block mb-2">Vector Label</label>
             <input
               autoFocus
               value={form.title}
               onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
               onKeyDown={e => e.key === 'Enter' && handleAdd()}
               placeholder="Signal vector name..."
-              className="w-full bg-white/5 border border-white/5 rounded-2xl px-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20"
+              className="w-full p-bg-card border p-border rounded-2xl px-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20"
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono block mb-2">Signal Description</label>
+            <label className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono block mb-2">Signal Description</label>
             <textarea
               value={form.desc}
               onChange={e => setForm(f => ({ ...f, desc: e.target.value }))}
               placeholder="Additional context..."
               rows={2}
-              className="w-full bg-white/5 border border-white/5 rounded-2xl px-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20 resize-none"
+              className="w-full p-bg-card border p-border rounded-2xl px-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20 resize-none"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             {/* Priority */}
             <div>
-              <label className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono block mb-2">Priority Class</label>
+              <label className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono block mb-2">Priority Class</label>
               <select
                 value={form.priority}
                 onChange={e => setForm(f => ({ ...f, priority: e.target.value as Priority }))}
-                className="w-full bg-white/5 border border-white/5 rounded-2xl px-4 py-3 text-white text-sm outline-none focus:border-white/20"
+                className="w-full p-bg-card border p-border rounded-2xl px-4 py-3 text-white text-sm outline-none focus:border-white/20"
               >
                 {(['critical', 'high', 'medium', 'low'] as Priority[]).map(p => (
                   <option key={p} value={p} className="bg-[#0a0a0b]">{priorityConfig[p].label}</option>
@@ -268,11 +269,11 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
             </div>
             {/* Assign */}
             <div>
-              <label className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono block mb-2">Assign Node</label>
+              <label className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono block mb-2">Assign Node</label>
               <select
                 value={form.ownerId}
                 onChange={e => setForm(f => ({ ...f, ownerId: e.target.value }))}
-                className="w-full bg-white/5 border border-white/5 rounded-2xl px-4 py-3 text-white text-sm outline-none focus:border-white/20"
+                className="w-full p-bg-card border p-border rounded-2xl px-4 py-3 text-white text-sm outline-none focus:border-white/20"
               >
                 {employees.map(e => (
                   <option key={e.id} value={e.id} className="bg-[#0a0a0b]">{e.name}</option>
@@ -284,22 +285,22 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
           <div className="grid grid-cols-2 gap-3">
             {/* Due */}
             <div>
-              <label className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono block mb-2">Terminus</label>
+              <label className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono block mb-2">Terminus</label>
               <input
                 value={form.due}
                 onChange={e => setForm(f => ({ ...f, due: e.target.value }))}
                 placeholder="Nov 30"
-                className="w-full bg-white/5 border border-white/5 rounded-2xl px-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20"
+                className="w-full p-bg-card border p-border rounded-2xl px-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20"
               />
             </div>
             {/* Tags */}
             <div>
-              <label className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono block mb-2">Tags</label>
+              <label className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono block mb-2">Tags</label>
               <input
                 value={form.tags}
                 onChange={e => setForm(f => ({ ...f, tags: e.target.value }))}
                 placeholder="Engineering, UX"
-                className="w-full bg-white/5 border border-white/5 rounded-2xl px-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20"
+                className="w-full p-bg-card border p-border rounded-2xl px-4 py-3 text-white text-sm font-light outline-none focus:border-white/20 transition-colors placeholder:text-white/20"
               />
             </div>
           </div>
@@ -309,14 +310,14 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
         <div className="flex gap-3 mt-8 relative z-10">
           <button
             onClick={onClose}
-            className="flex-1 py-3 rounded-2xl border border-white/5 text-white/40 text-sm font-light hover:text-white hover:bg-white/[0.04] hover:border-white/10 transition-all"
+            className="flex-1 py-3 rounded-2xl border p-border p-text-lo text-sm font-light hover:p-text-hi hover:bg-white/[0.04] hover:p-border-mid transition-all"
           >
             Abort
           </button>
           <button
             onClick={handleAdd}
             disabled={!form.title.trim()}
-            className="flex-1 py-3 rounded-2xl bg-white/5 border border-white/10 text-white text-sm font-light hover:bg-white/[0.04] hover:border-white/20 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+            className="flex-1 py-3 rounded-2xl p-bg-card border p-border-mid text-white text-sm font-light hover:bg-white/[0.04] hover:p-border-hi transition-all disabled:opacity-30 disabled:cursor-not-allowed"
           >
             Create Vector
           </button>
@@ -328,6 +329,7 @@ function NewTaskModal({ onClose, onAdd }: { onClose: () => void; onAdd: (t: Task
 
 // ─── Main Tasks Page ─────────────────────────────────────────────────────────
 export function Tasks() {
+  const navigate = useNavigate();
   const [tasks, setTasks]               = useState<Task[]>(initialTasks);
   const [showModal, setShowModal]       = useState(false);
   const [filterOwner, setFilterOwner]   = useState<string | null>(null);
@@ -368,14 +370,21 @@ export function Tasks() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
+        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b p-border pb-12"
       >
         <div>
-          <p className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
+                    <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 p-text-dim hover:p-text-hi text-sm mb-4 transition-colors group"
+          >
+            <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
+            Back
+          </button>
+          <p className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
             <Layers size={14} className="text-emerald-400" /> Operational Matrix
           </p>
           <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
-            Active <span className="text-white/30 italic font-serif">Vectors</span>
+            Active <span className="p-text-dim italic font-serif">Vectors</span>
           </h1>
         </div>
 
@@ -388,7 +397,7 @@ export function Tasks() {
               { label: 'Transmitted', val: stats.done,   color: '#10b981' },
             ].map(s => (
               <div key={s.label}>
-                <p className="text-white/40 uppercase tracking-[0.2em] text-xs mb-2">{s.label}</p>
+                <p className="p-text-lo uppercase tracking-[0.2em] text-xs mb-2">{s.label}</p>
                 <p className="text-4xl font-light" style={{ color: s.color }}>{s.val}</p>
               </div>
             ))}
@@ -397,7 +406,7 @@ export function Tasks() {
           {/* New task CTA — matches original Dashboard constellation CTA */}
           <button
             onClick={() => setShowModal(true)}
-            className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/[0.04] hover:border-emerald-400/50 transition-all duration-500 group"
+            className="w-16 h-16 rounded-full p-bg-card border p-border-mid flex items-center justify-center text-white hover:bg-white/[0.04] hover:border-emerald-400/50 transition-all duration-500 group"
             data-cursor="New Signal"
           >
             <Plus size={22} className="group-hover:rotate-90 transition-transform duration-500" />
@@ -413,7 +422,7 @@ export function Tasks() {
         className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10"
       >
         {/* View toggle */}
-        <div className="flex gap-1 p-1 bg-white/5 border border-white/5 rounded-xl">
+        <div className="flex gap-1 p-1 p-bg-card border p-border rounded-xl">
           {(['board', 'list'] as const).map(v => (
             <button
               key={v}
@@ -430,15 +439,15 @@ export function Tasks() {
 
         {/* Filters */}
         <div className="flex flex-wrap gap-2 items-center">
-          <span className="text-sm uppercase tracking-[0.12em] text-white/30 font-mono mr-1">Filter ·</span>
+          <span className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono mr-1">Filter ·</span>
           {employees.map(e => (
             <button
               key={e.id}
               onClick={() => setFilterOwner(filterOwner === e.id ? null : e.id)}
               className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs transition-all border ${
                 filterOwner === e.id
-                  ? 'bg-white/10 border-white/20 text-white'
-                  : 'border-white/5 text-white/40 hover:border-white/10 hover:text-white/70'
+                  ? 'bg-white/10 p-border-hi text-white'
+                  : 'border-white/5 p-text-lo hover:p-border-mid hover:text-white/70'
               }`}
               data-cursor={e.name.split(' ')[0]}
             >
@@ -449,13 +458,13 @@ export function Tasks() {
               {e.name.split(' ')[0]}
             </button>
           ))}
-          <div className="w-px h-4 bg-white/10 mx-1" />
+          <div className="w-px h-4 p-bg-pill mx-1" />
           {(['critical', 'high'] as Priority[]).map(p => (
             <button
               key={p}
               onClick={() => setFilterPriority(filterPriority === p ? null : p)}
               className={`px-3 py-1.5 rounded-full text-xs uppercase tracking-widest transition-all border ${
-                filterPriority === p ? 'text-white' : 'border-white/5 text-white/40 hover:border-white/10'
+                filterPriority === p ? 'text-white' : 'border-white/5 p-text-lo hover:border-white/10'
               }`}
               style={filterPriority === p
                 ? { borderColor: priorityConfig[p].color + '60', background: priorityConfig[p].color + '12', color: priorityConfig[p].color }
@@ -468,7 +477,7 @@ export function Tasks() {
           {(filterOwner || filterPriority) && (
             <button
               onClick={() => { setFilterOwner(null); setFilterPriority(null); }}
-              className="px-3 py-1.5 rounded-full text-xs border border-white/5 text-white/30 hover:text-white hover:border-white/20 transition-all flex items-center gap-1"
+              className="px-3 py-1.5 rounded-full text-xs border p-border p-text-dim hover:p-text-hi hover:p-border-hi transition-all flex items-center gap-1"
               data-cursor="Clear"
             >
               <X size={9} /> Clear
@@ -491,14 +500,14 @@ export function Tasks() {
                 className="flex flex-col gap-4"
               >
                 {/* Column header — single border, no double-stacking */}
-                <div className="flex items-center justify-between pb-4 border-b border-white/5">
+                <div className="flex items-center justify-between pb-4 border-b p-border">
                   <div className="flex items-center gap-2.5">
                     <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: col.accent }} />
-                    <h3 className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold">
+                    <h3 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold">
                       {col.label}
                     </h3>
                   </div>
-                  <span className="text-sm font-mono text-white/30 bg-white/5 px-2 py-0.5 rounded-full border border-white/5">
+                  <span className="text-sm font-mono p-text-dim p-bg-card px-2 py-0.5 rounded-full border p-border">
                     {colTasks.length}
                   </span>
                 </div>
@@ -513,7 +522,7 @@ export function Tasks() {
                 {/* Empty state */}
                 {colTasks.length === 0 && (
                   <div className="border border-dashed border-white/[0.07] rounded-[2rem] p-8 text-center">
-                    <p className="text-sm uppercase tracking-[0.12em] text-white/20 font-mono">No signals</p>
+                    <p className="text-sm uppercase tracking-[0.12em] p-text-ghost font-mono">No signals</p>
                   </div>
                 )}
               </motion.div>
@@ -528,18 +537,18 @@ export function Tasks() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-white/5 border border-white/5 rounded-[2rem] overflow-hidden"
+          className="p-bg-card border p-border rounded-[2rem] overflow-hidden"
         >
           {/* Ambient glow */}
           <div className="absolute top-0 right-0 w-96 h-48 bg-cyan-500/5 blur-[100px] rounded-full pointer-events-none" />
 
           <table className="w-full relative z-10">
             <thead>
-              <tr className="border-b border-white/5">
+              <tr className="border-b p-border">
                 {['Task', 'Owner', 'Priority', 'Status', 'Due', 'Progress'].map(h => (
                   <th
                     key={h}
-                    className="text-left text-sm uppercase tracking-[0.12em] text-white/30 font-mono py-4 px-6"
+                    className="text-left text-sm uppercase tracking-[0.12em] p-text-dim font-mono py-4 px-6"
                   >
                     {h}
                   </th>
@@ -566,12 +575,12 @@ export function Tasks() {
                         <p className={`text-sm font-light ${task.status === 'resolved' ? 'line-through text-white/25' : 'text-white/80'}`}>
                           {task.title}
                         </p>
-                        <p className="text-xs text-white/30 mt-0.5 font-mono">{task.tags.join(' · ')}</p>
+                        <p className="text-xs p-text-dim mt-0.5 font-mono">{task.tags.join(' · ')}</p>
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-2">
                           {emp && <img src={emp.avatar} alt={emp.name} className="w-6 h-6 rounded-full object-cover grayscale" />}
-                          <span className="text-white/60 text-sm font-light">{task.owner}</span>
+                          <span className="p-text-mid text-sm font-light">{task.owner}</span>
                         </div>
                       </td>
                       <td className="py-4 px-6">
@@ -585,13 +594,13 @@ export function Tasks() {
                           {col.label}
                         </span>
                       </td>
-                      <td className="py-4 px-6 text-white/40 text-sm font-mono">{task.due}</td>
+                      <td className="py-4 px-6 p-text-lo text-sm font-mono">{task.due}</td>
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-3">
-                          <div className="w-20 h-[2px] bg-white/5 rounded-full overflow-hidden">
+                          <div className="w-20 h-[2px] p-bg-card rounded-full overflow-hidden">
                             <div className="h-full rounded-full" style={{ width: `${pct}%`, background: col.accent }} />
                           </div>
-                          <span className="text-sm font-mono text-white/30">{pct}%</span>
+                          <span className="text-sm font-mono p-text-dim">{pct}%</span>
                         </div>
                       </td>
                     </motion.tr>

@@ -1,18 +1,19 @@
+import { useNavigate } from 'react-router';
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Cpu, TrendingUp, ArrowUpRight, ArrowDownRight, Coins } from 'lucide-react';
+import { Cpu, TrendingUp, ArrowUpRight, ArrowDownRight, Coins, ArrowLeft } from 'lucide-react';
 import { ResponsiveContainer, ComposedChart, Area, Line, Bar, XAxis, YAxis, Tooltip, CartesianGrid, BarChart } from 'recharts';
 import { employees, orgROIData, departmentROI } from '../mockData';
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-[#050505] border border-white/10 rounded-xl p-3 text-xs">
-      <p className="text-white/30 mb-2 uppercase tracking-widest font-mono text-xs">{label}</p>
+    <div className="p-bg-surface border p-border-mid rounded-xl p-3 text-xs">
+      <p className="p-text-dim mb-2 uppercase tracking-widest font-mono text-xs">{label}</p>
       {payload.map((p: any, i: number) => (
         <div key={i} className="flex items-center gap-2 mt-1">
           <div className="w-1.5 h-1.5 rounded-full" style={{ background: p.stroke || p.fill }} />
-          <span className="text-white/50">{p.name}:</span>
+          <span className="p-text-mid">{p.name}:</span>
           <span className="text-white font-mono">{typeof p.value === 'number' ? (p.name.includes('ROI') ? `${p.value}%` : `$${p.value.toFixed?.(1) ?? p.value}M`) : p.value}</span>
         </div>
       ))}
@@ -21,6 +22,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export function ROIInvestment() {
+  const navigate = useNavigate();
   const [selectedEmp, setSelectedEmp] = useState<string | null>(null);
   const emp = selectedEmp ? employees.find(e => e.id === selectedEmp) : null;
 
@@ -43,23 +45,30 @@ export function ROIInvestment() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b border-white/5 pb-12"
+        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b p-border pb-12"
       >
         <div>
-          <p className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
+                    <button
+            onClick={() => navigate(-1)}
+            className="inline-flex items-center gap-2 p-text-dim hover:p-text-hi text-sm mb-4 transition-colors group"
+          >
+            <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
+            Back
+          </button>
+          <p className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
             <Cpu size={14} className="text-emerald-400" /> Human Capital Value Engine
           </p>
           <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
-            Capital <span className="text-white/30 italic font-serif">Surplus</span>
+            Capital <span className="p-text-dim italic font-serif">Surplus</span>
           </h1>
         </div>
         <div className="flex gap-16 text-right">
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-xs mb-2">Org ROI</p>
+            <p className="p-text-lo uppercase tracking-[0.2em] text-xs mb-2">Org ROI</p>
             <p className="text-4xl font-light text-emerald-400">{orgROI}%</p>
           </div>
           <div>
-            <p className="text-white/40 uppercase tracking-[0.2em] text-xs mb-2">Surplus Generated</p>
+            <p className="p-text-lo uppercase tracking-[0.2em] text-xs mb-2">Surplus Generated</p>
             <p className="text-4xl font-light text-white">${(totalRevenue/1000000).toFixed(1)}M</p>
           </div>
         </div>
@@ -82,7 +91,7 @@ export function ROIInvestment() {
               <img src={topROI.avatar} alt={topROI.name} className="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all flex-shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm uppercase tracking-[0.12em] text-emerald-400 mb-1 font-mono">Top ROI — Reinforce</p>
-                <p className="text-white/80 text-sm font-light truncate">{topROI.name}</p>
+                <p className="p-text-body text-sm font-light truncate">{topROI.name}</p>
                 <p className="text-emerald-400 text-sm font-mono">{topROI.roi}% ROI</p>
               </div>
               <ArrowUpRight size={14} className="text-emerald-400/40 group-hover:text-emerald-400 transition-colors flex-shrink-0" />
@@ -99,7 +108,7 @@ export function ROIInvestment() {
               <img src={e.avatar} alt={e.name} className="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all flex-shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm uppercase tracking-[0.12em] text-amber-400 mb-1 font-mono">Below Average — Review</p>
-                <p className="text-white/80 text-sm font-light truncate">{e.name}</p>
+                <p className="p-text-body text-sm font-light truncate">{e.name}</p>
                 <p className="text-amber-400 text-sm font-mono">{e.roi}% ROI vs {orgROI}% avg</p>
               </div>
               <ArrowUpRight size={14} className="text-amber-400/40 group-hover:text-amber-400 transition-colors flex-shrink-0" />
@@ -110,12 +119,12 @@ export function ROIInvestment() {
 
       {/* Trajectory + Department */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <div className="lg:col-span-2 relative bg-white/5 border border-white/5 rounded-[2rem] p-8 overflow-hidden group">
+        <div className="lg:col-span-2 relative p-bg-card border p-border rounded-[2rem] p-8 overflow-hidden group">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-emerald-500/5 blur-[120px] rounded-full pointer-events-none group-hover:bg-emerald-500/8 transition-all duration-1000" />
           <div className="flex justify-between items-center mb-10 relative z-10">
             <div>
-              <h3 className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold flex items-center gap-4 border-b border-white/10 pb-4">ROI Trajectory (6M)</h3>
-              <p className="text-white/20 text-sm font-mono mt-1">Investment vs Value Generated ($M)</p>
+              <h3 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold flex items-center gap-4 border-b p-border-mid pb-4">ROI Trajectory (6M)</h3>
+              <p className="p-text-ghost text-sm font-mono mt-1">Investment vs Value Generated ($M)</p>
             </div>
             <div className="flex items-center gap-2 text-emerald-400">
               <TrendingUp size={13} />
@@ -148,19 +157,19 @@ export function ROIInvestment() {
           </div>
         </div>
 
-        <div className="relative bg-white/5 border border-white/5 rounded-[2rem] p-8 overflow-hidden group">
+        <div className="relative p-bg-card border p-border rounded-[2rem] p-8 overflow-hidden group">
           <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-purple-500/8 blur-[60px] rounded-full pointer-events-none" />
-          <h3 className="text-white/40 uppercase tracking-[0.2em] text-sm font-semibold flex items-center gap-4 border-b border-white/10 pb-4 mb-6 relative z-10">Department Vectors</h3>
+          <h3 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold flex items-center gap-4 border-b p-border-mid pb-4 mb-6 relative z-10">Department Vectors</h3>
           <div className="space-y-5 relative z-10">
             {departmentROI.map((dept, i) => (
               <div key={i} data-cursor="Trace">
                 <div className="flex justify-between text-xs mb-2">
-                  <span className="text-white/60">{dept.department}</span>
+                  <span className="p-text-mid">{dept.department}</span>
                   <span className={`font-mono ${dept.roi >= 200 ? 'text-emerald-400' : dept.roi >= 150 ? 'text-cyan-400' : dept.roi >= 110 ? 'text-amber-400' : 'text-rose-400'}`}>
                     {dept.roi}%
                   </span>
                 </div>
-                <div className="h-px bg-white/5">
+                <div className="h-px p-bg-card">
                   <motion.div
                     initial={{ width: 0 }}
                     whileInView={{ width: `${Math.min((dept.roi/400)*100, 100)}%` }}
@@ -170,7 +179,7 @@ export function ROIInvestment() {
                     style={{ background: dept.roi >= 200 ? '#10b981' : dept.roi >= 150 ? '#38bdf8' : dept.roi >= 110 ? '#f59e0b' : '#f43f5e' }}
                   />
                 </div>
-                <div className="flex justify-between text-xs text-white/20 mt-1 font-mono">
+                <div className="flex justify-between text-xs p-text-ghost mt-1 font-mono">
                   <span>Cost ${(dept.investment/1000).toFixed(0)}K</span>
                   <span>Value ${(dept.value/1000).toFixed(0)}K</span>
                 </div>
@@ -181,7 +190,7 @@ export function ROIInvestment() {
       </div>
 
       {/* Individual ROI profiles */}
-      <h2 className="text-white/30 uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-4 border-b border-white/10 pb-4"><Coins size={10} className="text-emerald-400" /> Individual Capital Nodes</h2>
+      <h2 className="p-text-dim uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-4 border-b p-border-mid pb-4"><Coins size={10} className="text-emerald-400" /> Individual Capital Nodes</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {employees.map((e, i) => {
           const surplus = e.revenueContribution - e.costInvestment;
@@ -193,7 +202,7 @@ export function ROIInvestment() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.08 }}
               onClick={() => setSelectedEmp(selectedEmp === e.id ? null : e.id)}
-              className={`relative text-left p-6 rounded-[2rem] border overflow-hidden transition-all duration-500 group hover:border-white/15 ${
+              className={`relative text-left p-6 rounded-[2rem] border overflow-hidden transition-all duration-500 group hover:p-border-mid ${
                 selectedEmp === e.id ? 'bg-white/10 border-white/20' : 'bg-white/5 border-white/5'
               }`}
               data-cursor="Expand Capital"
@@ -204,23 +213,23 @@ export function ROIInvestment() {
               <div className="flex items-center gap-3 mb-5 relative z-10">
                 <img src={e.avatar} alt={e.name} className="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"/>
                 <div>
-                  <p className="text-white/80 text-base font-light leading-none">{e.name.split(' ')[0]}</p>
-                  <p className="text-white/30 font-serif italic text-sm leading-none mt-0.5">{e.department}</p>
+                  <p className="p-text-body text-base font-light leading-none">{e.name.split(' ')[0]}</p>
+                  <p className="p-text-dim font-serif italic text-sm leading-none mt-0.5">{e.department}</p>
                 </div>
               </div>
 
               <div className="space-y-3 relative z-10">
                 <div>
-                  <p className="text-sm uppercase tracking-[0.12em] text-white/20 mb-0.5 font-mono">Investment</p>
-                  <p className="text-sm font-light text-white/60 font-mono">${(e.costInvestment/1000).toFixed(0)}K</p>
+                  <p className="text-sm uppercase tracking-[0.12em] p-text-ghost mb-0.5 font-mono">Investment</p>
+                  <p className="text-sm font-light p-text-mid font-mono">${(e.costInvestment/1000).toFixed(0)}K</p>
                 </div>
                 <div>
-                  <p className="text-sm uppercase tracking-[0.12em] text-white/20 mb-0.5 font-mono">Revenue</p>
+                  <p className="text-sm uppercase tracking-[0.12em] p-text-ghost mb-0.5 font-mono">Revenue</p>
                   <p className="text-sm font-light text-emerald-400 font-mono">${(e.revenueContribution/1000).toFixed(0)}K</p>
                 </div>
-                <div className="pt-3 border-t border-white/5 flex items-center justify-between">
+                <div className="pt-3 border-t p-border flex items-center justify-between">
                   <div>
-                    <p className="text-sm uppercase tracking-[0.12em] text-white/20 mb-0.5 font-mono">ROI Vector</p>
+                    <p className="text-sm uppercase tracking-[0.12em] p-text-ghost mb-0.5 font-mono">ROI Vector</p>
                     <p className={`text-2xl font-light ${e.roi >= 200 ? 'text-emerald-400' : e.roi >= 150 ? 'text-cyan-400' : e.roi >= 110 ? 'text-amber-400' : 'text-rose-400'}`}>
                       {e.roi}%
                     </p>
@@ -232,18 +241,18 @@ export function ROIInvestment() {
                         ${Math.abs(surplus/1000).toFixed(0)}K
                       </p>
                     </div>
-                    <p className="text-xs text-white/20 font-mono">net surplus</p>
+                    <p className="text-xs p-text-ghost font-mono">net surplus</p>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-3 h-px bg-white/5 relative z-10">
+              <div className="mt-3 h-px p-bg-card relative z-10">
                 <div className="h-full" style={{
                   width: `${Math.min((e.costInvestment/e.revenueContribution)*100, 100)}%`,
                   background: '#f43f5e', opacity: 0.5
                 }}/>
               </div>
-              <p className="text-xs text-white/15 mt-1 font-mono relative z-10">Cost / Revenue ratio</p>
+              <p className="text-xs p-text-whisper mt-1 font-mono relative z-10">Cost / Revenue ratio</p>
             </motion.button>
           );
         })}
@@ -254,16 +263,16 @@ export function ROIInvestment() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative bg-white/5 border border-white/5 rounded-[2rem] p-8 overflow-hidden group"
+          className="relative p-bg-card border p-border rounded-[2rem] p-8 overflow-hidden group"
         >
           <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/5 blur-[100px] rounded-full pointer-events-none group-hover:bg-emerald-500/10 transition-all duration-1000" />
           <div className="flex items-center justify-between mb-8 relative z-10">
             <div>
               <h3 className="text-white text-xl font-light leading-none">{emp.name.split(' ')[0]}</h3>
-              <h3 className="text-white/30 font-serif italic text-sm leading-relaxed mt-0.5">Quarterly Capital Trajectory</h3>
+              <h3 className="p-text-dim font-serif italic text-sm leading-relaxed mt-0.5">Quarterly Capital Trajectory</h3>
             </div>
             <button onClick={() => setSelectedEmp(null)}
-              className="text-sm uppercase tracking-[0.12em] text-white/20 hover:text-white transition-colors font-mono">
+              className="text-sm uppercase tracking-[0.12em] p-text-ghost hover:p-text-hi transition-colors font-mono">
               // Close
             </button>
           </div>

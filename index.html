@@ -1,35 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prism — Performance Refracted</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <!-- Fonts: Outfit (app UI), Inter (landing body), Cormorant Garamond (serif accent), Space Mono (mono) -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@200;300;400;500&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
-    rel="stylesheet" />
-  <!-- Prism theme: set class synchronously before paint to prevent flash -->
-  <script>
-    (function () {
-      try {
-        var t = localStorage.getItem('prism_theme');
-        var cl = document.documentElement.classList;
-        if (t === 'light') { cl.add('prism-light'); cl.remove('prism-dark'); }
-        else { cl.add('prism-dark'); cl.remove('prism-light'); }
-      } catch (e) {
-        document.documentElement.classList.add('prism-dark');
-      }
-    })();
-  </script>
-</head>
-
-<body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
-</body>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="theme-color" content="#050505" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Prism — Performance Refracted</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Fonts: Outfit (app UI), Inter (landing body), Cormorant Garamond (serif accent), Space Mono (mono) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@200;300;400;500&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+    <!-- Prism theme: set class synchronously before paint to prevent flash -->
+    <script>
+      (function() {
+        try {
+          var t = localStorage.getItem('prism_theme');
+          var cl = document.documentElement.classList;
+          if (t === 'light') { cl.add('prism-light'); cl.remove('prism-dark'); }
+          else               { cl.add('prism-dark');  cl.remove('prism-light'); }
+        } catch(e) {
+          document.documentElement.classList.add('prism-dark');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

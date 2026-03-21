@@ -91,7 +91,7 @@ export function Attendance() {
   const presenceRate = Math.round((att.present + att.wfh) / totalDays * 100);
 
   return (
-    <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 py-24 md:py-32">
+    <div className="page-wrap">
 
       {/* Hero */}
       <motion.div
@@ -111,7 +111,7 @@ export function Attendance() {
           <p className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
             <CalendarDays size={14} className="text-cyan-400" /> Workforce Temporal Dynamics
           </p>
-          <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
+          <h1 className="hero-title font-light text-white">
             Orbital <span className="p-text-dim italic font-serif">Presence</span>
           </h1>
         </div>

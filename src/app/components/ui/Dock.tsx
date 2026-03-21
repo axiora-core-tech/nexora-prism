@@ -32,7 +32,7 @@ export function Dock() {
       initial={{ y: 100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.5 }}
-      className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2"
+      className="dock-root fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2"
     >
       {/* Feature tray */}
       <AnimatePresence>
@@ -42,8 +42,8 @@ export function Dock() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.92 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center gap-1 px-3 py-2.5 p-dock backdrop-blur-2xl border rounded-full shadow-2xl shadow-black/30"
-          >
+            className="flex items-center gap-1 px-3 py-2.5 p-dock backdrop-blur-2xl border rounded-full shadow-2xl shadow-black/30 overflow-x-auto max-w-[calc(100vw-2rem)]"
+          style={{ scrollbarWidth: 'none' }}>
             {featureNav.map(item => (
               <NavLink
                 key={item.path}
@@ -59,7 +59,7 @@ export function Dock() {
                   <>
                     <item.Icon size={18} strokeWidth={isActive ? 2 : 1.5}
                       color={isActive ? item.color : undefined} />
-                    <span className="text-xs uppercase tracking-widest opacity-60 whitespace-nowrap"
+                    <span className="hidden sm:block text-xs uppercase tracking-widest opacity-60 whitespace-nowrap"
                       style={{ color: isActive ? item.color : undefined }}>
                       {item.label.split(' ')[0]}
                     </span>
@@ -77,7 +77,8 @@ export function Dock() {
       </AnimatePresence>
 
       {/* Main dock */}
-      <div className="flex items-center gap-1 px-3 py-2.5 p-dock backdrop-blur-2xl border rounded-full shadow-2xl shadow-black/30">
+      <div className="flex items-center gap-1 px-3 py-2.5 p-dock backdrop-blur-2xl border rounded-full shadow-2xl shadow-black/30 max-w-[calc(100vw-2rem)] overflow-x-auto"
+          style={{ scrollbarWidth: 'none' }}>
         {primaryNav.map(item => (
           <NavLink
             key={item.path}
@@ -91,7 +92,7 @@ export function Dock() {
             {({ isActive }) => (
               <>
                 <item.Icon size={18} strokeWidth={isActive ? 2 : 1.5} />
-                <span className="text-xs uppercase tracking-widest opacity-60 whitespace-nowrap">{item.label}</span>
+                <span className="hidden sm:block text-xs uppercase tracking-widest opacity-60 whitespace-nowrap">{item.label}</span>
                 {isActive && (
                   <motion.div layoutId="primary-active"
                     className="absolute inset-0 rounded-full bg-white/8 z-[-1]" />
@@ -113,7 +114,7 @@ export function Dock() {
           <motion.div animate={{ rotate: expanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
             <ChevronUp size={18} />
           </motion.div>
-          <span className="text-xs uppercase tracking-widest opacity-60">{expanded ? 'Less' : 'More'}</span>
+          <span className="hidden sm:block text-xs uppercase tracking-widest opacity-60">{expanded ? 'Less' : 'More'}</span>
         </button>
       </div>
     </motion.div>

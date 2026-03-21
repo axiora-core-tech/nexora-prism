@@ -196,7 +196,7 @@ export function Team() {
   }).sort((a,b) => b.avg - a.avg);
 
   return (
-    <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 py-24 md:py-32">
+    <div className="page-wrap">
 
       {/* Hero */}
       <motion.div initial={{ opacity:0, y:40 }} animate={{ opacity:1, y:0 }}
@@ -210,7 +210,7 @@ export function Team() {
           <p className="p-text-lo uppercase tracking-[0.15em] text-sm font-semibold mb-6 flex items-center gap-2">
             <Users size={14} className="text-cyan-400" /> People Directory & Analytics
           </p>
-          <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9] whitespace-nowrap">
+          <h1 className="hero-title font-light text-white whitespace-nowrap">
             Your <span className="p-text-dim italic font-serif">Team</span>
           </h1>
         </div>

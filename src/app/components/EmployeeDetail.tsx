@@ -110,8 +110,8 @@ export function EmployeeDetail() {
                 Risk: {employee.attritionRiskPercentage}%
               </span>
             </div>
-            <h1 className="text-6xl md:text-8xl font-light tracking-tighter text-white leading-none">{employee.name.split(' ')[0]}</h1>
-            <h1 className="text-6xl md:text-8xl font-serif italic p-text-mid leading-none mb-6">{employee.name.split(' ')[1]}</h1>
+            <h1 className="hero-title font-light text-white">{employee.name.split(' ')[0]}</h1>
+            <h1 className="hero-title font-serif italic p-text-mid mb-4">{employee.name.split(' ')[1]}</h1>
             <p className="text-lg md:text-xl p-text-body font-light mb-4">{employee.role}</p>
             
             <div className="flex flex-wrap gap-2">
@@ -126,7 +126,7 @@ export function EmployeeDetail() {
       </motion.div>
 
       {/* Floating Section Navigation */}
-      <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4 hidden md:flex">
+      <div className="floating-nav fixed right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4 hidden md:flex">
         {sections.map(section => (
           <button
             key={section.id}
@@ -145,7 +145,7 @@ export function EmployeeDetail() {
       </div>
 
       {/* Deep Dive Content Area (Right Column) */}
-      <div className="w-full xl:w-[60%] p-6 md:p-12 lg:p-24 relative z-20">
+      <div className="w-full xl:w-[60%] p-4 sm:p-6 md:p-12 lg:p-24 relative z-20">
         
         {/* Mobile Header (Hidden on Desktop) */}
         <div className="xl:hidden mb-12 pt-12">

@@ -56,7 +56,7 @@ export function Layout() {
 
       {/* Main Content Area */}
       <main
-        className="relative z-10 h-screen overflow-y-auto overflow-x-hidden pb-40"
+        className="relative z-10 h-screen overflow-y-auto overflow-x-hidden"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', backgroundColor: 'var(--p-bg)' }}
       >
         <style dangerouslySetInnerHTML={{__html: `main::-webkit-scrollbar { display: none; }`}} />

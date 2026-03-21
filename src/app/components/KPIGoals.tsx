@@ -121,7 +121,7 @@ export function KPIGoals() {
   ).slice(0, 3);
 
   return (
-    <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 py-24 md:py-32">
+    <div className="page-wrap">
 
       {/* Hero Header */}
       <motion.div
@@ -141,7 +141,7 @@ export function KPIGoals() {
           <p className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
             <Crosshair size={14} className="text-amber-400" /> Performance Intelligence
           </p>
-          <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
+          <h1 className="hero-title font-light text-white">
             Signal <span className="p-text-dim italic font-serif">Matrix</span>
           </h1>
         </div>

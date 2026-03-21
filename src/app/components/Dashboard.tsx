@@ -62,7 +62,7 @@ export function Dashboard() {
   const topPerformers = useMemo(() => [...employees].sort((a, b) => b.performanceScore - a.performanceScore).slice(0, 2), []);
 
   return (
-    <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 py-24 md:py-32" ref={scrollRef}>
+    <div className="page-wrap" ref={scrollRef}>
 
       {/* HERO */}
       <motion.div
@@ -73,7 +73,7 @@ export function Dashboard() {
       >
         <div>
           <p className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">{firstName}'s Overview</p>
-          <h1 className="text-6xl md:text-8xl font-light tracking-tighter text-white leading-none whitespace-nowrap">
+          <h1 className="hero-title font-light text-white">
             People <span className="p-text-dim italic font-serif">Intelligence</span>
           </h1>
         </div>
@@ -114,7 +114,7 @@ export function Dashboard() {
         {/* Right-edge fade signals scrollability on desktop */}
         <div className="relative">
           <div className="pointer-events-none absolute top-0 right-0 w-24 h-full z-10 bg-gradient-to-l from-[#030303] to-transparent" />
-          <div className="flex overflow-x-auto gap-6 pb-8 pt-2 snap-x snap-mandatory" style={{ scrollbarWidth: 'none' }}>
+          <div className="constellation-track flex overflow-x-auto gap-6 pb-8 pt-2 snap-x snap-mandatory" style={{ scrollbarWidth: 'none' }}>
             {employees.map((emp, index) => (
               <NavLink to={`/app/employee/${emp.id}`} key={emp.id} data-cursor="View Node">
                 <motion.div

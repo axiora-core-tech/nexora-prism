@@ -50,7 +50,20 @@ export function CustomCursor() {
     };
   }, [mouseX, mouseY]);
 
-  if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) return null;
+    // Disable on touch screens, TV remotes (pointer: coarse or pointer: none)
+  const [isPointerFine, setIsPointerFine] = React.useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(pointer: fine)').matches;
+  });
+
+  React.useEffect(() => {
+    const mql = window.matchMedia('(pointer: fine)');
+    const handler = (e: MediaQueryListEvent) => setIsPointerFine(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, []);
+
+  if (!isPointerFine) return null;
 
   const ringSize = hoverText ? 76 : 48;
 

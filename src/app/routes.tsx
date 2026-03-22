@@ -1,25 +1,24 @@
 import { createBrowserRouter } from "react-router";
-import { Layout }         from "./components/Layout";
+import { Layout } from "./components/Layout";
 import { ProtectedRoute } from "./auth/ProtectedRoute";
 import React, { lazy, Suspense } from "react";
 
 // ─── Lazy-loaded pages ──────────────────────────────────────────────────────
-const LandingPage       = lazy(() => import("./components/landing/LandingPage").then(m => ({ default: m.LandingPage })));
-const SignIn            = lazy(() => import("./components/SignIn").then(m => ({ default: m.SignIn })));
-const Demo              = lazy(() => import("./components/Demo").then(m => ({ default: m.Demo })));
-const EnterApp          = lazy(() => import("./components/EnterApp").then(m => ({ default: m.EnterApp })));
-const Dashboard         = lazy(() => import("./components/Dashboard").then(m => ({ default: m.Dashboard })));
-const EmployeeDetail    = lazy(() => import("./components/EmployeeDetail").then(m => ({ default: m.EmployeeDetail })));
-const Analytics         = lazy(() => import("./components/Analytics").then(m => ({ default: m.Analytics })));
-const Tasks             = lazy(() => import("./components/Tasks").then(m => ({ default: m.Tasks })));
-const Settings          = lazy(() => import("./components/Settings").then(m => ({ default: m.Settings })));
-const KPIGoals          = lazy(() => import("./components/KPIGoals").then(m => ({ default: m.KPIGoals })));
-const Attendance        = lazy(() => import("./components/Attendance").then(m => ({ default: m.Attendance })));
-const ROIInvestment     = lazy(() => import("./components/ROIInvestment").then(m => ({ default: m.ROIInvestment })));
-const Leaderboard       = lazy(() => import("./components/Leaderboard").then(m => ({ default: m.Leaderboard })));
+const LandingPage = lazy(() => import("./components/landing/LandingPage").then(m => ({ default: m.LandingPage })));
+const SignIn = lazy(() => import("./components/SignIn").then(m => ({ default: m.SignIn })));
+const Demo = lazy(() => import("./components/Demo").then(m => ({ default: m.Demo })));
+const EnterApp = lazy(() => import("./components/EnterApp").then(m => ({ default: m.EnterApp })));
+const Dashboard = lazy(() => import("./components/Dashboard").then(m => ({ default: m.Dashboard })));
+const EmployeeDetail = lazy(() => import("./components/EmployeeDetail").then(m => ({ default: m.EmployeeDetail })));
+const Analytics = lazy(() => import("./components/Analytics").then(m => ({ default: m.Analytics })));
+const Tasks = lazy(() => import("./components/Tasks").then(m => ({ default: m.Tasks })));
+const Settings = lazy(() => import("./components/Settings").then(m => ({ default: m.Settings })));
+const KPIGoals = lazy(() => import("./components/KPIGoals").then(m => ({ default: m.KPIGoals })));
+const Attendance = lazy(() => import("./components/Attendance").then(m => ({ default: m.Attendance })));
+const Leaderboard = lazy(() => import("./components/Leaderboard").then(m => ({ default: m.Leaderboard })));
 const PerformanceReview = lazy(() => import("./components/PerformanceReview").then(m => ({ default: m.PerformanceReview })));
-const Team               = lazy(() => import("./components/Team").then(m => ({ default: m.Team })));
-const Spectrum           = lazy(() => import("./components/Spectrum").then(m => ({ default: m.Spectrum })));
+const Team = lazy(() => import("./components/Team").then(m => ({ default: m.Team })));
+const Spectrum = lazy(() => import("./components/Spectrum").then(m => ({ default: m.Spectrum })));
 
 // ─── Loading skeleton — mimics page structure with pulsing blocks ───────────
 // Inline styles for CSS animation (no dependency on theme CSS during chunk load)
@@ -41,10 +40,10 @@ function PageSkeleton() {
   return (
     <div style={{ padding: 'clamp(4rem, 8vh, 8rem) clamp(1rem, 4vw, 5rem)', maxWidth: 1400, margin: '0 auto', color: 'rgba(255,255,255,0.5)' }}>
       <style>{pulseStyle}</style>
-      
+
       {/* Back button skeleton */}
       <div className="sk-pulse" style={{ width: 60, height: 14, marginBottom: 32, opacity: 0.03 }} />
-      
+
       {/* Hero section */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 48, paddingBottom: 48, borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
         <div>
@@ -159,9 +158,9 @@ function withEmployeeSuspense(Component: React.ComponentType) {
 }
 
 export const router = createBrowserRouter([
-  { path: "/",        element: withSuspense(LandingPage) },
+  { path: "/", element: withSuspense(LandingPage) },
   { path: "/sign-in", element: withSuspense(SignIn) },
-  { path: "/demo",    element: withSuspense(Demo) },
+  { path: "/demo", element: withSuspense(Demo) },
   {
     path: "/enter",
     element: (
@@ -180,20 +179,19 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { index: true,          element: withSuspense(Dashboard) },
-      { path: "team",         element: withSuspense(Team) },
+      { index: true, element: withSuspense(Spectrum) },
+      { path: "spectrum", element: withSuspense(Spectrum) },
+      { path: "team", element: withSuspense(Team) },
       { path: "employee/:id", element: withEmployeeSuspense(EmployeeDetail) },
-      { path: "analytics",    element: withSuspense(Analytics) },
-      { path: "kpis",         element: withSuspense(KPIGoals) },
-      { path: "attendance",   element: withSuspense(Attendance) },
-      { path: "roi",          element: withSuspense(ROIInvestment) },
-      { path: "leaderboard",  element: withSuspense(Leaderboard) },
-      { path: "review",       element: withSuspense(PerformanceReview) },
-      { path: "reviews",      element: withSuspense(PerformanceReview) },
-      { path: "tasks",        element: withSuspense(Tasks) },
-      { path: "settings",     element: withSuspense(Settings) },
-      { path: "spectrum",     element: withSuspense(Spectrum) },
-      { path: "*",            element: <NotFound /> },
+      { path: "analytics", element: withSuspense(Analytics) },
+      { path: "kpis", element: withSuspense(KPIGoals) },
+      { path: "attendance", element: withSuspense(Attendance) },
+      { path: "leaderboard", element: withSuspense(Leaderboard) },
+      { path: "review", element: withSuspense(PerformanceReview) },
+      { path: "reviews", element: withSuspense(PerformanceReview) },
+      { path: "tasks", element: withSuspense(Tasks) },
+      { path: "settings", element: withSuspense(Settings) },
+      { path: "*", element: <NotFound /> },
     ],
   },
 ]);

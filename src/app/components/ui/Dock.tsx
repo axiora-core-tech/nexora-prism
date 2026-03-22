@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ChevronUp } from 'lucide-react';
 import {
   IconOverview, IconTeam, IconAnalytics, IconTasks,
-  IconKPI, IconReviews, IconAttendance, IconROI,
+  IconKPI, IconReviews, IconAttendance,
   IconLeaderboard, IconSettings, IconSpectrum,
 } from './DockIcons';
 
@@ -19,7 +19,6 @@ const featureNav = [
   { Icon: IconKPI,         path: '/app/kpis',       label: 'KPI Goals',    color: '#f59e0b' },
   { Icon: IconReviews,     path: '/app/review',     label: '360° Reviews', color: '#c084fc' },
   { Icon: IconAttendance,  path: '/app/attendance', label: 'Attendance',   color: '#38bdf8' },
-  { Icon: IconROI,         path: '/app/roi',        label: 'ROI Intel',    color: '#10b981' },
   { Icon: IconLeaderboard, path: '/app/leaderboard',label: 'Leaderboard',  color: '#f59e0b' },
   { Icon: IconSpectrum,    path: '/app/spectrum',   label: 'Spectrum',     color: '#c084fc' },
   { Icon: IconSettings,    path: '/app/settings',   label: 'Settings',     color: '#94a3b8' },

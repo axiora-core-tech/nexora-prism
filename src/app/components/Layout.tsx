@@ -17,34 +17,34 @@ import { CustomCursor } from './ui/CustomCursor';
 
 // Depth map — higher number = deeper into the app
 const depthMap: Record<string, number> = {
-  '/app': 0,          // Dashboard
+  '/app': 0,          // Spectrum (landing)
+  '/app/spectrum': 0,
   '/app/team': 0,
-  '/app/analytics': 0,
   '/app/tasks': 0,
+  '/app/analytics': 0,
   '/app/kpis': 1,
   '/app/attendance': 1,
   '/app/roi': 1,
   '/app/leaderboard': 1,
   '/app/review': 1,
   '/app/reviews': 1,
-  '/app/spectrum': 1,
   '/app/settings': 1,
 };
 
 // Position map for lateral sliding — left-to-right order
 const posMap: Record<string, number> = {
   '/app': 0,
+  '/app/spectrum': 0,
   '/app/team': 1,
-  '/app/analytics': 2,
-  '/app/tasks': 3,
-  '/app/kpis': 4,
-  '/app/attendance': 5,
-  '/app/roi': 6,
-  '/app/leaderboard': 7,
-  '/app/review': 8,
-  '/app/reviews': 8,
-  '/app/spectrum': 9,
-  '/app/settings': 10,
+  '/app/tasks': 2,
+  '/app/analytics': 0,
+  '/app/kpis': 3,
+  '/app/attendance': 4,
+  '/app/roi': 0,
+  '/app/leaderboard': 5,
+  '/app/review': 6,
+  '/app/reviews': 6,
+  '/app/settings': 7,
 };
 
 function getDepth(path: string): number {

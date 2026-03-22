@@ -9,16 +9,16 @@ import {
 } from './DockIcons';
 
 const primaryNav = [
-  { Icon: IconSpectrum,   path: '/app',          label: 'Spectrum' },
-  { Icon: IconTeam,       path: '/app/team',      label: 'Team' },
-  { Icon: IconTasks,      path: '/app/tasks',     label: 'Tasks' },
+  { Icon: IconTeam,       path: '/app/team',        label: 'Team' },
+  { Icon: IconKPI,        path: '/app/kpis',        label: 'KPIs' },
+  { Icon: IconSpectrum,   path: '/app',             label: 'Spectrum', center: true },
+  { Icon: IconLeaderboard,path: '/app/leaderboard', label: 'Rankings' },
+  { Icon: IconTasks,      path: '/app/tasks',       label: 'Tasks' },
 ];
 
 const featureNav = [
-  { Icon: IconKPI,         path: '/app/kpis',       label: 'KPI Goals',    color: '#f59e0b' },
   { Icon: IconReviews,     path: '/app/review',     label: '360° Reviews', color: '#c084fc' },
   { Icon: IconAttendance,  path: '/app/attendance', label: 'Attendance',   color: '#38bdf8' },
-  { Icon: IconLeaderboard, path: '/app/leaderboard',label: 'Leaderboard',  color: '#f59e0b' },
   { Icon: IconSettings,    path: '/app/settings',   label: 'Settings',     color: '#94a3b8' },
 ];
 
@@ -77,28 +77,47 @@ export function Dock() {
       {/* Main dock */}
       <div className="flex items-center gap-1 px-3 py-2.5 p-dock backdrop-blur-2xl border rounded-full shadow-2xl shadow-black/30 max-w-[calc(100vw-2rem)] overflow-x-auto"
           style={{ scrollbarWidth: 'none' }}>
-        {primaryNav.map(item => (
+        {primaryNav.map(item => {
+          const isCenter = (item as any).center;
+          return (
           <NavLink
             key={item.path}
             to={item.path}
+            end={item.path === '/app'}
             className={({ isActive }) =>
-              `relative group flex flex-col items-center gap-1 px-3 py-1.5 rounded-full transition-all ${
-                isActive ? 'text-white' : 'p-text-lo hover:p-text-hi hover:p-bg-card'
+              `relative group flex flex-col items-center gap-1 rounded-full transition-all ${
+                isCenter
+                  ? `px-4 py-2 -my-3 ${isActive ? 'text-white' : 'p-text-lo hover:p-text-hi'}`
+                  : `px-3 py-1.5 ${isActive ? 'text-white' : 'p-text-lo hover:p-text-hi hover:p-bg-card'}`
               }`
             }
           >
             {({ isActive }) => (
               <>
-                <item.Icon size={18} strokeWidth={isActive ? 2 : 1.5} />
-                <span className="hidden sm:block text-xs uppercase tracking-widest opacity-60 whitespace-nowrap">{item.label}</span>
-                {isActive && (
+                {isCenter ? (
+                  <div className="relative">
+                    <div className={`w-11 h-11 rounded-full flex items-center justify-center transition-all duration-500 ${
+                      isActive
+                        ? 'bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-cyan-400/30 shadow-[0_0_20px_rgba(34,211,238,0.15)]'
+                        : 'bg-white/5 border border-white/10 group-hover:border-white/20 group-hover:bg-white/8'
+                    }`}>
+                      <item.Icon size={20} strokeWidth={isActive ? 2 : 1.5} />
+                    </div>
+                    {isActive && <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-cyan-400 shadow-[0_0_6px_rgba(34,211,238,0.6)]" />}
+                  </div>
+                ) : (
+                  <item.Icon size={18} strokeWidth={isActive ? 2 : 1.5} />
+                )}
+                <span className={`hidden sm:block uppercase tracking-widest opacity-60 whitespace-nowrap ${isCenter ? 'text-[10px]' : 'text-xs'}`}>{item.label}</span>
+                {!isCenter && isActive && (
                   <motion.div layoutId="primary-active"
                     className="absolute inset-0 rounded-full bg-white/8 z-[-1]" />
                 )}
               </>
             )}
           </NavLink>
-        ))}
+          );
+        })}
 
         {/* Divider */}
         <div className="w-px h-8 p-bg-card-2 mx-1" />

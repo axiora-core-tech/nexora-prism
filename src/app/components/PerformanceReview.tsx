@@ -86,7 +86,7 @@ function ReviewCard({ review, expanded, onToggle }: { review:any; expanded:boole
         <div className="flex items-center gap-6">
           <div className="text-right">
             <p className="text-xs uppercase tracking-widest p-text-dim mb-1">Overall</p>
-            <p className="text-xl font-light text-white">{review.overall}</p>
+            <p className="text-xl font-light p-text-hi">{review.overall}</p>
           </div>
           {expanded ? <ChevronUp size={12} className="p-text-dim" /> : <ChevronDown size={12} className="p-text-dim" />}
         </div>
@@ -166,7 +166,7 @@ function WritePanel({ emp, onClose, onDone }: { emp:any; onClose:()=>void; onDon
           </div>
         </div>
         <p className="text-xs uppercase tracking-widest p-text-dim mb-3 font-mono">Review Submitted</p>
-        <h3 className="text-2xl font-light text-white mb-2">Review <span className="p-text-dim font-serif italic">Recorded</span></h3>
+        <h3 className="text-2xl font-light p-text-hi mb-2">Review <span className="p-text-dim font-serif italic">Recorded</span></h3>
         <p className="p-text-lo text-sm mb-1">Your review for <span className="p-text-body">{emp.name}</span> has been saved.</p>
         <p className="p-text-ghost text-xs font-mono uppercase tracking-widest mb-8">
           Composite: <span style={{ color: composite >= 85 ? '#10b981' : composite >= 70 ? '#f59e0b' : '#f43f5e' }}>{composite}</span>
@@ -187,7 +187,7 @@ function WritePanel({ emp, onClose, onDone }: { emp:any; onClose:()=>void; onDon
         <div className="flex items-center gap-3">
           <img src={emp.avatar} alt={emp.name} className="w-8 h-8 rounded-full object-cover grayscale" />
           <div>
-            <p className="text-sm font-light text-white">{emp.name}</p>
+            <p className="text-sm font-light p-text-hi">{emp.name}</p>
             <p className="text-xs p-text-dim font-mono uppercase tracking-widest">{emp.role}</p>
           </div>
         </div>
@@ -227,7 +227,7 @@ function WritePanel({ emp, onClose, onDone }: { emp:any; onClose:()=>void; onDon
                   {[{val:'peer',l:'Peer'},{val:'manager',l:'Manager'},{val:'self',l:'Self'},{val:'direct-report',l:'Report'}].map(r => (
                     <button key={r.val} onClick={() => setRelation(r.val)}
                       className={`px-3 py-1.5 rounded-full border text-xs uppercase tracking-widest transition-all ${
-                        relation === r.val ? 'bg-white/10 border-white/25 text-white' : 'p-border p-text-dim hover:p-border-mid'
+                        relation === r.val ? 'bg-white/10 border-white/25 p-text-hi' : 'p-border p-text-dim hover:p-border-mid'
                       }`}>{r.l}</button>
                   ))}
                 </div>
@@ -239,7 +239,7 @@ function WritePanel({ emp, onClose, onDone }: { emp:any; onClose:()=>void; onDon
                         <div className="relative flex-shrink-0">
                           <ScoreArc value={scores[k]} color={cfg.color} size={52} />
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-xs font-light text-white">{scores[k]}</span>
+                            <span className="text-xs font-light p-text-hi">{scores[k]}</span>
                           </div>
                         </div>
                         <div className="flex-1">
@@ -276,7 +276,7 @@ function WritePanel({ emp, onClose, onDone }: { emp:any; onClose:()=>void; onDon
                     </div>
                     <p className="p-text-dim text-xs font-serif italic mb-3">"{prompt}"</p>
                     <textarea value={val} onChange={e => set(e.target.value)} rows={4}
-                      className="w-full bg-transparent p-text-body text-sm font-light font-serif italic outline-none resize-none placeholder:text-white/15 leading-relaxed"
+                      className="w-full bg-transparent p-text-body text-sm font-light font-serif italic outline-none resize-none placeholder:p-text-hi/15 leading-relaxed"
                       placeholder="Write your observations…" />
                   </div>
                 ))}
@@ -399,7 +399,7 @@ export function PerformanceReview() {
           <p className="p-text-lo uppercase tracking-[0.15em] text-sm font-semibold mb-6 flex items-center gap-2">
             <Network size={14} className="text-indigo-400" /> 360° Feedback & Reviews
           </p>
-          <h1 className="hero-title font-light text-white whitespace-nowrap">
+          <h1 className="hero-title font-light p-text-hi whitespace-nowrap">
             Network <span className="p-text-dim italic font-serif">Resonance</span>
           </h1>
         </div>
@@ -410,7 +410,7 @@ export function PerformanceReview() {
           </div>
           <div>
             <p className="p-text-lo uppercase tracking-[0.15em] text-xs mb-2">Total Reviews</p>
-            <p className="text-4xl font-light text-white">{totalReviews}</p>
+            <p className="text-4xl font-light p-text-hi">{totalReviews}</p>
           </div>
         </div>
       </motion.div>
@@ -481,7 +481,7 @@ export function PerformanceReview() {
                           className="w-10 h-10 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                         <div>
                           <div className="flex items-center gap-2">
-                            <h2 className="text-white text-lg font-light leading-none">{emp.name.split(' ')[0]}</h2>
+                            <h2 className="p-text-hi text-lg font-light leading-none">{emp.name.split(' ')[0]}</h2>
                             <h2 className="p-text-dim font-serif italic text-lg font-light leading-none">{emp.name.split(' ')[1]}</h2>
                             <NavLink to={`/app/employee/${emp.id}`}
                               className="flex-shrink-0 p-1.5 rounded-full p-bg-pill border p-border p-text-dim hover:text-cyan-400 hover:border-cyan-400/30 transition-all">
@@ -491,7 +491,7 @@ export function PerformanceReview() {
                         </div>
                         <div className="ml-auto text-right flex-shrink-0">
                           <p className="text-xs uppercase tracking-widest p-text-dim mb-1">Composite</p>
-                          <p className="text-3xl font-light text-white">{overallAvg}</p>
+                          <p className="text-3xl font-light p-text-hi">{overallAvg}</p>
                         </div>
                       </div>
                       {/* Score bars — full width, no competing columns */}

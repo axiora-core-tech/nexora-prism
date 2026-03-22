@@ -149,7 +149,7 @@ function TaskDetail({
   const removeAttachment = (id: string) => onUpdate(task.id, { attachments: task.attachments.filter(a => a.id !== id) });
 
   /* ── Inline input style ── */
-  const inp = 'w-full rounded-xl text-sm font-light outline-none transition-all bg-white/[0.04] border border-white/[0.07] text-white placeholder:text-white/20 focus:border-white/20 px-3 py-2';
+  const inp = 'w-full rounded-xl text-sm font-light outline-none transition-all bg-white/[0.04] border border-white/[0.07] p-text-hi placeholder:p-text-hi/20 focus:border-white/20 px-3 py-2';
 
   const parentTask = task.parentId ? tasks.find(t => t.id === task.parentId) : null;
   const childTasks = tasks.filter(t => t.parentId === task.id);
@@ -200,12 +200,12 @@ function TaskDetail({
                 onChange={e => setTitle(e.target.value)}
                 onBlur={() => { setEditingTitle(false); onUpdate(task.id, { title }); }}
                 onKeyDown={e => { if (e.key === 'Enter') { setEditingTitle(false); onUpdate(task.id, { title }); } }}
-                className="w-full bg-transparent text-2xl font-light text-white outline-none border-b border-white/20 pb-1 mb-1"
+                className="w-full bg-transparent text-2xl font-light p-text-hi outline-none border-b border-white/20 pb-1 mb-1"
               />
             ) : (
               <h2
                 onClick={() => setEditingTitle(true)}
-                className="text-2xl font-light text-white leading-snug cursor-text hover:text-white/90 transition-colors mb-1"
+                className="text-2xl font-light p-text-hi leading-snug cursor-text hover:p-text-hi/90 transition-colors mb-1"
                 data-cursor="Edit"
               >
                 {title}
@@ -222,7 +222,7 @@ function TaskDetail({
                     <button
                       onClick={() => onUpdate(task.id, { status: c.id })}
                       className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest transition-all border ${
-                        active  ? 'text-white border-white/20 bg-white/10' :
+                        active  ? 'p-text-hi border-white/20 bg-white/10' :
                         passed  ? 'border-white/10 p-text-dim' :
                                   'border-white/[0.05] p-text-ghost hover:border-white/15'
                       }`}
@@ -260,7 +260,7 @@ function TaskDetail({
                 onBlur={() => onUpdate(task.id, { desc })}
                 rows={3}
                 placeholder="Add a description…"
-                className="w-full bg-transparent text-sm font-light p-text-body leading-relaxed outline-none resize-none placeholder:text-white/15 border-b border-transparent focus:border-white/10 transition-colors"
+                className="w-full bg-transparent text-sm font-light p-text-body leading-relaxed outline-none resize-none placeholder:p-text-hi/15 border-b border-transparent focus:border-white/10 transition-colors"
               />
             </div>
 
@@ -425,7 +425,7 @@ function TaskDetail({
                 {(Object.keys(priorityConfig) as Priority[]).map(p => (
                   <button key={p} onClick={() => onUpdate(task.id, { priority: p })}
                     className={`px-2.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest border transition-all ${
-                      task.priority === p ? 'text-white' : 'p-text-ghost border-white/5 hover:border-white/15'
+                      task.priority === p ? 'p-text-hi' : 'p-text-ghost border-white/5 hover:border-white/15'
                     }`}
                     style={task.priority === p ? { borderColor: priorityConfig[p].color+'50', background: priorityConfig[p].color+'15', color: priorityConfig[p].color } : {}}>
                     {priorityConfig[p].label}
@@ -498,7 +498,7 @@ function TaskDetail({
                     type="number" min={0}
                     value={task.storyPoints}
                     onChange={e => onUpdate(task.id, { storyPoints: parseInt(e.target.value) || 0 })}
-                    className="w-20 text-right bg-white/[0.04] border border-white/[0.07] rounded-lg px-2 py-1 text-sm font-mono text-white outline-none focus:border-white/20"
+                    className="w-20 text-right bg-white/[0.04] border border-white/[0.07] rounded-lg px-2 py-1 text-sm font-mono p-text-hi outline-none focus:border-white/20"
                   />
                 </div>
 
@@ -509,7 +509,7 @@ function TaskDetail({
                     type="number" min={0} step={0.5}
                     value={task.estimatedHours}
                     onChange={e => onUpdate(task.id, { estimatedHours: parseFloat(e.target.value) || 0 })}
-                    className="w-20 text-right bg-white/[0.04] border border-white/[0.07] rounded-lg px-2 py-1 text-sm font-mono text-white outline-none focus:border-white/20"
+                    className="w-20 text-right bg-white/[0.04] border border-white/[0.07] rounded-lg px-2 py-1 text-sm font-mono p-text-hi outline-none focus:border-white/20"
                   />
                 </div>
 
@@ -523,7 +523,7 @@ function TaskDetail({
                       setLoggedInput(e.target.value);
                       onUpdate(task.id, { loggedHours: parseFloat(e.target.value) || 0 });
                     }}
-                    className="w-20 text-right bg-white/[0.04] border border-white/[0.07] rounded-lg px-2 py-1 text-sm font-mono text-white outline-none focus:border-white/20"
+                    className="w-20 text-right bg-white/[0.04] border border-white/[0.07] rounded-lg px-2 py-1 text-sm font-mono p-text-hi outline-none focus:border-white/20"
                   />
                 </div>
 
@@ -554,7 +554,7 @@ function TaskDetail({
                 <Timer size={9} /> Live Timer
               </p>
               <div className="p-bg-card border p-border rounded-xl p-4">
-                <div className="text-2xl font-mono text-white text-center mb-4 tracking-widest">
+                <div className="text-2xl font-mono p-text-hi text-center mb-4 tracking-widest">
                   {fmtTimer(timerSecs)}
                 </div>
                 <div className="flex gap-2">
@@ -645,7 +645,7 @@ function TaskCard({
           </span>
         </div>
 
-        <h4 className={`text-sm font-light leading-snug mb-1.5 ${done ? 'line-through p-text-dim' : 'text-white/90'}`}>
+        <h4 className={`text-sm font-light leading-snug mb-1.5 ${done ? 'line-through p-text-dim' : 'p-text-hi/90'}`}>
           {task.title}
         </h4>
         <p className="text-xs p-text-dim leading-relaxed mb-4 line-clamp-2">{task.desc}</p>
@@ -741,7 +741,7 @@ function NewTaskModal({ tasks, onClose, onAdd }: { tasks: Task[]; onClose: () =>
     onClose();
   };
 
-  const inp = 'w-full rounded-2xl text-sm font-light outline-none transition-colors p-bg-card border p-border text-white placeholder:text-white/20 focus:border-white/20 px-4 py-3';
+  const inp = 'w-full rounded-2xl text-sm font-light outline-none transition-colors p-bg-card border p-border p-text-hi placeholder:p-text-hi/20 focus:border-white/20 px-4 py-3';
 
   return (
     <motion.div
@@ -760,7 +760,7 @@ function NewTaskModal({ tasks, onClose, onAdd }: { tasks: Task[]; onClose: () =>
         <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 blur-[80px] rounded-full pointer-events-none" />
 
         <div className="flex items-center justify-between mb-6 relative z-10">
-          <h3 className="text-white text-xl font-light">New Task</h3>
+          <h3 className="p-text-hi text-xl font-light">New Task</h3>
           <button onClick={onClose} className="p-2.5 rounded-full p-bg-card border p-border p-text-dim hover:p-text-hi transition-all"><X size={14} /></button>
         </div>
 
@@ -820,7 +820,7 @@ function NewTaskModal({ tasks, onClose, onAdd }: { tasks: Task[]; onClose: () =>
         <div className="flex gap-3 mt-6 relative z-10">
           <button onClick={onClose} className="flex-1 py-3 rounded-2xl border p-border p-text-dim text-sm hover:p-text-hi hover:p-border-mid transition-all">Cancel</button>
           <button onClick={handleAdd} disabled={!form.title.trim()}
-            className="flex-1 py-3 rounded-2xl p-bg-card border p-border-mid text-white text-sm hover:bg-white/[0.06] transition-all disabled:opacity-30 disabled:cursor-not-allowed">
+            className="flex-1 py-3 rounded-2xl p-bg-card border p-border-mid p-text-hi text-sm hover:bg-white/[0.06] transition-all disabled:opacity-30 disabled:cursor-not-allowed">
             Create Task
           </button>
         </div>
@@ -884,7 +884,7 @@ export function Tasks() {
           <p className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
             <Layers size={14} className="text-emerald-400" /> Operational Matrix
           </p>
-          <h1 className="hero-title font-light text-white">
+          <h1 className="hero-title font-light p-text-hi">
             Active <span className="p-text-dim italic font-serif">Vectors</span>
           </h1>
         </div>
@@ -902,7 +902,7 @@ export function Tasks() {
             ))}
           </div>
           <button onClick={() => setShowModal(true)}
-            className="w-16 h-16 rounded-full p-bg-card border p-border-mid flex items-center justify-center text-white hover:p-border-hi transition-all duration-500 group" data-cursor="New Task">
+            className="w-16 h-16 rounded-full p-bg-card border p-border-mid flex items-center justify-center p-text-hi hover:p-border-hi transition-all duration-500 group" data-cursor="New Task">
             <Plus size={22} className="group-hover:rotate-90 transition-transform duration-500" />
           </button>
         </div>
@@ -914,7 +914,7 @@ export function Tasks() {
         <div className="flex gap-1 p-1 p-bg-card border p-border rounded-xl">
           {(['board','list'] as const).map(v => (
             <button key={v} onClick={() => setView(v)}
-              className={`px-5 py-2 rounded-lg text-xs uppercase tracking-widest font-medium transition-all ${view === v ? 'bg-white/10 text-white' : 'p-text-dim hover:p-text-hi'}`}>
+              className={`px-5 py-2 rounded-lg text-xs uppercase tracking-widest font-medium transition-all ${view === v ? 'bg-white/10 p-text-hi' : 'p-text-dim hover:p-text-hi'}`}>
               {v === 'board' ? 'Board' : 'List'}
             </button>
           ))}
@@ -923,7 +923,7 @@ export function Tasks() {
           <span className="text-xs uppercase tracking-[0.12em] p-text-dim font-mono mr-1">Filter ·</span>
           {employees.slice(0, 5).map(e => (
             <button key={e.id} onClick={() => setFilterOwner(filterOwner === e.id ? null : e.id)}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs transition-all border ${filterOwner === e.id ? 'bg-white/10 p-border-hi text-white' : 'border-white/5 p-text-lo hover:p-border-mid'}`}>
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs transition-all border ${filterOwner === e.id ? 'bg-white/10 p-border-hi p-text-hi' : 'border-white/5 p-text-lo hover:p-border-mid'}`}>
               <img src={e.avatar} alt={e.name} className="w-4 h-4 rounded-full object-cover grayscale" />
               {e.name.split(' ')[0]}
             </button>
@@ -931,7 +931,7 @@ export function Tasks() {
           <div className="w-px h-4 p-bg-pill mx-1" />
           {(['critical','high'] as Priority[]).map(p => (
             <button key={p} onClick={() => setFilterPriority(filterPriority === p ? null : p)}
-              className={`px-2.5 py-1.5 rounded-full text-xs uppercase tracking-widest transition-all border ${filterPriority === p ? 'text-white' : 'border-white/5 p-text-lo hover:border-white/10'}`}
+              className={`px-2.5 py-1.5 rounded-full text-xs uppercase tracking-widest transition-all border ${filterPriority === p ? 'p-text-hi' : 'border-white/5 p-text-lo hover:border-white/10'}`}
               style={filterPriority === p ? { borderColor: priorityConfig[p].color+'60', background: priorityConfig[p].color+'12', color: priorityConfig[p].color } : {}}>
               {priorityConfig[p].label}
             </button>

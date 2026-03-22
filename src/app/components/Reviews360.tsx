@@ -55,14 +55,14 @@ function ResonanceCard({ review, expanded, onToggle }: { review: any; expanded: 
             {review.reviewer.split(' ').map((n: string) => n[0]).join('')}
           </div>
           <div>
-            <p className="text-white/90 text-sm font-light">{review.reviewer}</p>
+            <p className="p-text-hi/90 text-sm font-light">{review.reviewer}</p>
             <p className="text-sm uppercase tracking-[0.12em] p-text-dim mt-0.5 font-mono">{review.relation} // {review.date}</p>
           </div>
         </div>
         <div className="flex items-center gap-8">
           <div className="text-right">
             <p className="text-sm uppercase tracking-[0.12em] p-text-dim mb-1">Resonance</p>
-            <p className="text-2xl font-light text-white">{review.overall}</p>
+            <p className="text-2xl font-light p-text-hi">{review.overall}</p>
           </div>
           {expanded ? <ChevronUp size={13} className="p-text-dim" /> : <ChevronDown size={13} className="p-text-dim" />}
         </div>
@@ -159,7 +159,7 @@ export function Reviews360() {
           <p className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
             <Network size={14} className="text-indigo-400" /> Multi-Source Feedback Intelligence
           </p>
-          <h1 className="text-7xl md:text-9xl font-light tracking-tighter text-white leading-[0.9]">
+          <h1 className="text-7xl md:text-9xl font-light tracking-tighter p-text-hi leading-[0.9]">
             Network <span className="p-text-dim italic font-serif">Resonance</span>
           </h1>
         </div>
@@ -170,7 +170,7 @@ export function Reviews360() {
           </div>
           <div>
             <p className="p-text-lo uppercase tracking-[0.2em] text-xs mb-2">Total Nodes</p>
-            <p className="text-4xl font-light text-white">{totalReviews}</p>
+            <p className="text-4xl font-light p-text-hi">{totalReviews}</p>
           </div>
         </div>
       </motion.div>
@@ -230,7 +230,7 @@ export function Reviews360() {
                       <div className="flex items-center gap-4 mb-6">
                         <img src={emp.avatar} alt={emp.name} className="w-12 h-12 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                         <div>
-                          <h2 className="text-white text-xl font-light leading-none">{emp.name.split(' ')[0]}</h2>
+                          <h2 className="p-text-hi text-xl font-light leading-none">{emp.name.split(' ')[0]}</h2>
                           <h2 className="p-text-dim font-serif italic text-sm leading-none mt-0.5">{emp.name.split(' ')[1]}</h2>
                           <NavLink
                             to={`/app/employee/${emp.id}`}
@@ -241,7 +241,7 @@ export function Reviews360() {
                         </div>
                         <div className="ml-auto text-right">
                           <p className="text-sm uppercase tracking-[0.12em] p-text-dim mb-1">Composite Resonance</p>
-                          <p className="text-4xl font-light text-white">{overallAvg}</p>
+                          <p className="text-4xl font-light p-text-hi">{overallAvg}</p>
                         </div>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">

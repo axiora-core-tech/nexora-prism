@@ -1,14 +1,125 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useTheme } from '../auth/ThemeContext';
 import { Outlet, useLocation } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { Dock } from './ui/Dock';
 import { CustomCursor } from './ui/CustomCursor';
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   TRANSITION CHOREOGRAPHY
+   
+   Navigation type determines animation:
+   • Lateral (same depth)  → slide left or right
+   • Deeper  (into detail) → scale up from center, slight blur
+   • Back    (out of detail)→ scale down to center, reverse
+   • Default               → soft fade
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+// Depth map — higher number = deeper into the app
+const depthMap: Record<string, number> = {
+  '/app': 0,          // Dashboard
+  '/app/team': 0,
+  '/app/analytics': 0,
+  '/app/tasks': 0,
+  '/app/kpis': 1,
+  '/app/attendance': 1,
+  '/app/roi': 1,
+  '/app/leaderboard': 1,
+  '/app/review': 1,
+  '/app/reviews': 1,
+  '/app/spectrum': 1,
+  '/app/settings': 1,
+};
+
+// Position map for lateral sliding — left-to-right order
+const posMap: Record<string, number> = {
+  '/app': 0,
+  '/app/team': 1,
+  '/app/analytics': 2,
+  '/app/tasks': 3,
+  '/app/kpis': 4,
+  '/app/attendance': 5,
+  '/app/roi': 6,
+  '/app/leaderboard': 7,
+  '/app/review': 8,
+  '/app/reviews': 8,
+  '/app/spectrum': 9,
+  '/app/settings': 10,
+};
+
+function getDepth(path: string): number {
+  // Employee detail is always depth 2
+  if (path.startsWith('/app/employee/')) return 2;
+  return depthMap[path] ?? 1;
+}
+
+function getPos(path: string): number {
+  if (path.startsWith('/app/employee/')) return 1.5; // between team and analytics
+  return posMap[path] ?? 5;
+}
+
+type TransitionType = 'lateral-left' | 'lateral-right' | 'dive' | 'surface' | 'fade';
+
+function getTransitionType(from: string, to: string): TransitionType {
+  const fromDepth = getDepth(from);
+  const toDepth = getDepth(to);
+  
+  if (toDepth > fromDepth) return 'dive';
+  if (toDepth < fromDepth) return 'surface';
+  
+  // Same depth → lateral slide
+  const fromPos = getPos(from);
+  const toPos = getPos(to);
+  if (fromPos === toPos) return 'fade';
+  return toPos > fromPos ? 'lateral-left' : 'lateral-right';
+}
+
+const transitions: Record<TransitionType, {
+  initial: Record<string, any>;
+  animate: Record<string, any>;
+  exit: Record<string, any>;
+}> = {
+  'lateral-left': {
+    initial: { opacity: 0, x: 60, filter: 'blur(2px)' },
+    animate: { opacity: 1, x: 0, filter: 'blur(0px)' },
+    exit:    { opacity: 0, x: -40, filter: 'blur(2px)' },
+  },
+  'lateral-right': {
+    initial: { opacity: 0, x: -60, filter: 'blur(2px)' },
+    animate: { opacity: 1, x: 0, filter: 'blur(0px)' },
+    exit:    { opacity: 0, x: 40, filter: 'blur(2px)' },
+  },
+  'dive': {
+    initial: { opacity: 0, scale: 0.94, filter: 'blur(6px)' },
+    animate: { opacity: 1, scale: 1, filter: 'blur(0px)' },
+    exit:    { opacity: 0, scale: 1.04, filter: 'blur(4px)' },
+  },
+  'surface': {
+    initial: { opacity: 0, scale: 1.06, filter: 'blur(4px)' },
+    animate: { opacity: 1, scale: 1, filter: 'blur(0px)' },
+    exit:    { opacity: 0, scale: 0.94, filter: 'blur(6px)' },
+  },
+  'fade': {
+    initial: { opacity: 0, y: 16, filter: 'blur(3px)' },
+    animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
+    exit:    { opacity: 0, y: -8, filter: 'blur(2px)' },
+  },
+};
+
 export function Layout() {
   const location = useLocation();
   const { theme } = useTheme();
   const isLight = theme === 'light';
+  const prevPath = useRef(location.pathname);
+  const [transType, setTransType] = useState<TransitionType>('fade');
+
+  useEffect(() => {
+    const type = getTransitionType(prevPath.current, location.pathname);
+    setTransType(type);
+    prevPath.current = location.pathname;
+  }, [location.pathname]);
+
+  const t = transitions[transType];
 
   return (
     <div
@@ -17,7 +128,7 @@ export function Layout() {
     >
       <CustomCursor />
       
-      {/* Avant-Garde Ambient Background — CSS-only, compositor thread */}
+      {/* Ambient background */}
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes app-blob-a {
           0%,100% { transform: rotate(0deg)   scale(1)   translate(0px,0px); }
@@ -42,10 +153,7 @@ export function Layout() {
         />
       </div>
 
-      {/* Restore native cursors for interactive form elements.
-           cursor-none on the root hides the OS cursor everywhere, which breaks
-           the text-insertion caret feel inside inputs. These rules carve out
-           the elements that need their native cursor back. */}
+      {/* Cursor overrides for form elements */}
       <style dangerouslySetInnerHTML={{ __html: `
         input, textarea, select { cursor: text !important; }
         input[type="range"]     { cursor: ew-resize !important; }
@@ -54,7 +162,7 @@ export function Layout() {
         select                  { cursor: pointer !important; }
       `}} />
 
-      {/* Main Content Area */}
+      {/* Main content */}
       <main
         className="relative z-10 h-screen overflow-y-auto overflow-x-hidden"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', backgroundColor: 'var(--p-bg)' }}
@@ -63,10 +171,10 @@ export function Layout() {
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
-            initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
-            animate={{ opacity: 1, y: 0,  filter: 'blur(0px)' }}
-            exit={{    opacity: 0, y: -8, filter: 'blur(2px)', transition: { duration: 0.18, ease: [0.4, 0, 1, 1] } }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            initial={t.initial}
+            animate={t.animate}
+            exit={{ ...t.exit, transition: { duration: 0.2, ease: [0.4, 0, 1, 1] } }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="w-full h-full"
           >
             <Outlet />

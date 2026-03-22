@@ -26,7 +26,7 @@ function SelectInput({ value, options, onChange }: { value: string; options: str
     <select
       value={value}
       onChange={e => onChange(e.target.value)}
-      className="p-bg-card border p-border-mid rounded-xl px-4 py-2 text-white text-sm outline-none focus:border-white/30 transition-colors"
+      className="p-bg-card border p-border-mid rounded-xl px-4 py-2 p-text-hi text-sm outline-none focus:border-white/30 transition-colors"
     >
       {options.map(o => <option key={o} value={o} className="p-bg-surface">{o}</option>)}
     </select>
@@ -148,7 +148,7 @@ export function Settings() {
           <p className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
             <SettingsIcon size={14} className="p-text-lo" /> System Configuration
           </p>
-          <h1 className="hero-title font-light text-white">
+          <h1 className="hero-title font-light p-text-hi">
             Core <span className="p-text-dim italic font-serif">Parameters</span>
           </h1>
         </div>
@@ -157,7 +157,7 @@ export function Settings() {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           className={`px-8 py-4 rounded-2xl border transition-all duration-300 flex items-center gap-3 text-sm font-light ${
-            saved ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400' : 'bg-white/5 p-border-mid text-white hover:bg-white/10 hover:border-white/20'
+            saved ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400' : 'bg-white/5 p-border-mid p-text-hi hover:bg-white/10 hover:border-white/20'
           }`}
         >
           <AnimatePresence mode="wait">
@@ -185,8 +185,8 @@ export function Settings() {
                 data-cursor={item.label}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-light transition-all text-left ${
                   activeSection === item.id
-                    ? 'bg-white/10 text-white border border-white/10'
-                    : 'text-white/40 hover:p-text-hi hover:bg-white/5'
+                    ? 'bg-white/10 p-text-hi border border-white/10'
+                    : 'p-text-hi/40 hover:p-text-hi hover:bg-white/5'
                 }`}
               >
                 <item.icon size={14} />
@@ -282,7 +282,7 @@ export function Settings() {
                       <div key={key} className="bg-white/[0.02] border p-border rounded-[2rem] p-5">
                         <p className="p-text-lo text-sm uppercase tracking-[0.12em] mb-3">{label}</p>
                         <div className="flex items-center gap-3 mb-3">
-                          <span className="text-3xl font-light text-white">{(notifs as any)[key]}<span className="text-lg p-text-dim">{unit}</span></span>
+                          <span className="text-3xl font-light p-text-hi">{(notifs as any)[key]}<span className="text-lg p-text-dim">{unit}</span></span>
                         </div>
                         <input
                           type="range" min={min} max={max}
@@ -402,7 +402,7 @@ export function Settings() {
                         <button className={`px-4 py-2 rounded-xl border text-xs uppercase tracking-widest transition-all ${
                           intg.status === 'connected'
                             ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/5 hover:bg-emerald-500/10'
-                            : 'border-white/10 p-text-lo hover:p-border-hi hover:text-white'
+                            : 'border-white/10 p-text-lo hover:p-border-hi hover:p-text-hi'
                         }`}>
                           {intg.status === 'connected' ? 'Connected' : 'Connect'}
                         </button>

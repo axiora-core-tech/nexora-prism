@@ -1,233 +1,192 @@
-import React, { useState } from 'react';
+/**
+ * Leaderboard — "The Race"
+ *
+ * Animated bar-race. Switch metrics → bars physically trade positions
+ * with spring animations. Race button plays through time.
+ */
+
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Diamond, TrendingUp, TrendingDown, Minus, ArrowUpRight, ArrowLeft } from 'lucide-react';
-import { NavLink } from 'react-router';
-import { useNavigate } from 'react-router';
+import { Diamond, TrendingUp, TrendingDown, Minus, ArrowUpRight, ArrowLeft, Play, RotateCcw, ChevronRight } from 'lucide-react';
+import { NavLink, useNavigate } from 'react-router';
 import { employees } from '../mockData';
 
 type Metric = 'performance' | 'roi' | 'learning' | 'motivation' | 'welfare';
 
-const metricConfig: Record<Metric, { label: string; vectorLabel: string; key: keyof typeof employees[0]; color: string; suffix: string }> = {
-  performance: { label: 'Efficiency Vector',  vectorLabel: 'Efficiency',  key: 'performanceScore', color: '#c084fc', suffix: '' },
-  roi:         { label: 'Capital ROI',         vectorLabel: 'ROI',         key: 'roi',              color: '#10b981', suffix: '%' },
-  learning:    { label: 'Neural Acquisition',  vectorLabel: 'Learning',    key: 'learningProgress', color: '#38bdf8', suffix: '%' },
-  motivation:  { label: 'Drive Index',         vectorLabel: 'Motivation',  key: 'motivationScore',  color: '#f59e0b', suffix: '' },
-  welfare:     { label: 'Bio-Rhythm Score',    vectorLabel: 'Welfare',     key: 'welfareScore',     color: '#f43f5e', suffix: '' },
+const metricConfig: Record<Metric, { label: string; key: keyof typeof employees[0]; color: string; suffix: string; max: number }> = {
+  performance: { label: 'Output',     key: 'performanceScore', color: '#f43f5e', suffix: 'pt', max: 100 },
+  roi:         { label: 'Return',     key: 'roi',              color: '#10b981', suffix: '%',  max: 350 },
+  learning:    { label: 'Growth',     key: 'learningProgress', color: '#38bdf8', suffix: '%',  max: 100 },
+  motivation:  { label: 'Motivation', key: 'motivationScore',  color: '#f59e0b', suffix: '',   max: 100 },
+  welfare:     { label: 'Wellbeing',  key: 'welfareScore',     color: '#c084fc', suffix: '',   max: 100 },
 };
 
-const podiumGlow: Record<number, string> = {
-  0: 'rgba(252,211,77,0.12)',
-  1: 'rgba(148,163,184,0.08)',
-  2: 'rgba(180,83,9,0.08)',
-};
-const podiumBorder: Record<number, string> = {
-  0: 'rgba(252,211,77,0.3)',
-  1: 'rgba(148,163,184,0.25)',
-  2: 'rgba(180,83,9,0.25)',
-};
-const rankLabels = ['I', 'II', 'III'];
-const rankNumerals = ['01', '02', '03'];
-
-function ranked(metric: Metric) {
+// Synthetic quarterly data per employee per metric
+function quarterlyData(metric: Metric) {
   const cfg = metricConfig[metric];
-  return [...employees].sort((a, b) => (Number(b[cfg.key])||0) - (Number(a[cfg.key])||0));
+  const quarters = ['Q1 \'24', 'Q2 \'24', 'Q3 \'24', 'Q4 \'24', 'Q1 \'25', 'Q2 \'25', 'Q3 \'25', 'Q4 \'25'];
+  return employees.map(emp => {
+    const base = Number(emp[cfg.key]) || 50;
+    return quarters.map((q, i) => {
+      const progress = (i + 1) / quarters.length;
+      const variation = Math.sin(emp.id.charCodeAt(1) * 7 + i * 1.8) * 14 + Math.cos(emp.id.charCodeAt(1) * 3 + i * 2.5) * 6;
+      return { quarter: q, val: Math.round(base * (0.7 + progress * 0.3) + variation) };
+    });
+  });
 }
+
+const QUARTER_LABELS = ['Q1 \'24', 'Q2 \'24', 'Q3 \'24', 'Q4 \'24', 'Q1 \'25', 'Q2 \'25', 'Q3 \'25', 'Q4 \'25'];
 
 export function Leaderboard() {
   const navigate = useNavigate();
   const [metric, setMetric] = useState<Metric>('performance');
-  const rankedEmps = ranked(metric);
+  const [qi, setQi] = useState(QUARTER_LABELS.length - 1);
+  const [playing, setPlaying] = useState(false);
   const cfg = metricConfig[metric];
-  const topScore = Number(rankedEmps[0]?.[cfg.key]) || 1;
+
+  const empQuarterly = useMemo(() => quarterlyData(metric), [metric]);
+
+  // Current values for selected quarter
+  const ranked = useMemo(() => {
+    return employees.map((emp, i) => ({
+      emp,
+      val: empQuarterly[i][qi].val,
+    })).sort((a, b) => b.val - a.val);
+  }, [empQuarterly, qi]);
+
+  const maxVal = Math.max(...ranked.map(r => r.val));
+
+  // Play animation
+  useEffect(() => {
+    if (!playing) return;
+    if (qi >= QUARTER_LABELS.length - 1) { setPlaying(false); return; }
+    const t = setTimeout(() => setQi(q => q + 1), 850);
+    return () => clearTimeout(t);
+  }, [playing, qi]);
+
+  const play = () => { setQi(0); setPlaying(true); };
 
   return (
     <div className="page-wrap">
-
       {/* Hero */}
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
+      <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-24 flex flex-col md:flex-row justify-between items-end gap-12 border-b p-border pb-12"
-      >
-        <div>
-                    <button
-            onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-2 p-text-dim hover:p-text-hi text-sm mb-4 transition-colors group"
-          >
-            <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
-            Back
-          </button>
-          <p className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-6 flex items-center gap-2">
-            <Diamond size={14} className="text-amber-400" /> Performance Rankings
-          </p>
-          <h1 className="hero-title font-light text-white">
-            Signal <span className="p-text-dim italic font-serif">Ranking</span>
+        className="mb-12 md:mb-16 border-b pb-10" style={{ borderColor: 'var(--p-border)' }}>
+        <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-sm mb-4 transition-colors group" style={{ color: 'var(--p-text-dim)' }}>
+          <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" /> Back
+        </button>
+        <p className="text-[11px] font-mono uppercase tracking-[0.2em] mb-6 flex items-center gap-2" style={{ color: 'var(--p-text-lo)' }}>
+          <Diamond size={14} style={{ color: '#f59e0b' }} /> Signal Rankings
+        </p>
+        <div className="flex flex-col md:flex-row justify-between md:items-end gap-6">
+          <h1 className="hero-title font-light" style={{ color: 'var(--p-text-hi)' }}>
+            The <span className="italic font-serif" style={{ color: 'var(--p-text-dim)' }}>Race</span>
           </h1>
+          <div className="flex items-center gap-3">
+            <button onClick={play} className="flex items-center gap-2 px-4 py-2 rounded-xl text-[11px] font-mono transition-all hover:scale-105"
+              style={{ background: `${cfg.color}10`, border: `1px solid ${cfg.color}20`, color: cfg.color }}>
+              {playing ? <RotateCcw size={12} /> : <Play size={12} />}
+              {playing ? 'Racing...' : 'Play race'}
+            </button>
+            <span className="font-mono text-lg" style={{ color: cfg.color }}>
+              {QUARTER_LABELS[qi]}
+            </span>
+          </div>
         </div>
       </motion.div>
 
       {/* Metric selector */}
-      <div className="flex flex-wrap gap-2 mb-20">
-        {(Object.keys(metricConfig) as Metric[]).map(m => (
-          <button
-            key={m}
-            onClick={() => setMetric(m)}
-            className={`px-6 py-2.5 rounded-full border text-xs uppercase tracking-widest font-medium transition-all ${
-              metric === m ? 'text-white' : 'text-white/30 p-border hover:p-border-mid hover:text-white/60'
-            }`}
-            style={metric === m ? {
-              borderColor: metricConfig[m].color + '50',
-              background: metricConfig[m].color + '12',
-              color: metricConfig[m].color
-            } : {}}
-            data-cursor={metricConfig[m].vectorLabel}
-          >
-            {metricConfig[m].label}
-          </button>
-        ))}
-      </div>
-
-      {/* Podium */}
-      <div className="grid grid-cols-3 gap-4 mb-16 max-w-xl mx-auto">
-        {[rankedEmps[1], rankedEmps[0], rankedEmps[2]].map((emp, i) => {
-          if (!emp) return <div key={i}/>;
-          const rank = i === 1 ? 0 : i === 0 ? 1 : 2;
-          const score = Number(emp[cfg.key]) || 0;
-          const heights = ['h-40','h-52','h-36'];
-
+      <div className="flex flex-wrap gap-2 mb-8">
+        {(Object.keys(metricConfig) as Metric[]).map(m => {
+          const mc = metricConfig[m];
+          const isActive = metric === m;
           return (
-            <motion.div
-              key={emp.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.7 }}
-              className="flex flex-col items-center"
-            >
-              <NavLink to={`/app/employee/${emp.id}`} data-cursor="View Node">
-                <motion.div whileHover={{ y: -5 }} className="flex flex-col items-center mb-3 group cursor-crosshair">
-                  <div className="relative mb-3">
-                    <img src={emp.avatar} alt={emp.name}
-                      className="w-14 h-14 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                      style={{ outline: `2px solid ${podiumBorder[rank]}`, outlineOffset: '2px' }} />
-                    <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border"
-                      style={{ background: podiumGlow[rank], borderColor: podiumBorder[rank] }}>
-                      {rank + 1}
-                    </div>
-                  </div>
-                  <p className="p-text-body text-sm font-light text-center">{emp.name.split(' ')[0]}</p>
-                  <p className="text-sm uppercase tracking-[0.12em] text-center mt-0.5 font-mono" style={{ color: cfg.color }}>
-                    {score}{cfg.suffix}
-                  </p>
-                </motion.div>
-              </NavLink>
-
-              <div
-                className={`w-full ${heights[i]} rounded-t-xl flex items-end justify-center pb-3 border-t-2 transition-all`}
-                style={{ background: podiumGlow[rank], borderColor: podiumBorder[rank] }}
-              >
-                <span className="text-sm font-mono font-light" style={{ color: podiumBorder[rank] }}>0{rank + 1}</span>
-              </div>
-            </motion.div>
+            <button key={m} onClick={() => { setMetric(m); setQi(QUARTER_LABELS.length - 1); setPlaying(false); }}
+              className="px-5 py-2 rounded-xl text-[11px] uppercase tracking-widest font-mono transition-all"
+              style={{
+                background: isActive ? `${mc.color}12` : 'var(--p-bg-card)',
+                border: `1px solid ${isActive ? mc.color + '25' : 'var(--p-border)'}`,
+                color: isActive ? mc.color : 'var(--p-text-dim)',
+              }}>
+              {mc.label}
+            </button>
           );
         })}
       </div>
 
-      {/* Full ranking table */}
-      <div className="relative p-bg-card border p-border rounded-[2rem] overflow-hidden group">
-        <div className="absolute top-0 right-0 w-96 h-96 blur-[120px] rounded-full pointer-events-none transition-all duration-1000"
-          style={{ background: cfg.color + '05' }} />
-
-        <div className="px-8 py-5 border-b p-border flex items-center justify-between relative z-10">
-          <p className="text-sm uppercase tracking-[0.12em] p-text-dim font-mono">Full Ranking · {cfg.label}</p>
-          <p className="text-sm uppercase tracking-[0.12em] p-text-ghost font-mono">{employees.length} nodes</p>
+      {/* The Race — animated bars */}
+      <div className="rounded-2xl p-5 md:p-8 mb-8" style={{ background: 'var(--p-bg-card)', border: '1px solid var(--p-border)' }}>
+        <div className="space-y-3">
+          {ranked.map((r, rank) => (
+            <motion.div key={r.emp.id} layout transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="flex items-center gap-4">
+              {/* Rank */}
+              <span className="text-sm font-mono w-6 text-center flex-shrink-0" style={{ color: rank === 0 ? '#f59e0b' : 'var(--p-text-ghost)' }}>
+                {rank === 0 ? '👑' : String(rank + 1).padStart(2, '0')}
+              </span>
+              {/* Avatar */}
+              <img src={r.emp.avatar} alt={r.emp.name}
+                className="w-8 h-8 rounded-full object-cover grayscale flex-shrink-0"
+                loading="lazy" decoding="async" />
+              {/* Name */}
+              <span className="text-sm font-light w-24 flex-shrink-0 truncate" style={{ color: 'var(--p-text-body)' }}>
+                {r.emp.name.split(' ')[0]}
+              </span>
+              {/* Bar */}
+              <div className="flex-1 h-5 rounded overflow-hidden" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                <motion.div className="h-full rounded"
+                  style={{ background: `linear-gradient(90deg, ${cfg.color}30, ${cfg.color})` }}
+                  animate={{ width: `${(r.val / maxVal) * 100}%` }}
+                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }} />
+              </div>
+              {/* Score */}
+              <span className="font-mono text-sm w-14 text-right flex-shrink-0" style={{ color: cfg.color }}>
+                {r.val}{cfg.suffix}
+              </span>
+              {/* Trend */}
+              {qi > 0 && (() => {
+                const prev = empQuarterly[employees.indexOf(r.emp)][qi - 1].val;
+                const delta = r.val - prev;
+                return delta !== 0 ? (
+                  <span className="text-[11px] font-mono w-10 text-right flex-shrink-0" style={{ color: delta > 0 ? '#10b981' : '#f43f5e' }}>
+                    {delta > 0 ? '+' : ''}{delta}
+                  </span>
+                ) : <span className="w-10 flex-shrink-0" />;
+              })()}
+              {/* Link */}
+              <NavLink to={`/app/employee/${r.emp.id}`} className="flex-shrink-0 transition-colors" style={{ color: 'var(--p-text-ghost)' }}>
+                <ArrowUpRight size={12} />
+              </NavLink>
+            </motion.div>
+          ))}
         </div>
 
-        <AnimatePresence mode="wait">
-          <motion.div key={metric} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-            {rankedEmps.map((emp, i) => {
-              const score = Number(emp[cfg.key]) || 0;
-              const pct = (score / topScore) * 100;
-              return (
-                <motion.div
-                  key={emp.id}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05, duration: 0.4 }}
-                  className="flex items-center gap-6 px-8 py-5 border-b border-white/[0.03] hover:bg-white/[0.03] transition-colors group/row relative z-10"
-                  data-cursor="View Node"
-                >
-                  {/* Rank */}
-                  <div className="w-8 text-center flex-shrink-0">
-                    {i < 3
-                      ? <span className="text-sm font-mono font-light" style={{ color: i === 0 ? '#FCD34D' : i === 1 ? '#94A3B8' : '#B45309' }}>{String(i+1).padStart(2,'0')}</span>
-                      : <span className="p-text-ghost text-sm font-mono">{i+1}</span>}
-                  </div>
-
-                  {/* Employee */}
-                  <div className="flex items-center gap-3 w-52 flex-shrink-0">
-                    <img src={emp.avatar} alt={emp.name}
-                      className="w-9 h-9 rounded-full object-cover grayscale group-hover:grayscale-0 group-hover/row:grayscale group-hover:grayscale-0-0 transition-all duration-500" />
-                    <div>
-                      <p className="p-text-body text-base font-light leading-none">{emp.name.split(' ')[0]}</p>
-                      <p className="p-text-dim font-serif italic text-sm leading-none mt-0.5">{emp.name.split(' ')[1]}</p>
-                    </div>
-                  </div>
-
-                  {/* Score */}
-                  <div className="w-24 flex-shrink-0 text-right">
-                    <span className="text-2xl font-light" style={{ color: cfg.color }}>{score}</span>
-                    <span className="p-text-ghost text-sm">{cfg.suffix}</span>
-                  </div>
-
-                  {/* Bar */}
-                  <div className="flex-1 h-px p-bg-card">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${pct}%` }}
-                      transition={{ duration: 1, delay: i * 0.05, ease: [0.16,1,0.3,1] }}
-                      className="h-full"
-                      style={{ background: `linear-gradient(to right, ${cfg.color}40, ${cfg.color})` }}
-                    />
-                  </div>
-
-                  {/* Trend */}
-                  <div className="w-20 flex-shrink-0 flex items-center justify-end gap-1">
-                    <span className={`text-xs uppercase tracking-widest flex items-center gap-1 px-2 py-1 rounded-full ${
-                      emp.trend === 'up'   ? 'text-emerald-400 bg-emerald-500/10' :
-                      emp.trend === 'down' ? 'text-rose-400 bg-rose-500/10' :
-                      'text-white/20 bg-white/5'
-                    }`}>
-                      {emp.trend === 'up' ? <TrendingUp size={8}/> : emp.trend === 'down' ? <TrendingDown size={8}/> : <Minus size={8}/>}
-                      {emp.trend}
-                    </span>
-                  </div>
-
-                  <NavLink to={`/app/employee/${emp.id}`}
-                    className="opacity-0 group-hover/row:opacity-100 transition-opacity p-2 rounded-full p-bg-card p-text-dim hover:p-text-hi hover:bg-white/10">
-                    <ArrowUpRight size={11}/>
-                  </NavLink>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </AnimatePresence>
+        {/* Time scrubber */}
+        <div className="mt-6 pt-4" style={{ borderTop: '1px solid var(--p-border)' }}>
+          <input type="range" min={0} max={QUARTER_LABELS.length - 1} value={qi}
+            onChange={e => { setQi(+e.target.value); setPlaying(false); }}
+            className="w-full h-1 rounded-full cursor-pointer appearance-none"
+            style={{ accentColor: cfg.color, background: 'rgba(255,255,255,0.06)' }} />
+          <div className="flex justify-between mt-2">
+            {QUARTER_LABELS.map((q, i) => (
+              <span key={i} className="text-[11px] font-mono cursor-pointer" onClick={() => { setQi(i); setPlaying(false); }}
+                style={{ color: i === qi ? cfg.color : 'var(--p-text-ghost)' }}>{q}</span>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Summary nodes */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+      {/* Summary stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
-          { label: 'Collective Average', val: Math.round(employees.reduce((s,e)=>(s+Number(e[cfg.key]))||0,0)/employees.length)+cfg.suffix, color: cfg.color },
-          { label: 'Peak Signal',        val: topScore+cfg.suffix, color: '#fcd34d' },
-          { label: 'Signal Spread',      val: (topScore-(Number(rankedEmps[rankedEmps.length-1]?.[cfg.key])||0))+cfg.suffix, color: '#c084fc' },
-          { label: 'Above Threshold',    val: employees.filter(e=>(Number(e[cfg.key])||0)>=85).length+' / '+employees.length, color: '#10b981' },
+          { label: 'Average', val: Math.round(ranked.reduce((s, r) => s + r.val, 0) / ranked.length) + cfg.suffix, color: cfg.color },
+          { label: 'Leader', val: ranked[0]?.val + cfg.suffix, color: '#f59e0b' },
+          { label: 'Spread', val: (ranked[0]?.val - ranked[ranked.length - 1]?.val) + cfg.suffix, color: '#c084fc' },
+          { label: 'Above target', val: ranked.filter(r => r.val >= 85).length + ' / ' + ranked.length, color: '#10b981' },
         ].map(s => (
-          <div key={s.label} className="relative p-bg-card border p-border rounded-[2rem] p-5 overflow-hidden group hover:p-border-mid transition-colors" data-cursor="Stat">
-            <div className="absolute -bottom-4 -right-4 w-20 h-20 rounded-full blur-[30px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-              style={{ background: s.color + '20' }} />
-            <p className="text-sm uppercase tracking-[0.12em] p-text-ghost mb-2 font-mono">{s.label}</p>
-            <p className="text-2xl font-light relative z-10" style={{ color: s.color }}>{s.val}</p>
+          <div key={s.label} className="p-4 rounded-xl" style={{ background: 'var(--p-bg-card)', border: '1px solid var(--p-border)' }}>
+            <p className="text-[11px] uppercase tracking-[0.12em] font-mono mb-1.5" style={{ color: 'var(--p-text-ghost)' }}>{s.label}</p>
+            <p className="text-xl font-light font-mono" style={{ color: s.color }}>{s.val}</p>
           </div>
         ))}
       </div>

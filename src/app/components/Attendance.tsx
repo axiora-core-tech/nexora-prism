@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { CalendarDays, Clock, MapPin, AlertTriangle, ArrowUpRight, ArrowLeft } from 'lucide-react';
+import { CalendarDays, Clock, MapPin, AlertTriangle, ArrowUpRight, ArrowLeft, Brain, Lightbulb, Eye, Flame } from 'lucide-react';
 import { employees } from '../mockData';
 import { NavLink } from 'react-router';
 import { useNavigate } from 'react-router';
@@ -90,6 +90,118 @@ export function Attendance() {
   const totalDays = att.present + att.wfh + att.leave + att.absent;
   const presenceRate = Math.round((att.present + att.wfh) / totalDays * 100);
 
+  /* ── Deep pattern detection — collective + individual ── */
+  const patterns = useMemo(() => {
+    const items: { type: 'critical' | 'watch' | 'opportunity'; title: string; detail: string; action: string; color: string; icon: React.ElementType; empIds?: string[] }[] = [];
+
+    // ─ Individual patterns ─
+    employees.forEach(emp => {
+      const a = emp.attendance;
+      const cal = a.calendar;
+      const rate = Math.round((a.present + a.wfh) / (a.present + a.wfh + a.leave + a.absent) * 100);
+
+      // Consecutive absences
+      let maxConsec = 0, consec = 0;
+      cal.forEach((d: any) => { if (d.type === 'absent') { consec++; maxConsec = Math.max(maxConsec, consec); } else if (d.type !== 'weekend') consec = 0; });
+      if (maxConsec >= 2) items.push({
+        type: 'critical', color: '#f43f5e', icon: Flame, empIds: [emp.id],
+        title: `${emp.name.split(' ')[0]} — ${maxConsec} consecutive absent days`,
+        detail: `Consecutive unexplained absences are a strong attrition predictor. Current flight risk: ${emp.attritionRiskPercentage}%.`,
+        action: `Schedule an immediate 1:1. Frame it as a wellbeing check, not a performance review.`,
+      });
+
+      // High absence count
+      if (a.absent >= 3 && maxConsec < 2) items.push({
+        type: 'watch', color: '#f59e0b', icon: Eye, empIds: [emp.id],
+        title: `${emp.name.split(' ')[0]} — ${a.absent} unplanned absences`,
+        detail: `Above the 2-per-month threshold. Presence rate at ${rate}%.`,
+        action: `Monitor next 2 weeks. If pattern continues, initiate a supportive conversation about workload.`,
+      });
+
+      // Heavy WFH pattern (>60% remote)
+      const wfhRatio = a.wfh / (a.present + a.wfh);
+      if (wfhRatio > 0.5 && a.present + a.wfh > 5) items.push({
+        type: 'watch', color: '#38bdf8', icon: Eye, empIds: [emp.id],
+        title: `${emp.name.split(' ')[0]} — ${Math.round(wfhRatio * 100)}% remote work ratio`,
+        detail: `Significantly above team average. Could indicate disengagement or commute friction.`,
+        action: `Discuss preferred work arrangement. Ensure they're connected to team rituals.`,
+      });
+
+      // Monday/Friday pattern detection
+      const mondayAbsent = cal.filter((d: any) => {
+        const dow = new Date(d.date).getDay();
+        return dow === 1 && (d.type === 'absent' || d.type === 'leave' || d.type === 'wfh');
+      }).length;
+      const fridayAbsent = cal.filter((d: any) => {
+        const dow = new Date(d.date).getDay();
+        return dow === 5 && (d.type === 'absent' || d.type === 'leave' || d.type === 'wfh');
+      }).length;
+      if (mondayAbsent + fridayAbsent >= 3) items.push({
+        type: 'watch', color: '#f59e0b', icon: Eye, empIds: [emp.id],
+        title: `${emp.name.split(' ')[0]} — Monday/Friday absence pattern`,
+        detail: `${mondayAbsent} Mondays and ${fridayAbsent} Fridays with absence, leave, or WFH. Classic long-weekend pattern.`,
+        action: `Address directly but constructively. This pattern erodes team trust if left unchecked.`,
+      });
+    });
+
+    // ─ Collective patterns ─
+    // Mass bunking — check if 3+ people were absent/leave on the same date
+    const dateMap: Record<string, string[]> = {};
+    employees.forEach(emp => {
+      emp.attendance.calendar.forEach((d: any) => {
+        if (d.type === 'absent' || d.type === 'leave') {
+          if (!dateMap[d.date]) dateMap[d.date] = [];
+          dateMap[d.date].push(emp.name.split(' ')[0]);
+        }
+      });
+    });
+    Object.entries(dateMap).forEach(([date, names]) => {
+      if (names.length >= 2) {
+        items.push({
+          type: 'critical', color: '#f43f5e', icon: AlertTriangle,
+          title: `Mass absence on ${new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`,
+          detail: `${names.join(', ')} were all absent or on leave. ${names.length} of ${employees.length} employees (${Math.round(names.length / employees.length * 100)}% of the team).`,
+          action: `Investigate if this was coordinated. If recurring, review team morale and upcoming calendar.`,
+        });
+      }
+    });
+
+    // Collective WFH surge — check if 3+ people WFH on same day
+    const wfhMap: Record<string, string[]> = {};
+    employees.forEach(emp => {
+      emp.attendance.calendar.forEach((d: any) => {
+        if (d.type === 'wfh') {
+          if (!wfhMap[d.date]) wfhMap[d.date] = [];
+          wfhMap[d.date].push(emp.name.split(' ')[0]);
+        }
+      });
+    });
+    Object.entries(wfhMap).forEach(([date, names]) => {
+      if (names.length >= 3) {
+        items.push({
+          type: 'watch', color: '#38bdf8', icon: Eye,
+          title: `WFH surge on ${new Date(date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}`,
+          detail: `${names.join(', ')} all worked remotely. Office was effectively empty (${names.length}/${employees.length} remote).`,
+          action: `If recurring on same day, consider making it an official remote day to set expectations.`,
+        });
+      }
+    });
+
+    // Org-wide low presence
+    const orgPresence = employees.reduce((s, e) => {
+      const a = e.attendance;
+      return s + (a.present + a.wfh) / (a.present + a.wfh + a.leave + a.absent);
+    }, 0) / employees.length;
+    if (orgPresence < 0.85) items.push({
+      type: 'watch', color: '#f59e0b', icon: AlertTriangle,
+      title: `Org-wide presence below 85%`,
+      detail: `Average presence rate is ${Math.round(orgPresence * 100)}%. Below healthy threshold for team cohesion.`,
+      action: `Review team calendar, upcoming deadlines, and recent morale signals. Consider a team-building initiative.`,
+    });
+
+    return items.sort((a, b) => ({ critical: 0, watch: 1, opportunity: 2 }[a.type] - { critical: 0, watch: 1, opportunity: 2 }[b.type])).slice(0, 6);
+  }, []);
+
   return (
     <div className="page-wrap">
 
@@ -126,6 +238,53 @@ export function Attendance() {
           </div>
         </div>
       </motion.div>
+
+      {/* ── Temporal Intelligence — Pattern Detection ── */}
+      {patterns.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="mb-12"
+        >
+          <div className="flex items-center gap-2 mb-4">
+            <Brain size={13} className="p-text-mid" />
+            <p className="text-xs font-mono uppercase tracking-[0.2em] p-text-ghost">Pattern detection — individual & collective</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {patterns.map((ins, i) => {
+              const Icon = ins.icon;
+              return (
+                <motion.div key={i}
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 + i * 0.06 }}
+                  className="rounded-xl p-4 group transition-all duration-300"
+                  style={{ background: `${ins.color}06`, border: `1px solid ${ins.color}12` }}
+                >
+                  <div className="flex items-start gap-3">
+                    <Icon size={12} className="flex-shrink-0 mt-0.5" style={{ color: ins.color }} />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs font-mono uppercase tracking-[0.15em] px-1.5 py-0.5 rounded"
+                          style={{ background: `${ins.color}12`, color: ins.color }}>
+                          {ins.type}
+                        </span>
+                      </div>
+                      <p className="text-sm font-light text-white leading-snug mb-1">{ins.title}</p>
+                      <p className="text-xs p-text-dim leading-relaxed mb-2">{ins.detail}</p>
+                      <div className="flex items-start gap-1.5 p-2 rounded-lg" style={{ background: `${ins.color}06` }}>
+                        <Lightbulb size={10} className="flex-shrink-0 mt-0.5" style={{ color: ins.color }} />
+                        <p className="text-xs leading-relaxed" style={{ color: `${ins.color}cc` }}>{ins.action}</p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
+      )}
 
       {/* Node selector row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">

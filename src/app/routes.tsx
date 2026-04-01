@@ -5,7 +5,7 @@ import React, { lazy, Suspense } from "react";
 
 // ─── Lazy-loaded pages ──────────────────────────────────────────────────────
 const LandingPage       = lazy(() => import("./components/landing/LandingPage").then(m => ({ default: m.LandingPage })));
-const SignIn            = lazy(() => import("./components/SignIn").then(m => ({ default: m.SignIn })));
+const SignIn            = lazy(() => import("./components/landing/LandingPage").then(m => ({ default: m.SignIn })));
 const Demo              = lazy(() => import("./components/Demo").then(m => ({ default: m.Demo })));
 const EnterApp          = lazy(() => import("./components/EnterApp").then(m => ({ default: m.EnterApp })));
 const Dashboard         = lazy(() => import("./components/Dashboard").then(m => ({ default: m.Dashboard })));

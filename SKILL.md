@@ -2,7 +2,8 @@
 
 > Reference this file before creating, editing, or reviewing ANY component in Nexora Prism.
 > It is the single source of truth for all visual and interaction decisions.
-> For architecture, data models, and page specifications, see DESIGN_DOCUMENT.md.
+> For architecture and data models: see DESIGN_DOCUMENT.md.
+> For v3 AI platform specs, prompts, and build plan: see PRODUCT_ARCHITECTURE_v3.md.
 
 ---
 
@@ -35,8 +36,6 @@ Inline style form: `style={{ color: 'var(--p-text-hi)' }}`
 | `p-bg-pill` | Small pill/tag backgrounds |
 | `p-bg-input` | Form inputs |
 
-Inline: `style={{ background: 'var(--p-bg-card)' }}`
-
 ### Border Classes
 
 | Class | Opacity | Usage |
@@ -45,8 +44,6 @@ Inline: `style={{ background: 'var(--p-bg-card)' }}`
 | `p-border-mid` | 10% | Hover state |
 | `p-border-hi` | 20% | Active/selected |
 | `p-border-emp` | 30% | Emphasised |
-
-Inline: `style={{ border: '1px solid var(--p-border)' }}`
 
 ### Accent Colors (for dimension-specific elements)
 
@@ -59,10 +56,7 @@ Inline: `style={{ border: '1px solid var(--p-border)' }}`
 | Cyan | `#38bdf8` | Return/ROI, interactive elements, links, completed status |
 | Orange | `#fb923c` | Risk/Attrition (dimension 6 only) |
 
-Each accent has three tiers used as hex suffixes:
-- Background: `${color}06` to `${color}12` (6–12% opacity)
-- Border: `${color}12` to `${color}25` (12–25% opacity)
-- Text: `${color}` (full), or `${color}cc` for slightly dimmed
+Each accent has three tiers (hex suffix): Background `06`–`12`, Border `12`–`25`, Text full or `cc`.
 
 ### Status Colors
 
@@ -75,8 +69,6 @@ Each accent has three tiers used as hex suffixes:
 
 ### Score Colour Thresholds
 
-Apply consistently across all components:
-
 ```
 Score ≥ 90 → emerald    ROI ≥ 200% → emerald    Risk: High → rose + pulse-ring
 Score ≥ 80 → cyan       ROI ≥ 150% → cyan       Risk: Medium → amber
@@ -86,11 +78,7 @@ Score < 65 → rose       ROI < 110% → rose
 
 ### Chart Tokens
 
-Use `var(--p-chart-*)` for all chart elements:
-- Grid: `var(--p-chart-grid)` — faint lines
-- Axes: `var(--p-chart-axis)` — label text
-- Track: `var(--p-chart-track)` — bar background
-- Cursor: `var(--p-chart-cursor)` — hover region fill
+Use `var(--p-chart-*)` for all chart elements: `--p-chart-grid`, `--p-chart-axis`, `--p-chart-track`, `--p-chart-cursor`.
 
 ---
 
@@ -119,16 +107,7 @@ Use `var(--p-chart-*)` for all chart elements:
 
 **Section markers:**
 ```jsx
-<p className="text-[11px] font-mono uppercase tracking-[0.2em] p-text-ghost">
-  Label text
-</p>
-```
-
-**With icon prefix:**
-```jsx
-<p className="text-[11px] font-mono uppercase tracking-[0.2em] p-text-ghost flex items-center gap-2">
-  <Icon size={10} style={{ color: accent }} /> Label text
-</p>
+<p className="text-[11px] font-mono uppercase tracking-[0.2em] p-text-ghost">Label text</p>
 ```
 
 **Stat values:**
@@ -136,14 +115,6 @@ Use `var(--p-chart-*)` for all chart elements:
 <span className="font-mono text-2xl" style={{ color: accent }}>
   87<span className="text-[10px] p-text-dim">pt</span>
 </span>
-```
-
-**Hero stat cluster:**
-```jsx
-<div className="text-right">
-  <p className="text-[11px] uppercase tracking-[0.15em] mb-2 p-text-lo">Label</p>
-  <p className="text-3xl font-light" style={{ color: accent }}>{value}</p>
-</div>
 ```
 
 **Insight badges:**
@@ -156,13 +127,12 @@ Use `var(--p-chart-*)` for all chart elements:
 
 ### The Serif Italic Accent Pattern
 
-Every page hero title pairs a light sans word with an italic serif word:
 ```jsx
 <h1 className="hero-title font-light" style={{ color: 'var(--p-text-hi)' }}>
   Word <span className="italic font-serif" style={{ color: 'var(--p-text-dim)' }}>Accent</span>
 </h1>
 ```
-The serif word is always the poetic/conceptual word. Examples: "The *Spectrum*", "Your *Team*", "Global *Models*", "Orbital *Presence*", "The *Race*".
+The serif word is always the poetic/conceptual word. Examples: "The *Spectrum*", "Your *Team*", "The *Race*", "Orbital *Presence*", "The *Meridian*", "Signal *Synthesis*".
 
 ---
 
@@ -175,20 +145,17 @@ The serif word is always the poetic/conceptual word. Examples: "The *Spectrum*",
   transition={{duration:0.8, ease:[0.16,1,0.3,1]}}
   className="mb-12 md:mb-16 border-b pb-10"
   style={{borderColor:'var(--p-border)'}}>
-  
   {/* Back button — omit on Spectrum (it's home) */}
   <button onClick={() => navigate(-1)}
     className="inline-flex items-center gap-2 text-sm mb-4 transition-colors group"
     style={{color:'var(--p-text-dim)'}}>
     <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform"/> Back
   </button>
-  
   {/* Section marker */}
   <p className="text-[11px] font-mono uppercase tracking-[0.2em] mb-6 flex items-center gap-2"
      style={{color:'var(--p-text-lo)'}}>
     <IconName size={14} style={{color: accent}}/> Section description
   </p>
-  
   {/* Title */}
   <h1 className="hero-title font-light" style={{color:'var(--p-text-hi)'}}>
     Word <span className="italic font-serif" style={{color:'var(--p-text-dim)'}}>Accent</span>
@@ -204,45 +171,33 @@ The serif word is always the poetic/conceptual word. Examples: "The *Spectrum*",
   {/* Optional ambient glow — NEVER use box-shadow */}
   <div className="absolute top-0 right-0 w-60 h-60 rounded-full blur-[80px] pointer-events-none"
     style={{background:`rgba(accent, 0.06)`}}/>
-  
   {/* Card header */}
   <h3 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold 
       flex items-center gap-4 border-b p-border-mid pb-4 mb-6">
     <Icon size={12} style={{color: accent}}/> Card Title
   </h3>
-  
   {/* Content */}
 </div>
 ```
-
-For standard-size cards use `rounded-2xl`. For small cards use `rounded-xl`.
 
 ### Insight/Action Card Pattern
 
 ```jsx
 <div className="rounded-xl p-4 group transition-all duration-300 hover:scale-[1.005]"
-  style={{
-    background: `${color}06`,
-    border: `1px solid ${color}12`,
-    cursor: empId ? 'pointer' : 'default'
-  }}>
+  style={{ background: `${color}06`, border: `1px solid ${color}12` }}>
   <div className="flex items-start gap-3">
     <Icon size={12} className="flex-shrink-0 mt-0.5" style={{color}}/>
     <div className="flex-1 min-w-0">
       <span className="text-[11px] font-mono uppercase tracking-[0.15em] px-1.5 py-0.5 rounded mb-1.5 inline-block"
-        style={{background:`${color}12`, color}}>
-        {type}
-      </span>
+        style={{background:`${color}12`, color}}>{type}</span>
       <p className="text-sm font-light leading-snug mb-1" style={{color:'var(--p-text-hi)'}}>{title}</p>
       <p className="text-xs leading-relaxed" style={{color:'var(--p-text-dim)'}}>{detail}</p>
-      {/* Action recommendation */}
       <div className="flex items-start gap-1.5 p-2 rounded-lg mt-2"
         style={{background:`${color}06`}}>
         <Lightbulb size={10} className="flex-shrink-0 mt-0.5" style={{color}}/>
         <p className="text-xs leading-relaxed" style={{color:`${color}cc`}}>{action}</p>
       </div>
     </div>
-    {empId && <ChevronRight size={12} className="p-text-ghost group-hover:p-text-mid"/>}
   </div>
 </div>
 ```
@@ -256,28 +211,21 @@ For standard-size cards use `rounded-2xl`. For small cards use `rounded-xl`.
     <button key={tab.id} onClick={() => setActive(tab.id)}
       className={`px-5 py-2 rounded-lg text-xs uppercase tracking-widest font-medium transition-all ${
         active === tab.id ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white'
-      }`}>
-      {tab.label}
-    </button>
+      }`}>{tab.label}</button>
   ))}
 </div>
 ```
 
 **Sub-tabs (accent-coloured with icons):**
 ```jsx
-<div className="flex gap-2 flex-wrap">
-  {items.map(s => (
-    <button key={s.id} onClick={() => setActive(s.id)}
-      className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300"
-      style={{
-        background: active === s.id ? `${accent}12` : 'var(--p-bg-card)',
-        border: `1px solid ${active === s.id ? accent+'25' : 'var(--p-border)'}`,
-        color: active === s.id ? accent : 'var(--p-text-dim)'
-      }}>
-      <s.icon size={13}/><span className="text-xs font-light">{s.label}</span>
-    </button>
-  ))}
-</div>
+<button className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300"
+  style={{
+    background: active === s.id ? `${accent}12` : 'var(--p-bg-card)',
+    border: `1px solid ${active === s.id ? accent+'25' : 'var(--p-border)'}`,
+    color: active === s.id ? accent : 'var(--p-text-dim)'
+  }}>
+  <s.icon size={13}/><span className="text-xs font-light">{s.label}</span>
+</button>
 ```
 
 ### Employee Avatar Pattern
@@ -288,11 +236,8 @@ For standard-size cards use `rounded-2xl`. For small cards use `rounded-xl`.
              transition-all duration-500 flex-shrink-0"
   loading="lazy" decoding="async"/>
 ```
-
-- Always `grayscale` default, `group-hover:grayscale-0` (except landing hero: `loading="eager"`)
-- Always `loading="lazy" decoding="async"` and `object-cover rounded-full`
-- Sizes: `w-6 h-6` (tiny, inline), `w-7 h-7` (scatter/list), `w-8 h-8` (table), `w-10 h-10` (card standard), `w-12 h-12` (profile/detail)
-- Stacked: `-space-x-2`, descending `z-index`, `border-2` matching background
+- Always `grayscale` + `group-hover:grayscale-0`. Always `loading="lazy" decoding="async"`.
+- Sizes: `w-6` tiny, `w-7` scatter, `w-8` table, `w-10` card, `w-12` profile.
 
 ### Employee Link/Row Pattern
 
@@ -306,67 +251,259 @@ For standard-size cards use `rounded-2xl`. For small cards use `rounded-xl`.
     <p className="text-xs" style={{color:'var(--p-text-dim)'}}>{emp.role}</p>
   </div>
   <span className="font-mono text-sm" style={{color: accent}}>{value}</span>
-  <ArrowUpRight size={10} className="p-text-ghost group-hover:p-text-mid transition-colors"/>
 </NavLink>
 ```
 
-### Risk Indicator Pattern
+### Risk Indicator + Expandable Row
 
-```jsx
-<div className={`w-1.5 h-1.5 rounded-full shadow-[0_0_10px_currentColor] ${
-  risk === 'High' ? 'bg-rose-500 text-rose-500' :
-  risk === 'Medium' ? 'bg-amber-500 text-amber-500' : 
-  'bg-emerald-500 text-emerald-500'
-}`} />
-```
-
-For High risk, add `pulse-ring` class for animated pulsing.
+*(Unchanged from current patterns — see existing implementations.)*
 
 ### Empty State Pattern
 
-Always use the branded `<EmptyState>` component. Never show bare "No data" text.
+Always use `<EmptyState>`. Never show bare "No data" text.
+
+**Existing variants (7):** `tasks`, `reviews`, `no-results`, `no-data`, `kpis`, `attendance`, `leaderboard`
+
+**v3 planned variants (5):**
+- `genesis` — "No vision uploaded yet. Share your business plan to begin."
+- `meridian` — "No roadmap active. Complete Genesis to generate your Meridian."
+- `checkpoint` — "All clear. No items pending approval."
+- `synthesis` — "No reports generated yet. Choose a template or describe what you need."
+- `luminary` — "No conversations yet. Start your first standup to begin building your Echo Trail."
+
+Each variant gets a custom geometric SVG mark, on-brand headline, body text, and optional CTA.
+
+---
+
+## 4. v3 Component Patterns — Luminary & AI Features
+
+### Luminary Floating Button
 
 ```jsx
-import { EmptyState } from './ui/EmptyState';
-// Variants: 'tasks', 'reviews', 'no-results', 'no-data', 'kpis', 'attendance', 'leaderboard'
-<EmptyState variant="tasks" action={{ label: 'Create first task', onClick: handleCreate }} />
+<button className="fixed bottom-24 right-6 z-50 group"
+  onClick={openLuminary}>
+  <div className="w-14 h-14 rounded-full flex items-center justify-center
+    bg-gradient-to-br from-cyan-500/10 to-purple-500/10 
+    border border-cyan-400/20 backdrop-blur-xl
+    group-hover:border-cyan-400/40 group-hover:shadow-[0_0_30px_rgba(34,211,238,0.15)]
+    transition-all duration-500">
+    <LuminaryIcon size={22}/>
+  </div>
+  {/* Pulse dot when pending standup */}
+  {hasPending && <div className="absolute top-0 right-0 w-3 h-3 rounded-full bg-amber-500 pulse-ring"/>}
+</button>
 ```
 
-Each variant has a custom geometric SVG mark, on-brand headline, descriptive body, optional CTA.
+### HUD Context Panel (Luminary)
 
-### Expandable Row Pattern
+Floating panels at screen edges during Luminary conversations:
 
 ```jsx
-<div className="border-b select-none cursor-pointer" style={{borderColor:'var(--p-border)'}}
-  onClick={() => toggle()}>
-  <div className="flex items-center gap-4 px-6 md:px-12 lg:px-24 py-7">
-    {/* Always-visible summary row */}
+<motion.div
+  initial={{ opacity: 0, x: -20 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ delay: staggerIndex * 0.08, type: 'spring', damping: 25 }}
+  className="absolute left-6 top-1/4 w-56 rounded-2xl p-4 backdrop-blur-xl"
+  style={{
+    background: 'var(--p-bg-card)',
+    border: '1px solid var(--p-border)',
+    boxShadow: 'none' // NEVER box-shadow — use blur blobs
+  }}>
+  <h4 className="text-[11px] font-mono uppercase tracking-[0.2em] p-text-ghost mb-3">
+    Active tasks
+  </h4>
+  {/* Task list */}
+</motion.div>
+```
+
+### Conversation Message Card (Luminary)
+
+Floating card style for hybrid transcript:
+
+```jsx
+{/* Luminary message */}
+<motion.div initial={{opacity:0, y:8}} animate={{opacity:1, y:0}}
+  className="max-w-md rounded-2xl p-4 ml-4"
+  style={{background:'var(--p-bg-card)', border:'1px solid var(--p-border)'}}>
+  <div className="flex items-center gap-2 mb-2">
+    <img src={avatarThumb} className="w-5 h-5 rounded-full"/>
+    <span className="text-[11px] font-mono p-text-ghost">{managerName}</span>
   </div>
-  <AnimatePresence>
-    {isActive && (
-      <motion.div
-        initial={{height:0, opacity:0}} animate={{height:'auto', opacity:1}}
-        exit={{height:0, opacity:0}}
-        transition={{duration:0.5, ease:[0.16,1,0.3,1]}}
-        className="overflow-hidden">
-        {/* Expanded detail */}
-      </motion.div>
-    )}
-  </AnimatePresence>
+  <p className="text-sm p-text-body leading-relaxed">{message}</p>
+</motion.div>
+
+{/* Employee message */}
+<motion.div initial={{opacity:0, y:8}} animate={{opacity:1, y:0}}
+  className="max-w-md rounded-2xl p-4 mr-4 ml-auto"
+  style={{background:'var(--p-cyan-lo)', border:'1px solid var(--p-cyan-border)'}}>
+  <p className="text-sm p-text-body leading-relaxed">{message}</p>
+  {audioUrl && <VoiceWaveform url={audioUrl}/>}
+</motion.div>
+```
+
+### Task Action Card (in-conversation creation)
+
+When Luminary creates a task during conversation:
+
+```jsx
+<motion.div initial={{opacity:0, scale:0.95}} animate={{opacity:1, scale:1}}
+  className="max-w-sm rounded-xl p-4 mx-auto my-2 border-l-2"
+  style={{
+    background: 'var(--p-bg-card)',
+    border: '1px solid var(--p-border)',
+    borderLeftColor: '#38bdf8'
+  }}>
+  <div className="flex items-center gap-2 mb-2">
+    <Sparkles size={10} style={{color:'#38bdf8'}}/>
+    <span className="text-[11px] font-mono uppercase tracking-[0.15em]" style={{color:'#38bdf8'}}>
+      Task created
+    </span>
+  </div>
+  <p className="text-sm p-text-hi font-light mb-1">{taskTitle}</p>
+  <p className="text-xs p-text-dim mb-3">{taskDescription}</p>
+  <div className="flex gap-2">
+    <button className="text-xs font-mono px-3 py-1 rounded-lg"
+      style={{background:'rgba(16,185,129,0.08)', border:'1px solid rgba(16,185,129,0.2)', color:'#10b981'}}>
+      Confirm
+    </button>
+    <button className="text-xs font-mono px-3 py-1 rounded-lg"
+      style={{background:'var(--p-bg-card)', border:'1px solid var(--p-border)', color:'var(--p-text-dim)'}}>
+      Modify
+    </button>
+  </div>
+</motion.div>
+```
+
+### Echo Trail (conversation timeline dots)
+
+```jsx
+<div className="flex items-center gap-1 py-4">
+  {standups.map((s, i) => (
+    <div key={i} className="group relative">
+      <div className={`w-2.5 h-2.5 rounded-full cursor-pointer transition-all group-hover:scale-150 ${
+        s.status === 'completed' && s.sentiment === 'positive' ? 'bg-emerald-500' :
+        s.status === 'completed' && s.sentiment === 'concerned' ? 'bg-amber-500' :
+        s.status === 'missed' ? 'bg-rose-500' : 'bg-white/10'
+      }`}/>
+      {/* Tooltip on hover */}
+      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 
+        opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+        <div className="p-bg-surface border p-border-mid rounded-lg p-2 text-[11px] font-mono whitespace-nowrap">
+          <span className="p-text-lo">{s.date}</span>
+          <span className="ml-2" style={{color: sentimentColor}}>{s.topTopic}</span>
+        </div>
+      </div>
+    </div>
+  ))}
 </div>
+```
+
+### AI Source Badge (Tasks)
+
+Fading badge on AI-generated tasks:
+
+```jsx
+{task.source !== 'manual' && !task.accepted && (
+  <span className="text-[10px] font-mono uppercase tracking-[0.15em] px-1.5 py-0.5 rounded-full
+    bg-cyan-500/8 text-cyan-400 border border-cyan-400/15 transition-opacity"
+    style={{ opacity: task.accepted ? 0 : 1 }}>
+    AI suggested
+  </span>
+)}
+{/* Non-editable source field always in task detail, regardless of badge */}
+<span className="text-[10px] font-mono p-text-ghost">
+  Source: {task.source}
+</span>
+```
+
+### VoiceInput Component
+
+```jsx
+<div className="flex items-center gap-3 p-3 rounded-2xl"
+  style={{ background: 'var(--p-bg-card)', border: '1px solid var(--p-border)' }}>
+  
+  {/* Mic button — hold to talk or toggle */}
+  <button
+    onMouseDown={startRecording} onMouseUp={stopRecording}
+    className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+      isRecording 
+        ? 'bg-rose-500/15 border border-rose-400/30 text-rose-400 scale-110' 
+        : 'p-bg-card-2 border p-border-mid p-text-dim hover:p-text-hi'
+    }`}>
+    <Mic size={18} />
+    {isRecording && <div className="absolute inset-0 rounded-full pulse-ring text-rose-400"/>}
+  </button>
+  
+  {/* Live transcript — word-by-word as employee speaks */}
+  <div className="flex-1 min-h-[40px]">
+    {isRecording ? (
+      <p className="text-sm p-text-body animate-pulse">{liveTranscript}<span className="text-cyan-400">|</span></p>
+    ) : (
+      <p className="text-sm p-text-ghost">Hold to speak or type below…</p>
+    )}
+  </div>
+  
+  {/* Mode toggle */}
+  <button onClick={toggleMode}
+    className="text-[11px] font-mono uppercase tracking-[0.15em] px-3 py-1.5 rounded-lg p-text-dim hover:p-text-hi"
+    style={{ border: '1px solid var(--p-border)' }}>
+    {mode === 'voice' ? 'Text' : 'Voice'}
+  </button>
+</div>
+```
+
+### NotificationBell Component
+
+```jsx
+<button className="relative p-2 rounded-full p-text-dim hover:p-text-hi transition-colors"
+  onClick={toggleNotificationPanel}>
+  <Bell size={18} />
+  {unreadCount > 0 && (
+    <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 rounded-full 
+      bg-rose-500 text-white text-[10px] font-mono flex items-center justify-center px-1">
+      {unreadCount > 9 ? '9+' : unreadCount}
+    </span>
+  )}
+</button>
+
+{/* Notification panel — slides down from bell position */}
+<AnimatePresence>
+  {isOpen && (
+    <motion.div
+      initial={{ opacity: 0, y: -8, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -8, scale: 0.95 }}
+      className="absolute right-0 top-full mt-2 w-80 max-h-96 overflow-y-auto rounded-2xl p-2"
+      style={{ background: 'var(--p-surface)', border: '1px solid var(--p-border-mid)', scrollbarWidth: 'none' }}>
+      <p className="text-[11px] font-mono uppercase tracking-[0.2em] p-text-ghost px-3 py-2">
+        Notifications
+      </p>
+      {notifications.map(n => (
+        <div key={n.id} className="flex items-start gap-3 px-3 py-3 rounded-xl hover:p-bg-card transition-colors cursor-pointer"
+          style={{ borderBottom: '1px solid var(--p-border)' }}>
+          <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${!n.read ? 'bg-cyan-400' : 'bg-transparent'}`}/>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm p-text-body leading-snug">{n.title}</p>
+            <p className="text-[11px] font-mono p-text-ghost mt-1">{n.timestamp}</p>
+          </div>
+        </div>
+      ))}
+    </motion.div>
+  )}
+</AnimatePresence>
 ```
 
 ---
 
-## 4. Animation Rules
+## 5. Animation Rules
 
 ### Easing
 
 | Easing | Value | Usage |
 |--------|-------|-------|
-| Primary | `[0.16, 1, 0.3, 1]` | Nearly everything — fast in, slow out |
-| Spring | `{type:'spring', damping:25, stiffness:200}` | Layout animations (Leaderboard race, Dock) |
-| Exit | `[0.4, 0, 1, 1]` | Faster, no overshoot — exit transitions |
+| Primary | `[0.16, 1, 0.3, 1]` | Nearly everything |
+| Spring | `{type:'spring', damping:25, stiffness:200}` | Layout (The Race, Dock) |
+| Exit | `[0.4, 0, 1, 1]` | Faster, no overshoot |
 
 ### Entrance Timing
 
@@ -374,62 +511,50 @@ Each variant has a custom geometric SVG mark, on-brand headline, descriptive bod
 |---------|----------|-------|
 | Page hero | 0.8s | 0 |
 | Content sections | 0.6–0.7s | 0.1–0.2s sequentially |
-| List items | 0.3–0.5s | `index * 0.05` (max 0.5s total stagger) |
-| Charts/visualizations | 1.0s+ | 0.3s |
-| Scroll-triggered | 0.5–0.7s | Use `whileInView` with `viewport={{once:true}}` |
+| List items | 0.3–0.5s | `index * 0.05` (max 0.5s total) |
+| Charts | 1.0s+ | 0.3s |
+| Scroll-triggered | — | `whileInView` + `viewport={{once:true}}` |
+| Dawn Sequence (Luminary) | 2.2s total | 5 stages, see §5.1 |
 
 ### AnimatePresence Rules
 
-- Always wrap conditional renders in `<AnimatePresence>`
-- Use `mode="wait"` for tab content switches (content that swaps)
-- Omit `mode` for content that overlays
-- Exit animations faster than entrances (0.2s vs 0.4s)
-- Exit direction: opposite of entrance (enter from bottom → exit to top)
+- Wrap conditional renders in `<AnimatePresence>`
+- `mode="wait"` for tab switches
+- Exit faster than entrance (0.2s vs 0.4s)
+- Exit direction: opposite of entrance
 
-### Motion Value Restrictions
+### Dawn Sequence — Luminary Entry Animation
 
-Do NOT animate these without strong justification:
-- `filter: blur()` — GPU-expensive, only on route transitions
-- `scale` — sparingly, range 0.94–1.06 max
-- `rotate` — almost never (exception: Dock chevron 180°)
+5 choreographed stages, ~2.2s total. **Must feel warm, welcoming, human.**
 
-### Route Transition Animations
+| Stage | Time | What Happens | Emotion |
+|-------|------|-------------|---------|
+| 1: The Breath | 0–400ms | Prism UI scales to 0.96, blurs 8px, fades to 40%. Dock sinks. | Making space |
+| 2: The Warmth | 300–800ms | Warm radial gradient blooms (amber/rose 3%). Two Prism rings pulse outward then dissolve. | Lamp turning on |
+| 3: The Presence | 700–1400ms | Avatar materialises: opacity 0→1, scale 0.92→1.0, y +30→0. Light sweep across face. Idle animation begins. | Someone just looked up |
+| 4: The Greeting | 1200–1800ms | Avatar speaks contextual greeting. Text card appears. Voice plays. | First words |
+| 5: The Room Forms | 1600–2200ms | HUD panels glide in (spring, stagger 80ms). Mic input area fades in with pulse. | Ready to talk |
 
-Handled by `Layout.tsx` — don't implement manually:
-- Lateral: slide ±60px + 2px blur
-- Dive: scale 0.94 + 6px blur
-- Surface: scale 1.06 + 4px blur (reverse)
-- Fade: y ±16px + 3px blur
+**Exit:** Reverse 5→1 in 0.8s (3× faster). Quick, not ceremonial.
 
 ---
 
-## 5. Chart & Visualization Rules
+## 6. Chart & Visualization Rules
 
 ### When to Use What
 
 | Type | Use For |
 |------|---------|
-| **Hand-crafted SVG** | Novel interactions (magnetic, scatter, radar, orbital, prism) |
-| **Recharts** | Standard charts (area, composed, bar, radar) where interactivity isn't the focus |
-| **Canvas** | Only for high-frequency animation (waveform with `requestAnimationFrame`) |
+| **Hand-crafted SVG** | Novel interactions (Magnetic, Scatter, Radar, Orbital, Echo Trail) |
+| **Recharts** | Standard charts (area, composed, bar, radar) |
+| **Canvas** | High-frequency animation only (waveform) |
 
 ### SVG Chart Conventions
 
-- ViewBox-based responsive: `width="100%" viewBox="0 0 W H" preserveAspectRatio="xMidYMid meet"`
-- Default viewBox widths: 600–700px
-- Minimum font: `fontSize={10}` in SVG
-- Font family: `fontFamily="'Space Mono',monospace"` for ALL SVG text
-- Grid lines: `stroke="var(--p-chart-grid)"` or `rgba(255,255,255,0.03)`
-- Axis labels: `fill="var(--p-chart-axis)"` or `rgba(255,255,255,0.2)`, brighter on hover
-- Data colors: MUST match dimension accent color, never arbitrary
-
-### Recharts Configuration
-
-```jsx
-<CartesianGrid strokeDasharray="3 3" stroke="var(--p-chart-grid)" vertical={false} />
-<XAxis axisLine={false} tickLine={false} tick={{fill:'var(--p-chart-axis)', fontSize:10}} />
-<Tooltip content={<CustomTooltip/>} />
-```
+- ViewBox: `width="100%" viewBox="0 0 W H" preserveAspectRatio="xMidYMid meet"`
+- Min font: `fontSize={10}`. Font: `fontFamily="'Space Mono',monospace"`
+- Grid: `stroke="var(--p-chart-grid)"`. Axis: `fill="var(--p-chart-axis)"`
+- Data colours: dimension accent, never arbitrary
 
 ### Tooltip Pattern (recharts)
 
@@ -453,13 +578,12 @@ const CustomTooltip = ({active, payload, label}: any) => {
 
 ---
 
-## 6. Responsive Rules
+## 7. Responsive Rules
 
 ### Page Layout
 
-- Always use `.page-wrap` for page containers (handles max-width, fluid padding, safe areas)
-- For full-bleed sections (dimension rows, team constellation): use `px-6 md:px-12 lg:px-24` directly
-- Bottom padding: `pb-32` minimum for dock clearance (or `.dock-clearance` class)
+- `.page-wrap` for containers. Full-bleed: `px-6 md:px-12 lg:px-24`.
+- Bottom padding: `pb-32` minimum for dock. Luminary overlay: full-screen, no dock visible.
 
 ### Grid Patterns
 
@@ -468,206 +592,209 @@ const CustomTooltip = ({active, payload, label}: any) => {
 | 2-column | `grid grid-cols-1 md:grid-cols-2 gap-3` |
 | 3-column | `grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4` |
 | 4-column | `grid grid-cols-2 md:grid-cols-4 gap-3` |
-| Responsive-4 | `.grid-responsive-4` (1 → 2 → 4 across breakpoints) |
-
-Always start with `grid-cols-1` or `grid-cols-2` for mobile.
 
 ### Breakpoint Behaviour
 
 | Breakpoint | Changes |
 |------------|---------|
-| < 640px | Single column. Constellation snap-start. Dock labels hidden. Stats stack. |
+| < 640px | Single column. Dock labels hidden. Luminary: full-screen only. |
 | 768px | Hero → row. 2-col grids. |
-| 1024px | 3-col cards. Full dimension row details. |
-| 1280px | Employee detail splits 40/60. |
-| 1920px+ | `page-wrap` → 1760px. Dock 1.3×. Gaps increase. |
+| 1024px | 3-col cards. Full dimension rows. |
+| 1280px | Employee detail 40/60 split. |
+| 1920px+ | `page-wrap` 1760px. Dock 1.3×. |
 
 ### Touch Devices
 
-- `@media (pointer: coarse)` restores native cursor, replaces `crosshair` with `pointer`
-- Hover-dependent interactions must have tap fallbacks
-- Constellation cards: `snap-x snap-mandatory`
-- Floating nav dots hidden on touch
+`@media (pointer: coarse)`: native cursor restored, `crosshair` → `pointer`, floating nav hidden. Constellation: `snap-x snap-mandatory`.
 
 ---
 
-## 7. Light Mode Compliance
+## 8. Light Mode Compliance
 
-### Rules
+1. NEVER use `text-white` — use `p-text-hi` or `style={{color:'var(--p-text-hi)'}}`
+2. NEVER hardcode `rgba(255,255,255,...)` for text
+3. SVG on guaranteed-dark surfaces (Prism orbital, constellation cards) may use `fill="white"`
+4. `.prism-light .text-white` CSS override catches remaining Tailwind classes
+5. All new components must use `var(--p-*)` tokens
+6. Luminary: Dawn Sequence warm gradient uses hardcoded amber/rose (intentional — always dark background)
 
-1. NEVER use `text-white` class — use `p-text-hi` or `style={{color:'var(--p-text-hi)'}}`
-2. NEVER hardcode `rgba(255,255,255,...)` for text — use token variables
-3. SVG text on guaranteed-dark surfaces (Prism orbital, constellation card overlays) may use `fill="white"`
-4. The `.prism-light .text-white` CSS override catches remaining Tailwind classes as a safety net
-5. All new components must use `var(--p-*)` tokens for every color
-6. Background accents: warm off-white `#f2f0eb`, not pure white
-7. Accent colours are deepened in light mode (handled by token redefinition)
-
-### Testing
-
-Before shipping any component, mentally test: **"If the background were `#f2f0eb`, would every text element be readable?"**
+**Test:** "If the background were `#f2f0eb`, would every text element be readable?"
 
 ---
 
-## 8. Insight & Intelligence Pattern
+## 9. Insight & Intelligence Pattern
 
 ### Insight Structure
 
 ```typescript
 interface Insight {
   type: 'critical' | 'watch' | 'opportunity';
-  title: string;       // Short, actionable headline
-  detail: string;      // 1-2 sentences of context
-  action: string;      // Specific recommended action
-  color: string;       // Rose / Amber / Emerald
-  icon: ComponentType; // Flame / Eye / Sparkles
-  empId?: string;      // Links to employee if relevant
-  empIds?: string[];   // For collective patterns
+  title: string; detail: string; action: string;
+  color: string; icon: ComponentType;
+  empId?: string; empIds?: string[];
 }
 ```
 
-### Spectrum Detection Patterns
+### Spectrum Illuminations (v3: AI-generated)
 
-- **Burnout corridor:** performanceScore > 85 AND welfareScore < 65 (originally <70)
-- **Flight risk:** attritionRiskPercentage > 50 AND roi > 150
-- **Scaling past role:** learningProgress > performanceScore + 5 AND motivationScore > 75
-- **Motivation decoupling:** motivationScore < 60 AND performanceScore > 70
+Same card layout as current Intelligence section. Content AI-generated by Claude. Richer, contextual, references trends over time. Can now reference Luminary standup data, task completion, and Meridian progress.
 
-### Attendance Detection Patterns (7 algorithms)
+Detection patterns: burnout corridor (perf>85 + welfare<65), flight risk (attrition>50 + roi>150), scaling past role (learn>perf+5 + motiv>75), motivation decoupling (motiv<60 + perf>70).
 
-- **Consecutive absences:** 2+ consecutive absent days → critical
-- **High absence count:** 3+ absences, no consecutive → watch
-- **Heavy WFH ratio:** >50% remote of working days → watch
-- **Monday/Friday pattern:** 3+ Mon/Fri with absence/leave/WFH → watch
-- **Mass bunking:** 2+ employees absent/leave same date → critical
-- **WFH surge:** 3+ employees remote same date → watch
-- **Org-wide low presence:** avg presence < 85% → watch
+### Attendance Patterns (7 algorithms)
 
-### Rules
+Consecutive absences, high absence count, heavy WFH, Monday/Friday, mass bunking, WFH surge, org-wide low presence. v3 adds: missed standup streak, low standup engagement (integrated into same panel).
 
-- Sort by severity: critical → watch → opportunity
-- Max display: 4–6 cards
-- Each card includes: type badge, icon, narrative, detail, action recommendation (with Lightbulb icon)
-- Clickable if linked to employee (`empId`)
+Sort by severity: critical → watch → opportunity. Max 4–6 cards.
 
 ---
 
-## 9. Landing Page Patterns
+## 10. Landing Page Patterns
 
-The landing page uses a different design language from the app shell. It is darker (`#010101` vs `#030303`), bolder, and uses cinematic effects not present in the app.
+The landing page uses a different design language. Darker (`#010101`), bolder, cinematic.
 
 ### Visual Layer Stack
 
-1. Base: `bg-[#010101]` (NOT `--p-bg`)
-2. Noise texture: SVG `feTurbulence` (fractalNoise, baseFrequency 0.95, 4 octaves), 5% opacity, `mix-blend-overlay`
-3. Designer grid: 12-col desktop / 4-col mobile, `border-l border-white`, 3% opacity
-4. Radial vignette: `radial-gradient(circle_at_center, transparent_40%, rgba(1,1,1,0.8)_120%)`
-5. Registration marks: 4 corner brackets (`border-t-2 border-l-2` etc.), `border-white/50`
-6. Custom cursor (landing-specific, separate from app cursor)
+1. `bg-[#010101]` (NOT `--p-bg`)
+2. Noise: SVG fractalNoise, 5% opacity, `mix-blend-overlay`
+3. Grid: 12-col / 4-col, 3% opacity
+4. Vignette: `radial-gradient(circle, transparent_40%, rgba(1,1,1,0.8)_120%)`
+5. Registration marks: corner brackets, `border-white/50`
 
 ### Landing Typography
 
-- Hero title: `text-[4rem] sm:text-[6.5rem] md:text-[8.5rem] lg:text-[11rem] font-bold tracking-tighter leading-[0.85]`
-- Gradient text: `bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-100 to-rose-200`
-- Section titles: `text-4xl sm:text-6xl lg:text-[7rem] font-light tracking-tighter`
-- Body: Inter, `text-lg text-zinc-300 font-light`
-- Labels: `text-[10px] font-mono tracking-[0.2em] uppercase`
+Hero: `text-[4rem] sm:text-[6.5rem] md:text-[8.5rem] lg:text-[11rem] font-bold tracking-tighter`.
+Gradient: `bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-100 to-rose-200`.
+Body: Inter, `text-lg text-zinc-300 font-light`.
 
-### Loader Pattern
+### Key Patterns
 
-2s duration, 20ms intervals. Gradient percentage (indigo→rose, Space Mono). 2px progress bar with glow. "Calibrating Core" label with `ping` animation. Exploding ring transition (10vw→150vw). Once per session (`sessionStorage` key `prism_intro_seen`).
-
-### Stacking Sticky Cards
-
-Each feature card is `sticky top-0`. Parent has `scrollYProgress`. Cards scale down as scroll progresses: `targetScale = 1 - (n - i) * 0.05`. Offset via `top: calc(-5vh + ${i * 30}px)`. Content (5/12) + parallax image (7/12). HUD overlay: center reticle (crosshair), data stream labels (mono 9px). RotateX tilt ±5° driven by scroll.
-
-### SVG Journey Path
-
-`min-height: 220vh`. Sinuous SVG path via `<path>` with cubic Béziers. Dashed guide at 10% opacity. Animated gradient stroke (indigo→purple→rose) via `pathLength` motion value tied to `scrollYProgress`. Milestones at 9%/43%/77%. Diamond-shaped dots with gradient fill + blur glow. Glassmorphic cards: `bg-gradient-to-br from-white/[0.05] to-transparent backdrop-blur-2xl`. Registration marks on card corners.
-
-### Landing Buttons
-
-- Primary CTA: `bg-white text-black font-bold`, `hover:scale-[1.05]`, gradient overlay on hover, `active:scale-[0.98]`
-- Secondary CTA: `border-2 border-white/30`, `hover:border-indigo-400 hover:bg-indigo-500/20`, `bg-black/40 backdrop-blur-md`
-
-### Massive Typography Footer
-
-"PRISM" at `text-[18vw]`, `bg-clip-text text-transparent bg-gradient-to-b from-white to-zinc-900`, `mix-blend-difference`. Non-interactive (`pointer-events-none select-none`).
+- **Loader:** 2s counter, indigo→rose gradient, exploding ring. Once per session.
+- **Sticky cards:** `sticky top-0`, scale `1 - (n-i)*0.05`, HUD reticle, RotateX ±5°.
+- **SVG journey:** 220vh, `pathLength` on scroll, 3 milestone nodes, glassmorphic cards.
+- **Footer:** "PRISM" 18vw, `mix-blend-difference`.
 
 ---
 
-## 10. Naming Conventions
+## 11. Naming Conventions
 
-### Page Titles (hero)
+### The Prism Naming Universe
 
-Format: `Word <span italic serif dim>Accent</span>`
+All names draw from: **optics, light, signal processing, navigation, space/physics.**
 
-Existing examples: "The *Spectrum*", "Your *Team*", "Global *Models*", "Orbital *Presence*", "The *Race*", "Capital *Dynamics*"
+#### v3 Screen Names
 
-The serif word is always the evocative/conceptual word, never the functional one.
+| Name | Route | Meaning |
+|------|-------|---------|
+| **Genesis** | `/app/onboard` | The origin of all signals |
+| **Meridian** | `/app/roadmap` | The guiding reference line |
+| **Luminary** | Floating overlay | A source of light that inspires |
+| **Checkpoint** | `/app/approvals` | Verified before moving forward |
+| **Synthesis** | `/app/reports` | Combining signals into unified output |
+| **Calibration** | `/app/admin` | Tuning the instrument |
 
-### Section Labels
+#### v3 Section / Feature Names
 
-Format: `text-[11px] font-mono uppercase tracking-[0.2em] p-text-ghost`
+| Name | Location | Meaning |
+|------|----------|---------|
+| **Illuminations** | Spectrum | Light revealing hidden patterns (AI insight cards) |
+| **Meridian Pulse** | Spectrum | Heartbeat of the roadmap |
+| **Echo Trail** | Employee Detail | Echoes of past conversations (timeline) |
+| **Work Stream** | Employee Detail | Flow of work through a person (task pipeline) |
+| **Meridian Alignment** | The Race | How aligned work is to the roadmap (AI metric) |
+| **Dawn Sequence** | Luminary | Entry animation — light filling the room |
 
-Examples: "Cross-dimensional patterns", "Department Vectors", "Simulation Lab", "Temporal Breakdown", "Pattern detection — individual & collective"
+#### Existing Names (unchanged)
 
-### Interaction Names
+The Spectrum, The Prism, Constellation, The Race, Orbital Presence, 360° Resonance, Telemetry, Neural Pathways, Bio-Rhythms, Capital Matrix, Impact Nodes, In Orbit, Dark, Standby, Protocol, Burnout Corridor, Flight Risk, Threshold Transition.
 
-Use evocative names, not generic:
+#### Page Title Pattern
+
+`Word <span italic serif dim>Accent</span>`
+
+| Screen | Title |
+|--------|-------|
+| Spectrum | "The *Spectrum*" |
+| Team | "Your *Team*" |
+| The Race | "The *Race*" |
+| Orbital Presence | "Orbital *Presence*" |
+| 360° Resonance | "Signal *Resonance*" |
+| Genesis | "The *Genesis*" |
+| Meridian | "The *Meridian*" |
+| Checkpoint | "Signal *Checkpoint*" |
+| Synthesis | "Signal *Synthesis*" |
+| Calibration | "System *Calibration*" |
+
+#### Naming Rules for New Features
 
 | ✅ Use | ❌ Don't use |
 |--------|-------------|
-| Correlation Engine | What-If Sliders |
-| Signal Scatter | Scatter Plot |
-| Temporal Rewind | Time Slider |
-| Ghost Horizon | Forecast Chart |
-| Magnetic Trajectory | ROI Line Chart |
-| The Race | Rankings Table |
-| Neural Pathways | Learning Modules |
-| Bio-Rhythms | Wellbeing Metrics |
-| Temporal Grid | Calendar View |
+| Genesis | Setup Wizard |
+| Meridian | Roadmap Page |
+| Luminary | AI Chat Bot |
+| Checkpoint | Approval Queue |
+| Synthesis | Report Builder |
+| Calibration | Admin Settings |
+| Illuminations | AI Insights Panel |
+| Dawn Sequence | Loading Animation |
+| Echo Trail | Chat History |
+| Meridian Alignment | Roadmap Score |
 
-New features MUST follow this pattern. See DESIGN_DOCUMENT.md §10 for full glossary.
-
-### Attendance Vocabulary
-
-| Prism Term | Meaning |
-|------------|---------|
-| In Orbit | Present (in office) |
-| Remote | Work from home |
-| Dark | Absent (unexplained) |
-| Standby | Weekend |
-| Protocol | Leave type ("PTO Protocol", "Sick Protocol") |
+Test: "Would this name feel native next to Spectrum, Luminary, and Meridian?"
 
 ---
 
-## 11. Do NOT Do List
+## 12. Do NOT Do List
 
-- Do NOT use `box-shadow` — use `blur-[60-120px]` ambient blobs instead
+**Visual system:**
+- Do NOT use `box-shadow` — use `blur-[60-120px]` ambient blobs
 - Do NOT use pie charts or donut charts
 - Do NOT use 3D perspective on charts
-- Do NOT use emoji in UI (exception: 👑 in Leaderboard race winner)
+- Do NOT use emoji in UI (exception: 👑 in The Race winner)
 - Do NOT use `text-white` class — use `p-text-hi`
 - Do NOT hardcode hex colors for text/borders — use `--p-*` tokens
 - Do NOT use fonts below 10px
 - Do NOT use recharts for novel interactions — hand-craft SVG
-- Do NOT create separate pages for content that can be a tab within Spectrum
-- Do NOT use `cursor: default` — the app uses custom cursor with `cursor: none`
-- Do NOT put explanatory text inside SVG charts — keep labels minimal, explain in surrounding prose
-- Do NOT use `position: fixed` for anything except the Dock
-- Do NOT add a sidebar or top navigation bar — the Dock is the only nav
-- Do NOT use `overflow: scroll` — always hide scrollbars with `scrollbarWidth: 'none'`
 - Do NOT display employee photos without the grayscale-to-colour hover pattern
-- Do NOT use unicode bullets (`•`, `→`) in data labels — use Lucide icons
-- Do NOT animate with `setInterval` — use Motion or CSS `@keyframes`
 - Do NOT hardcode dark mode colours without a `.prism-light` override
+
+**Layout and navigation:**
+- Do NOT create separate pages for content that can be a tab within Spectrum
+- Do NOT add a sidebar or top navigation bar — the Dock is the only nav
+- Do NOT use `position: fixed` for anything except the Dock and Luminary button
+- Do NOT use `cursor: default` — the app uses custom cursor with `cursor: none`
+- Do NOT use `overflow: scroll` — hide scrollbars with `scrollbarWidth: 'none'`
 - Do NOT forget bottom padding for dock clearance (`pb-32` minimum)
-- Do NOT show bare "No data" strings — use `<EmptyState>`
+
+**Animation:**
+- Do NOT animate with `setInterval` — use Motion or CSS `@keyframes`
+- Do NOT put explanatory text inside SVG charts
+- Do NOT use unicode bullets in data labels — use Lucide icons
+
+**UI cohesion (CRITICAL for v3 screens):**
+- Do NOT use list views or table rows — always use card-based layouts (`rounded-[2rem]`, `p-bg-card`)
+- Do NOT show checkboxes — use shift-click/long-press multi-select with floating action pill
+- Do NOT use dashed-border upload zones — use Prism card with animated pulse border
+- Do NOT use dropdown selectors — use pill buttons, radio cards, or slider controls
+- Do NOT use horizontal tab bars with 5+ tabs — use scroll-spy dot sidebar (like Employee Detail)
+- Do NOT render documents in white backgrounds — use Prism-styled dark viewer (`p-bg-card-2`)
+- Do NOT use standard Gantt/PM visualizations — reimagine with Prism's signal/light metaphors (but keep a true linear time axis for date readability)
+- Do NOT show bare form fields — wrap each form group in a Prism card with section marker header
+- Do NOT skip hero sections on new pages — every page needs: overline + serif italic title + stats + border-bottom
+- Do NOT show bare "No data" strings — use `<EmptyState>` with page-specific variant
+- Do NOT use generic names for features — use Prism vocabulary (see §11)
+- Do NOT call Luminary "chatbot" or "AI assistant" — it's a Luminary, a source of light
+
+**Two disclosure models** (choose based on screen purpose):
+- **Analytics disclosure** (Spectrum, Employee Detail, The Race, KPIs): hover→reveal. Information hidden by default, revealed on interaction. Quiet by default, rich on exploration.
+- **Operations disclosure / focus-dim** (Checkpoint, Tasks active view): ALL actions visible on every card by default. On hover: focused card stays full opacity, ALL OTHER cards dim to 60%. This creates focus without hiding — speed of action over visual quietness.
+- Do NOT mix models on the same screen. Pick one based on whether the screen is for understanding (analytics) or acting (operations).
+
+**The cohesion test:** Before shipping any new screen, ask: "If I screenshot this next to Spectrum, would someone know it's the same product?" If no → redesign using the patterns above.
 
 ---
 
-## 12. Adding a New Page: Checklist
+## 13. Adding a New Page: Checklist
 
 1. Create `src/app/components/YourPage.tsx` with a named export
 2. Add lazy import + route in `routes.tsx` (wrap with `withSuspense`)
@@ -678,13 +805,16 @@ New features MUST follow this pattern. See DESIGN_DOCUMENT.md §10 for full glos
 7. Animate entrance: hero at delay 0, first section 0.1, second 0.2
 8. Add a dock entry if primary navigation (edit `Dock.tsx` primary or feature nav)
 9. Add an `EmptyState` variant in `EmptyState.tsx` if the page can have zero data
-10. Use evocative naming (see §10) for the page title and all section labels
+10. **Name the page using Prism vocabulary** (see §11). No generic names.
 11. Ensure all images: `loading="lazy" decoding="async"`, grayscale pattern
 12. Ensure all data values: `font-mono` + dimension colour
 13. Ensure all colours use `var(--p-*)` tokens — test light mode
 14. Test: dark mode, light mode, mobile (320px), tablet, desktop, TV (1920px)
 15. Add `pb-32` minimum at page bottom for dock clearance
+16. **If the page interacts with Luminary:** ensure conversation context is passed correctly
+17. **If the page has role-based content:** check PRODUCT_ARCHITECTURE_v3.md §4 permission matrix
 
 ---
 
-*This file is the single source of truth for Prism's UI/UX conventions. Reference it before building any new feature.*
+*This file is the single source of truth for Prism's UI/UX conventions.*
+*For architecture: DESIGN_DOCUMENT.md. For v3 AI specs: PRODUCT_ARCHITECTURE_v3.md.*

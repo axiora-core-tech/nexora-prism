@@ -1,7 +1,8 @@
 # Nexora Prism — Design System & Architecture Document
 
-**Version:** 3.0 — April 2026  
-**Status:** Living document — single source of truth for architecture, design, and specifications  
+**Version:** 3.2 — April 2026  
+**Status:** Living document — single source of truth for design system and existing codebase  
+**Companion docs:** SKILL.md (UI/UX conventions), PRODUCT_ARCHITECTURE_v3.md (v3 AI platform specs)  
 **Stack:** React 19 · TypeScript · Vite 6.3 · Tailwind CSS v4 · Motion (Framer Motion) · React Router v7
 
 ---
@@ -10,22 +11,26 @@
 
 ### 1.1 What Prism Is
 
-Nexora Prism is a people analytics platform that surfaces six dimensions of employee health: Output (performance), Growth (learning), Motivation (engagement), Wellbeing (burnout risk), Return (ROI), and Risk (attrition probability). Unlike traditional HR dashboards that present data in flat tables, Prism treats each metric as a living signal and uses novel interaction paradigms to let leaders *feel* correlations between dimensions rather than merely reading them.
+Nexora Prism is an AI-powered Chief Operating Officer. It surfaces six dimensions of employee health — Output, Growth, Motivation, Wellbeing, Return, and Risk — and decomposes a CEO's vision into a company roadmap, auto-allocates tasks, and runs daily standups through an AI avatar manager called **Luminary**.
+
+**Prism is not 10 products. It is ONE product — an AI COO — with 10 views into the same intelligence layer.** The screens are windows into a unified data model. The value is the end-to-end chain from vision to execution, not any individual screen.
 
 ### 1.2 Vision
 
 > Every person carries more than their job title. Prism brings together every signal — reviews, growth, wellbeing, output — so leaders can see each person whole, and act accordingly.
 
-The core philosophy is captured in one line: **"One score compresses six signals. This page holds them apart."** Traditional HR platforms reduce people to a performance rating. Prism deliberately decompresses that into a spectrum of independent, sometimes-contradictory signals — because a person scoring 90 on output while burning out is not the same as a person scoring 90 across the board.
+The core philosophy: **"One score compresses six signals. This page holds them apart."**
 
 ### 1.3 Target Users
 
 | User | Need | Primary Pages |
 |------|------|---------------|
-| VP/Director of People | Strategic workforce decisions, retention planning | Spectrum (hub), Leaderboard |
-| Engineering Manager | Team health, 1:1 prep, performance reviews | Team, Employee Detail, KPIs |
-| CHRO/CPO | Board-level reporting, capital allocation | Spectrum (Capital Dynamics tab) |
-| HR Business Partner | Reviews, attendance, wellbeing programs | PerformanceReview, Attendance |
+| CEO / Entrepreneur | Upload vision, review roadmap, monitor revenue, calibrate system | Genesis, Meridian, Spectrum, Synthesis, Calibration |
+| Department Head | Department strategy, team performance, budget allocation | Meridian (dept view), Spectrum, Checkpoint, The Race |
+| VP/Director of People | Strategic workforce decisions, retention planning | Spectrum, The Race, Meridian |
+| Engineering Manager | Team health, 1:1 prep, reviews, approvals | Team, Employee Detail, KPIs, Checkpoint |
+| HR Business Partner | Reviews, attendance, wellbeing programs | 360° Resonance, Orbital Presence |
+| Employee | Daily standups, task management, self-view | Luminary, Tasks, KPIs |
 
 ### 1.4 The Six Dimensions
 
@@ -38,11 +43,9 @@ The core philosophy is captured in one line: **"One score compresses six signals
 | 05 | Return | `roi` | `#38bdf8` (Cyan) | % | No | Revenue contribution vs cost |
 | 06 | Risk | `attritionRiskPercentage` | `#fb923c` (Orange) | % | Yes | Flight probability (lower = better) |
 
-The `invert` flag on Risk means lower is better. This affects bar fill direction, sorting order, colour thresholds, and the Prism orbital ring fill calculation.
-
 ### 1.5 Design Language
 
-Prism's visual identity is **"cinematic data"** — observatory instruments, signal processing displays, editorial typography. Not corporate dashboards. Dark by default (`#030303`) with a warm off-white light mode (`#f2f0eb`). Every number is treated as a living signal, not a static label.
+**"Cinematic data"** — observatory instruments, signal processing displays, editorial typography. Not corporate dashboards. Dark by default (`#030303`) with a warm off-white light mode (`#f2f0eb`).
 
 ---
 
@@ -56,17 +59,31 @@ Prism's visual identity is **"cinematic data"** — observatory instruments, sig
 /enter ................... Threshold Transition (cinematic app entry)
 /demo .................... Interactive product demo
 
-/app ..................... Spectrum — THE Hub (index route)
-/app/spectrum ............ Spectrum (alias)
+EXISTING APP SCREENS:
+/app ..................... The Spectrum — THE Hub (index route)
+/app/spectrum ............ The Spectrum (alias)
 /app/team ................ Team Directory + 1:1 Prep
 /app/employee/:id ........ Employee Detail (split-panel editorial)
-/app/kpis ................ KPI Goals (health strip + OKR stream)
-/app/leaderboard ......... Animated Race (8-quarter bar race)
-/app/attendance .......... Temporal Patterns (heatmap + pattern detection)
-/app/review .............. 360° Performance Review (write + score)
-/app/reviews ............. 360° (alias)
-/app/tasks ............... Task Management (kanban + timers)
-/app/settings ............ Preferences (theme, profile, sign-out)
+/app/kpis ................ KPI Goals
+/app/leaderboard ......... The Race — Animated Rankings
+/app/attendance .......... Orbital Presence — Temporal Patterns
+/app/review .............. 360° Resonance — Performance Reviews
+/app/reviews ............. 360° Resonance (alias)
+/app/tasks ............... Tasks — Kanban + Timers
+/app/settings ............ Settings — Preferences
+
+v3 NEW SCREENS:
+/app/onboard ............. Genesis — CEO Vision Onboard Wizard (CEO-only)
+/app/roadmap ............. Meridian — Company Roadmap (timeline/cascade/kanban)
+/app/approvals ........... Checkpoint — Approval Queue + Negotiations
+/app/reports ............. Synthesis — NL Report Generation
+/app/admin ............... Calibration — System Configuration (CEO-only)
+
+v3 FLOATING:
+Luminary ................. AI Manager Overlay (full-screen / compact)
+                          Entry animation codename: Dawn Sequence
+
+REDIRECTS:
 /app/analytics ........... → redirects to /app
 /app/roi ................. → redirects to /app
 /app/* ................... 404 — "Signal lost"
@@ -74,63 +91,61 @@ Prism's visual identity is **"cinematic data"** — observatory instruments, sig
 
 ### 2.2 Navigation — The Dock
 
-macOS-style floating bottom dock. This is the **only** navigation element — there is no sidebar, no top nav bar inside the app shell.
+macOS-style floating bottom dock. The **only** navigation element.
 
-**Primary Nav (always visible):** Team | KPIs | ✦ Spectrum ✦ | Rankings | Tasks
+**Primary Nav (5 items):** Team | KPIs | ✦ Spectrum ✦ | The Race | Tasks
 
-- Spectrum icon is visually elevated: 44px circular button, cyan-to-purple gradient ring when active, floats above the dock bar with `-my-3`
-- Active indicator: `layoutId`-animated pill behind active icon (primary or feature)
+**Feature Nav (expanded tray):** 360° Resonance | Orbital Presence | Meridian | Checkpoint | Synthesis | Settings
 
-**Feature Nav (expandable tray via "More" chevron):** 360° Reviews | Attendance | Settings
+**v3 Floating elements:**
+- Luminary button — bottom-right, above dock. Triggers Dawn Sequence.
+- Notification bell — in-app notifications.
+
+**Role-based visibility:** See PRODUCT_ARCHITECTURE_v3.md §5 for full role matrix.
 
 **Dock behaviour:**
 - Spring entrance: `{ type: 'spring', stiffness: 200, damping: 20, delay: 0.5 }`
-- Fixed at `bottom: 2rem`, centered via `left-1/2 -translate-x-1/2`
-- Backdrop blur: `backdrop-blur-2xl`
-- Labels hidden below `sm` breakpoint
-- TV (1920px+): Dock scales up 1.3× for distance legibility
-- iOS safe area: `bottom: max(2rem, calc(1rem + env(safe-area-inset-bottom)))`
+- Fixed at `bottom: 2rem`, centered, `backdrop-blur-2xl`
+- Labels hidden below `sm`. TV: 1.3× scale. iOS safe area handled.
 
 ### 2.3 Page Transition Choreography
 
-Navigation type determines animation style, computed automatically by `Layout.tsx`:
-
 | Direction | Animation | Use Case |
 |-----------|-----------|----------|
-| Lateral | Slide left/right + 2px blur | Same-depth pages (Team → Tasks) |
-| Dive | Scale up from 94% + 6px blur | Going deeper (Team → Employee) |
-| Surface | Scale down from 106% + 4px blur | Coming back (Employee → Team) |
+| Lateral | Slide left/right + 2px blur | Same-depth pages |
+| Dive | Scale up from 94% + 6px blur | Going deeper |
+| Surface | Scale down from 106% + 4px blur | Coming back |
 | Fade | Vertical fade 16px | Same position or fallback |
 
-Every route has a numeric `depth` (0–2) and lateral `position` in static maps:
-
+Depth/position maps in `Layout.tsx`:
 ```typescript
-// Depth map
-'/app': 0, '/app/spectrum': 0, '/app/team': 0, '/app/tasks': 0, '/app/analytics': 0,
-'/app/kpis': 1, '/app/attendance': 1, '/app/roi': 1, '/app/leaderboard': 1,
+// Depth: 0 = hub level, 1 = feature level, 2 = detail level
+'/app': 0, '/app/spectrum': 0, '/app/team': 0, '/app/tasks': 0,
+'/app/kpis': 1, '/app/attendance': 1, '/app/leaderboard': 1,
 '/app/review': 1, '/app/settings': 1,
+// v3 additions:
+'/app/onboard': 1, '/app/roadmap': 1, '/app/approvals': 1,
+'/app/reports': 1, '/app/admin': 1,
 '/app/employee/*': 2
-
-// Position map (lateral ordering)
-'/app': 0, '/app/team': 1, '/app/tasks': 2, '/app/kpis': 3,
-'/app/attendance': 4, '/app/leaderboard': 5, '/app/review': 6, '/app/settings': 7
 ```
 
 ### 2.4 Provider Hierarchy
 
 ```
-ThemeProvider          ← Dark/light CSS class on <html>, persisted to localStorage
-  └─ AuthProvider      ← User session { email, name } via localStorage
+ThemeProvider          ← Dark/light CSS class on <html>
+  └─ AuthProvider      ← User session { email, name, role_level }
        └─ RouterProvider
-            ├─ LandingPage       (public)
-            ├─ SignIn             (public)
-            ├─ Demo              (public)
+            ├─ LandingPage, SignIn, Demo    (public)
             └─ ProtectedRoute
-                 ├─ EnterApp      (threshold transition)
-                 └─ Layout        (app shell: ambient blobs, cursor, transitions, dock)
-                      ├─ Spectrum, Team, EmployeeDetail, Tasks,
-                      ├─ KPIGoals, Attendance, Leaderboard,
-                      ├─ PerformanceReview, Settings
+                 ├─ EnterApp               (threshold transition)
+                 └─ Layout                 (app shell + dock + cursor + Luminary button)
+                      ├─ Spectrum           (with Illuminations + Meridian Pulse)
+                      ├─ Team, EmployeeDetail (with Echo Trail + Work Stream)
+                      ├─ Tasks, KPIGoals
+                      ├─ Attendance (Orbital Presence), Leaderboard (The Race)
+                      ├─ PerformanceReview (360° Resonance), Settings
+                      ├─ Genesis, Meridian, Checkpoint, Synthesis, Calibration  [v3]
+                      ├─ Luminary overlay  [v3, floating]
                       └─ NotFound (404)
 ```
 
@@ -152,284 +167,253 @@ ThemeProvider          ← Dark/light CSS class on <html>, persisted to localSto
 | Drag and drop | react-dnd + HTML5 backend | 16.0.1 |
 | Icons | Lucide React | 0.487.0 |
 | Date utilities | date-fns | 3.6.0 |
-| Carousel | Embla Carousel | 8.6.0 |
 | Notifications | Sonner | 2.0.3 |
-| Utilities | clsx, tailwind-merge, class-variance-authority | Latest |
+| v3: AI | Anthropic Claude API (client-side) | `/v1/messages` |
+| v3: Avatar | D-ID or HeyGen (photo-driven animation) | API |
+| v3: Voice | ElevenLabs (voice cloning + TTS) | API |
+| v3: STT | Web Speech API → Whisper (upgrade path) | Browser / API |
+| v3: Email | SendGrid or Resend | API |
 
 ### 3.2 Project Structure
 
 ```
 nexora-prism/
 ├── src/
-│   ├── main.tsx                        # Entry point
+│   ├── main.tsx
 │   ├── app/
-│   │   ├── App.tsx                     # Root: ThemeProvider → AuthProvider → RouterProvider
-│   │   ├── routes.tsx                  # All routes + lazy loading + suspense skeletons (~200 lines)
-│   │   ├── mockData.ts                # Centralised mock data store (~845 lines)
+│   │   ├── App.tsx, routes.tsx, mockData.ts
 │   │   ├── auth/
-│   │   │   ├── AuthContext.tsx         # Auth state + localStorage persistence
-│   │   │   ├── ThemeContext.tsx        # Dark/light toggle + immediate CSS class switching
-│   │   │   └── ProtectedRoute.tsx     # Auth gate → redirects to /sign-in
-│   │   └── components/
-│   │       ├── Layout.tsx              # App shell (~188 lines)
-│   │       ├── Spectrum.tsx            # THE Hub (~417 lines)
-│   │       ├── Team.tsx                # Directory + 1:1 prep (~351 lines)
-│   │       ├── EmployeeDetail.tsx      # Deep-dive split-panel (~879 lines)
-│   │       ├── Tasks.tsx               # Kanban + drag-and-drop (~1070 lines)
-│   │       ├── KPIGoals.tsx            # OKR + KPI tracking (~311 lines)
-│   │       ├── Attendance.tsx          # Calendar + 7 pattern algorithms (~467 lines)
-│   │       ├── Leaderboard.tsx         # Animated bar-race (~195 lines)
-│   │       ├── PerformanceReview.tsx   # 360° read + write wizard (~558 lines)
-│   │       ├── Settings.tsx            # Theme, notifications, system config (~473 lines)
-│   │       ├── ThresholdTransition.tsx # Cinematic entry animation (~344 lines)
-│   │       ├── EnterApp.tsx            # Post-sign-in gate
-│   │       ├── Demo.tsx                # Product demo walkthrough (~331 lines)
-│   │       ├── landing/               # Marketing site
-│   │       │   ├── LandingPage.tsx, Loader.tsx, Navbar.tsx, HeroSection.tsx,
-│   │       │   ├── FeatureSection.tsx, JourneySection.tsx, CTASection.tsx,
-│   │       │   ├── Footer.tsx, CustomCursor.tsx
-│   │       ├── ui/                    # Shared primitives
-│   │       │   ├── Dock.tsx, DockIcons.tsx (~251 lines), CustomCursor.tsx,
-│   │       │   ├── EmptyState.tsx (~164 lines, 7 variants), ROIWaveChart.tsx (~325 lines),
-│   │       │   └── [~40 shadcn Radix primitives]
-│   │       └── figma/ImageWithFallback.tsx
-│   └── styles/
-│       ├── index.css, prism-theme.css (~509 lines), theme.css,
-│       ├── responsive.css (~178 lines), fonts.css, tailwind.css
+│   │   │   ├── AuthContext.tsx, ThemeContext.tsx, ProtectedRoute.tsx
+│   │   ├── components/
+│   │   │   ├── Layout.tsx, Spectrum.tsx, Team.tsx, EmployeeDetail.tsx,
+│   │   │   ├── Tasks.tsx, KPIGoals.tsx, Attendance.tsx, Leaderboard.tsx,
+│   │   │   ├── PerformanceReview.tsx, Settings.tsx, ThresholdTransition.tsx,
+│   │   │   ├── EnterApp.tsx, Demo.tsx
+│   │   │   ├── landing/ (LandingPage, Loader, Navbar, Hero, Features, Journey, CTA, Footer)
+│   │   │   ├── ui/ (Dock, DockIcons, CustomCursor, EmptyState, ROIWaveChart, ~40 shadcn)
+│   │   │   │
+│   │   │   ├── [v3 PLANNED NEW FILES:]
+│   │   │   ├── Genesis.tsx              # CEO onboard wizard
+│   │   │   ├── Meridian.tsx             # Roadmap (timeline/cascade/kanban)
+│   │   │   ├── Luminary.tsx             # AI Manager overlay
+│   │   │   ├── Checkpoint.tsx           # Approval queue
+│   │   │   ├── Synthesis.tsx            # NL report generation
+│   │   │   ├── Calibration.tsx          # Admin / system config
+│   │   │   └── ui/
+│   │   │       ├── LuminaryButton.tsx   # Floating trigger button
+│   │   │       ├── DawnSequence.tsx      # 5-stage entry animation
+│   │   │       ├── HUDPanel.tsx         # Floating context panels
+│   │   │       ├── ConversationThread.tsx # Hybrid message display
+│   │   │       ├── NotificationBell.tsx  # In-app notifications
+│   │   │       └── VoiceInput.tsx       # STT microphone component
+│   │   ├── [v3 PLANNED:]
+│   │   │   ├── services/
+│   │   │   │   ├── aiClient.ts          # Anthropic API wrapper
+│   │   │   │   ├── avatarService.ts     # D-ID/HeyGen integration
+│   │   │   │   ├── voiceService.ts      # ElevenLabs TTS + clone
+│   │   │   │   └── notificationService.ts # Email + in-app
+│   │   │   └── stores/
+│   │   │       ├── companyConfig.ts, conversationStore.ts, roadmapStore.ts
+│   └── styles/ (index.css, prism-theme.css, theme.css, responsive.css, fonts.css, tailwind.css)
 ├── index.html, package.json, vite.config.ts
 ```
 
 ### 3.3 Code Splitting & Loading
 
-Every page lazy-loaded via `React.lazy()` + named exports + `<Suspense>`. Two skeleton variants: `PageSkeleton` (generic) and `EmployeeSkeleton` (split-panel). Skeletons use inline CSS `@keyframes` (no theme dependency during chunk load). `NotFound` catches unmatched `/app/*` routes.
+Every page lazy-loaded via `React.lazy()`. Two skeleton variants: `PageSkeleton`, `EmployeeSkeleton`. `NotFound` catches unmatched routes.
 
 ### 3.4 Authentication
 
-Client-side mock: React Context + `localStorage` key `prism_auth_user`. Stores `{ email, name }`. Exposes `login()`, `logout()`, `isAuthenticated`. `ProtectedRoute` redirects to `/sign-in`. **Future:** Replace with OAuth/SSO — only `AuthContext.tsx` and `ProtectedRoute.tsx` need changes.
+Client-side mock: `localStorage` key `prism_auth_user` storing `{ email, name }`. v3 extends to `{ email, name, role_level }` with 4 roles: `ceo`, `department_head`, `manager`, `employee`.
+
+**v3 Privacy model** (CEO configures per company):
+- `full_transparency` — manager sees full transcripts + AI summaries
+- `summary_only` — manager sees AI-generated summaries, not raw transcripts
+- `layered` — employee can tag topics as "private/HR-only", manager sees everything else
+
+**v3 Conversation memory** (CEO configures per company):
+Luminary retains conversation context for: 7 / 30 / 90 days / full history (`-1`). Older conversations are summarised into key facts. See PRODUCT_ARCHITECTURE_v3.md §8 for `CompanyConfig.conversationMemoryDays`.
 
 ### 3.5 Theming
 
-Dual-layer: **Prism tokens** (`--p-*`) in `prism-theme.css` + **shadcn tokens** in `theme.css`. Toggle `.prism-dark`/`.prism-light` on `<html>`. `ThemeContext` applies immediately (not waiting for React) and persists to `localStorage` key `prism_theme`.
+Dual-layer: **Prism tokens** (`--p-*`) + **shadcn tokens**. Toggle `.prism-dark`/`.prism-light` on `<html>`. Applied immediately by `ThemeContext`.
 
 ---
 
 ## 4. Design System
 
-*(Complete token tables, typography rules, spacing system, responsive breakpoints, and colour system are documented in the companion SKILL.md file. This section covers the architectural decisions.)*
+*(Complete token tables, patterns, and copy-paste JSX in SKILL.md. This section covers architectural decisions.)*
 
 ### 4.1 Token Architecture
 
-All colours defined as `--p-*` CSS custom properties in `prism-theme.css`. Both `.prism-dark` and `.prism-light` variants. Components NEVER use raw hex — they reference tokens via utility classes (`p-text-hi`, `p-bg-card`, etc.) or inline `var()`.
-
-Seven-level text opacity ladder, three-tier border system, six accent colours each with full/low-opacity/border variants, chart-specific tokens, motion tokens.
+All colours as `--p-*` CSS custom properties in `prism-theme.css`. Seven-level text ladder, three-tier borders, six accent colours with full/low/border tiers, chart tokens, motion tokens.
 
 ### 4.2 Light Mode Strategy
 
-Retrofitted onto dark-first codebase via three layers:
-1. Token redefinition in `.prism-light` (automatic for token-using components)
-2. CSS selector overrides for hardcoded Tailwind classes (`bg-white/5` etc.)
-3. Component-level `isLight` checks for ambient effects (blobs, cursor blend mode)
-
-Key: warm off-white `#f2f0eb` (not pure white), deepened accents for legibility, avatar grayscale 60% (not 100%), blobs use `mix-blend-mode: multiply` instead of `screen`.
+Three layers: token redefinition in `.prism-light`, CSS overrides for hardcoded Tailwind classes, component-level `isLight` checks. Warm off-white `#f2f0eb`, deepened accents, 60% grayscale on avatars, `multiply` blend on blobs.
 
 ---
 
 ## 5. UI/UX Design Principles
 
-### 5.1 Core Philosophy
-
 1. **Signal, not noise.** Every element must earn its space.
-2. **Feel, don't read.** Correlations felt through interaction (sliders resist, dots attract, bars race).
-3. **Editorial, not dashboard.** Magazine profiles, not spreadsheet summaries.
-4. **Dark-first, light-capable.** Data visualization pops on dark.
-5. **One score compresses, the page holds apart.** Composite only in The Prism; everywhere else, dimensions separated.
+2. **Feel, don't read.** Correlations through interaction.
+3. **Editorial, not dashboard.** Magazine profiles.
+4. **Dark-first, light-capable.** Data pops on dark.
+5. **One score compresses, the page holds apart.** Composite only in The Prism.
 6. **Progressive disclosure.** Start quiet, reveal on interaction.
 
-### 5.2 Visual Language
-
-| Principle | Implementation |
-|-----------|---------------|
-| Grayscale portraits, color on hover | `grayscale` default → `group-hover:grayscale-0` over 500ms |
-| Ambient glow, not hard shadows | `blur-[120px]` soft blobs, NEVER `box-shadow` |
-| Borders as whispers | 5% → 10–20% on hover/active |
-| Typography hierarchy through weight, not size | Serif/sans pairing, font-weight, not dramatic size jumps |
-
-### 5.3 Interaction Patterns
-
-| Pattern | Rule |
-|---------|------|
-| Hover → Reveal | Information appears on proximity, not by default |
-| Click → Expand | In-place with AnimatePresence, never navigate unless profile link |
-| Drag → Physics | Spring-connected correlated data |
-| Scroll → Parallax | Hero backgrounds: scale, opacity, blur |
-| Navigate → Choreograph | Transitions match navigation intent |
+*(Full visual language, interaction patterns, card system, button/control patterns documented in SKILL.md.)*
 
 ---
 
-## 6. Page-by-Page Specification
+## 6. Page-by-Page Specification — Existing Screens
 
 ### 6.1 Landing Page (`/`)
 
-**Visual layers:** `bg-[#010101]` + fractalNoise (5%) + 12-col grid (3%) + radial vignette + corner registration marks + custom cursor.
+Visual layers: `bg-[#010101]` + fractalNoise (5%) + 12-col grid (3%) + vignette + registration marks.
 
-**Sections:**
-1. **Loader** — 2s percentage counter (Space Mono, indigo→rose gradient). Once per session (`sessionStorage`). Exploding ring (10vw→150vw) on completion.
-2. **Hero** — Full viewport parallax. Three CSS blobs (GPU, `will-change`). 3D text (`perspective:1000px`). "People, understood." (4rem→11rem fluid). Two CTAs.
-3. **Features** — 4 stacking sticky cards. Scale down as next stacks. Content (5/12) + parallax image (7/12) with HUD reticle. RotateX tilt ±5°.
-4. **Journey** — 220vh. SVG path draws on scroll (indigo→purple→rose gradient `pathLength`). 3 milestone nodes at 9%/43%/77%, alternating left/right. Diamond dots with glow. Glassmorphic cards with registration marks. Mobile: straight vertical line.
-5. **CTA** — Conversion section.
-6. **Footer** — 3 link columns. "PRISM" at 18vw, `mix-blend-difference`. Identifier + copyright in 10px mono.
+Sections: Loader (2s, once/session, exploding ring) → Hero (parallax, 3 CSS blobs, 3D text, two CTAs) → Features (4 stacking sticky cards, HUD reticle) → Journey (220vh, SVG path draws on scroll, 3 milestone nodes) → CTA → Footer (18vw "PRISM", `mix-blend-difference`).
 
-### 6.2 Spectrum — The Intelligence Nexus (`/app`)
+### 6.2 The Spectrum — Intelligence Nexus (`/app`)
 
-**THE Hub.** No back button. Personalised greeting. Title: "The *Spectrum*".
+**THE Hub.** No back button. "The *Spectrum*".
 
-**Sections:**
-1. **The Prism** — SVG 440×440. 6 concentric rings (base 48px, gap 27px). Animated `stroke-dashoffset` (1.6s, staggered 0.1s). Gradient stroke. Hover: isolate ring (18% opacity others), show label/value at arc endpoint, glow filter. Click: expand dimension row + scroll. Centre: composite score 42px.
-
-2. **Team Constellation** — Horizontal scroll. 260×370px cards. Photo with `from-black via-black/50 to-transparent` gradient. Risk dot (top-left), ROI badge (top-right). Names: first (sans light) + last (serif italic). Hover: `y:-20, scale:1.02`, grayscale→colour. Entrance: staggered `x:50, rotateY:-10`. Snap scroll. Right-edge fade.
-
-3. **Dimension Rows** — 6 full-bleed expandable rows. Large stat (`clamp(2rem,4.5vw,3.5rem)`), progress bar, top-3 avatars. Active: accent left border, glow gradient, others 25% opacity. Expanded: insight quote (serif italic), action card, TeamScatter (avatars on gradient track, ±9px jitter), top/bottom-3 ranked lists.
-
-4. **Intelligence** — Auto-generated cross-dimensional patterns. 4 max. Severity-sorted cards: type badge, icon, narrative, employee link.
-
-5. **Deep Analytics** — 4 tabs:
-   - **Overview**: ComposedChart (area/line/bar), attrition bars, performance sparkline, employee matrix table.
-   - **Capital Dynamics**: Magnetic chart (12% cursor pull within 100px) + Ghost Horizon (growth slider -5→20%) + Cost of Departure (1.5× comp) + Department Vectors.
-   - **Wellbeing**: Radar (6 axes), learning bars (stacked), burnout matrix (employee cards).
-   - **Simulation Lab**: Correlation Engine (6 sliders with physics: Output↑→Wellbeing↓0.45×, Motivation→Risk inverse, Wellbeing<65→Risk↑0.5×, Learning→ROI↑1.2×) + Signal Scatter (any X/Y, spring 0.7s stagger 0.06s) + Temporal Rewind (4-quarter slider, all dims animate).
+Sections: The Prism (SVG 440×440, 6 concentric rings) → Team Constellation (horizontal scroll, 260×370px cards) → Dimension Rows (6 expandable, TeamScatter) → Illuminations [v3: AI-generated insight cards replacing static Intelligence] → Meridian Pulse [v3: roadmap progress widget] → Deep Analytics (4 tabs: Overview, Capital Dynamics, Wellbeing, Simulation Lab).
 
 ### 6.3 Team (`/app/team`)
 
-4 org stat cards + department performance bars → filterable grid (search/dept/risk) → employee cards. Cards: avatar+risk dot, name/role/dept(colour), perf score, 3 mini-metrics, skills (max 3), trend. Click → 1:1 prep panel: topics + hand-crafted SVG MiniRadar (4 axes). Zero recharts.
+4 org stat cards + dept bars → filterable grid → employee cards with 1:1 prep (SVG MiniRadar). v3: AI-generated prep from Luminary conversation history. Cards show standup status.
 
 ### 6.4 Employee Detail (`/app/employee/:id`)
 
-Split-panel: **Left 40%** sticky photo column (parallax scale/y, gradient overlay, name/role/dept, engagement badge). **Right 60%** scrollable with floating dot sidebar (scroll-spy via RAF on `<main>`).
+Split-panel: Left 40% sticky photo, Right 60% scrollable. 8 sections: Telemetry → KPI Goals → Capital Matrix → Neural Pathways → Temporal Dynamics → Impact Nodes → Bio-Rhythms → 360° Resonance.
 
-8 sections: Telemetry (6 stat rings, daily perf) → KPI Goals (OKRs + KPI vectors) → Capital Matrix (quarterly ROI, compensation, leave) → Neural Pathways (LMS modules) → Temporal Dynamics (TemporalGrid, timesheets, feedback) → Impact Nodes (promotions) → Bio-Rhythms (stress/burnout/sleep/cognitive) → 360° Resonance (review cards with 5-axis radar).
+v3 adds: **Echo Trail** tab (conversation timeline dots) + **Work Stream** tab (task pipeline) + AI performance recommendations.
 
 ### 6.5 Tasks (`/app/tasks`)
 
-Kanban: Backlog|Active|Review|Resolved. react-dnd HTML5 backend. Task card: title, priority badge, owner avatar, story points, timer, comments, attachments. Detail slide-out panel. Create/edit modal. Branded empty states.
+Kanban: Backlog|Active|Review|Resolved. react-dnd. v3: AI tasks arrive with fading "AI suggested" badge + non-editable `source` field. Negotiation via quick-action dropdown → Luminary.
 
 ### 6.6 KPI Goals (`/app/kpis`)
 
-Per-employee: OKR nodes (progress + status badge: Nominal/Degraded/Critical/Resolved) + KPI vectors (current vs target, colour-coded). `isLowerBetter` flag for inverted metrics.
+OKR nodes + KPI vectors. `isLowerBetter` flag. v3: AI Recommendations panel + inline suggestion chips.
 
-### 6.7 Attendance (`/app/attendance`)
+### 6.7 Orbital Presence (`/app/attendance`)
 
-Hero: Org Presence Rate + Remote Ratio. **7 pattern detection algorithms** (all implemented): consecutive absences (≥2, critical), high absence count (≥3, watch), heavy WFH (>50%, watch), Monday/Friday pattern (≥3 combined, watch), mass bunking (≥2 same date, critical), WFH surge (≥3 same date, watch), org-wide low presence (<85%, watch). Max 6 cards, severity-sorted.
+7 pattern detection algorithms (all implemented): consecutive absences, high absence count, heavy WFH, Monday/Friday, mass bunking, WFH surge, org-wide low presence. v3: standup patterns integrated into detection panel.
 
-Node selector (2×4 grid) → detail panel: TemporalGrid (7-col calendar, colour-coded, hover tooltips), breakdown bars, leave balance, location donut (SVG ring).
+### 6.8 The Race (`/app/leaderboard`)
 
-### 6.8 Leaderboard (`/app/leaderboard`)
+8-quarter bar race. Layout spring animations. 5 metrics + v3: **Meridian Alignment** (6th metric, AI-judged). Play 850ms/step. Winner 👑.
 
-8-quarter bar race (Q1'24→Q4'25). `motion.div layout` with `spring: {damping:25, stiffness:200}`. 5 metrics (Output/Return/Growth/Motivation/Wellbeing). Play: 850ms/step from Q1. Winner: 👑 emoji. Manual scrubber + clickable labels. Summary stats: Average, Leader, Spread, Above target.
+### 6.9 360° Resonance (`/app/review`)
 
-### 6.9 Performance Review (`/app/review`)
-
-**Reviews mode:** Per-employee cards, hand-crafted SVG RadarWeb (5 axes), scores/strengths/improvements. **Write mode:** 4-phase wizard: Select → Score (5 sliders) → Write (text areas) → Confirm.
+Reviews mode (SVG RadarWeb) + Write mode (4-phase wizard). v3: Progressive AI draft — manager highlights sections to regenerate.
 
 ### 6.10 Settings (`/app/settings`)
 
-Theme toggle (dark/light, sun/moon). Notification prefs. Security. Integrations. Sign-out.
+Theme toggle, notifications, security, sign-out. v3: Luminary preferences (voice/text, immersive/compact, mute default). CEO users → replaced by Calibration.
 
 ---
 
-## 7. Interaction Design Catalogue
+## 7. Page Specification — v3 New Screens
 
-### 7.1 Custom Cursor
+*(Full specifications in PRODUCT_ARCHITECTURE_v3.md §6. Summary here for cross-reference.)*
 
-Dot (4px, `spring: damping:30, stiffness:500, mass:0.2`) + Ring (28→48px on hover, `spring: damping:28, stiffness:150, mass:0.6`). Contextual labels via `data-cursor`. `mix-blend-mode: difference`/`multiply`. Hidden on `(pointer: coarse)`.
+**UI cohesion rules:** Every new screen follows Prism DNA — hero section (overline + serif italic title), card-based layout, section markers (11px mono uppercase ghost), ambient glow (never box-shadow), spring physics. Two disclosure models:
+- **Analytics screens** (Spectrum, Employee Detail, The Race): hover→reveal progressive disclosure.
+- **Operations screens** (Checkpoint, Tasks active view): **focus-dim** — all actions visible by default, on hover dim everything EXCEPT the focused card to 60% opacity.
 
-### 7.2 Novel Interactions
+### 7.1 Genesis (`/app/onboard`)
+CEO-only cinematic vertical scroll (not a stepped wizard). **Voice-first:** large mic button centered ("Tell us your vision"), upload secondary, text tertiary. 4 sections that transition cinematically: Voice/Upload → AI Summary (split-panel, editable entity cards) → Deep-Dive (avatar conversation, mini-Luminary) → Meridian Preview. SVG progress path draws along right edge. Dock hidden. First-run shows a choice screen: "Begin your Genesis" or "Explore Prism first."
+
+### 7.2 Meridian (`/app/roadmap`)
+3 view modes via sub-tab toggle. **Signal Path** (default): glowing milestone nodes on a **true linear proportional time axis** — dates are readable, duration is comparable. Department swim lanes as ambient depth-separated bands. Dependencies as light threads. Toggle-able duration bars and critical path highlighting. **Cascade**: vertical tree of cards. **Kanban**: column layout. All views use Prism card pattern. Filter chips for department/status/date.
+
+### 7.3 Luminary (floating overlay)
+**Three experience modes** (employee chooses in Settings, default: cinematic): Always cinematic (full Dawn Sequence) / Quick mode (skip Dawn Sequence, instant room) / Ask each time. Layout: immersive full-screen (default) or compact drawer. Dawn Sequence is **two-phase**: Phase A (0-800ms, client-side animation + API calls fire in parallel) → Warm Hold (breathing glow while APIs respond, 2-5s) → Phase B (avatar materialises + speaks, 1.4s). HUD panels are Prism cards positioned absolutely at screen edges. Default avatar (Prism geometric form + curated voice) when manager avatar not configured. Voice configurable: clone manager OR Prism branded voice.
+
+### 7.4 Checkpoint (`/app/approvals`)
+**Card grid** (2-column). Each approval is a full Prism card. **Focus-dim model:** all action buttons (Approve/Reject/Reassign) visible on every card by default. On hover: focused card at full opacity, all others dim to 60%. Multi-select via shift-click with floating action pill above dock. Hero section: "Signal *Checkpoint*." **Fast-track:** simple deadline extensions (≤5 days) skip Luminary — one-line card routes directly to manager. Complex negotiations through Luminary.
+
+### 7.5 Synthesis (`/app/reports`)
+Template gallery as Prism cards (3-column grid). Past reports as searchable card grid. Custom reports via text + VoiceInput. **Prism-styled document viewer** (dark background, Prism typography, accent-colored charts). Export generates properly formatted light-background documents. **Execution Velocity** replaces "Revenue Prediction" — three layers: Velocity Score (0-100, primary), Revenue Estimate (secondary, caveated), AI Narrative (contextual).
+
+### 7.6 Calibration (`/app/admin`)
+CEO-only. **Scroll-spy sections** (not horizontal tabs) — same vertical scroll + floating dot sidebar as Employee Detail. 7 sections as Prism cards. Avatar setup includes voice choice: "Clone manager voice" or "Use Prism voice" with A/B comparison. Task allocation threshold configurable per manager (all/high+critical/critical/trust AI, default: medium+critical). Privacy as radio cards. Integrations as service cards.
+
+---
+
+## 8. Interaction Design Catalogue
+
+### 8.1 Custom Cursor
+
+Dot (4px, fast spring) + Ring (28→48px, trailing spring). `data-cursor` labels. `mix-blend-mode: difference`/`multiply`. Hidden on touch.
+
+### 8.2 Novel Interactions
 
 | Name | Location | Mechanic |
 |------|----------|----------|
-| **Prism Orbital** | Spectrum | 6 concentric SVG rings, animated `stroke-dashoffset`, hover isolate, click scroll |
-| **TeamScatter** | Dimension rows | Avatar dots on gradient track, ±9px jitter, hover tooltip |
-| **Magnetic Data Points** | Capital Dynamics | 12% cursor pull within 100px radius, closest auto-labels |
-| **Ghost Horizon** | Capital Dynamics | Real→forecast zone, confidence envelope, growth slider |
-| **Cost of Departure** | Capital Dynamics | Click employee → replacement cost (1.5× comp), lost value, time to replace |
-| **Correlation Engine** | Simulation Lab | 6 sliders with physics resistance between correlated dimensions |
-| **Signal Scatter** | Simulation Lab | Any 2 dims → animated scatter, spring 0.7s staggered 0.06s |
-| **Temporal Rewind** | Simulation Lab | Quarter slider, all 6 dims animate simultaneously |
-| **ROI Bar Race** | Leaderboard | 8-quarter race, layout spring animations trade positions |
-| **MiniRadar** | Team 1:1 panel | Hand-crafted SVG, 4 axes, grid rings + data polygon |
-| **TemporalGrid** | Attendance | 7-col calendar, colour-coded, animated cell entrance (staggered 0.015s) |
-| **RadarWeb** | Reviews | 5-axis radar, hand-crafted SVG |
+| **Prism Orbital** | Spectrum | 6 SVG rings, animated dashoffset, hover isolate, click scroll |
+| **TeamScatter** | Dimension rows | Avatars on gradient track, ±9px jitter |
+| **Magnetic Data Points** | Capital Dynamics | 12% cursor pull within 100px |
+| **Ghost Horizon** | Capital Dynamics | Forecast + growth slider |
+| **Cost of Departure** | Capital Dynamics | Click → replacement cost model |
+| **Correlation Engine** | Simulation Lab | 6 sliders with physics resistance |
+| **Signal Scatter** | Simulation Lab | Any 2 dims → animated scatter |
+| **Temporal Rewind** | Simulation Lab | Quarter slider, all 6 dims animate |
+| **ROI Bar Race** | The Race | Layout spring animations trade positions |
+| **MiniRadar** | Team 1:1 panel | SVG spider, 4 axes |
+| **TemporalGrid** | Orbital Presence | 7-col calendar, colour-coded |
+| **RadarWeb** | 360° Resonance | 5-axis SVG radar |
+| **Dawn Sequence** | Luminary entry | 5-stage, 2.2s: Breath → Warmth → Presence → Greeting → Room [v3] |
+| **Echo Trail** | Employee Detail | Timeline dots per standup, sentiment-coloured [v3] |
 
 ---
 
-## 8. Data Model
+## 9. Data Model
 
-### 8.1 Employee Schema
+### 9.1 Employee Schema (existing)
 
 ```typescript
 interface Employee {
-  id: string;                     // "e1"–"e8"
-  name: string; role: string; department: string;
-  stage: string;                  // "Established", "Rising", etc.
-  avatar: string;                 // Unsplash URL
-  skills: string[];
-
-  // Six Dimensions
-  performanceScore: number;       // 0–100
-  learningProgress: number;       // 0–100 (%)
-  motivationScore: number;        // 0–100
-  welfareScore: number;           // 0–100
-  roi: number;                    // 80–350 (%)
-  attritionRiskPercentage: number;// 0–100
-  attritionRisk: 'Low' | 'Medium' | 'High';
-  trend: 'up' | 'down' | 'stable';
-
-  // Financial
+  id: string; name: string; role: string; department: string;
+  stage: string; avatar: string; skills: string[];
+  performanceScore: number; learningProgress: number;
+  motivationScore: number; welfareScore: number;
+  roi: number; attritionRiskPercentage: number;
+  attritionRisk: 'Low'|'Medium'|'High'; trend: 'up'|'down'|'stable';
   revenueContribution: number; costInvestment: number;
-  compensation: { base, bonus, equityVested, equityUnvested, nextVestDate, wellnessStipend, utilizedStipend };
-  roiQuarterly: { quarter, investment, value, roi }[];
-
-  // Performance
-  engagementLevel: string; recentFeedback: string; nextPromotionEligibility: string;
-  dailyPerformance: { day, score, hours }[];
-  timesheets: { week, hoursLogged, utilizationRate, billable }[];
-  workLogFeedback: { date, comment, sentiment }[];
-
-  // Goals
-  okrs: { objective, progress, status, weight }[];
-  kpis: { name, target, current, unit, trend, weight }[];
-  projectedPromotions: { role, timeframe, probability }[];
-
-  // Learning
-  lmsModules: { id, title, status, progress, score, date }[];
-
-  // Reviews
-  reviews360: { reviewer, relation, date, scores:{communication,technical,leadership,collaboration,innovation}, strengths, improvements, overall }[];
-
-  // Attendance
-  attendance: { present, wfh, leave, absent, calendar: { date, type, checkIn?, checkOut?, leaveType? }[] };
-  leaveBalance: { ptoTotal, ptoUsed, sickTotal, sickUsed, sabbaticalEligible };
-
-  // Wellbeing
-  bioRhythm: { stressIndex, burnoutProbability, sleepQuality, cognitiveLoad };
-
+  compensation: {...}; roiQuarterly: {...}[];
+  engagementLevel: string; recentFeedback: string;
+  dailyPerformance: {...}[]; timesheets: {...}[];
+  workLogFeedback: {...}[]; okrs: {...}[]; kpis: {...}[];
+  projectedPromotions: {...}[]; lmsModules: {...}[];
+  reviews360: {...}[]; attendance: {...}; leaveBalance: {...};
+  bioRhythm: {...};
   // PLANNED: peerReviews[], equipment[]
 }
 ```
 
-### 8.2 Global Data Exports
+*(Full field definitions in PRODUCT_ARCHITECTURE_v3.md §8. v3 extends with role_level, managerId, assignedAvatarId, standupStreak, strengthTags, weaknessTags, personalityProfile, etc.)*
+
+### 9.2 Global Data Exports
 
 Implemented: `employees` (8), `performanceData`, `globalRevenueForecast`, `globalLearningData`, `orgROIData`, `departmentROI`.
 Planned: `alerts`, `globalKPIData`.
 
-### 8.3 Insight Detection
+### 9.3 v3 New Entities (summary)
 
-Spectrum: burnout corridor (perf>85 + welfare<65), flight risk (attrition>50 + roi>150), scaling past role (learn>perf+5 + motiv>75), motivation decoupling (motiv<60 + perf>70).
-Attendance: 7 algorithms (see §6.7). Always severity-sorted: critical → watch → opportunity.
+`CompanyConfig`, `VisionDocument`, `Roadmap`, `Milestone`, `RoadmapOKR`, `TaskV3` (with negotiation + source), `Conversation`, `ConversationMessage`, `ConversationExtract`, `AvatarConfig`, `PerformanceRecommendation`, `StandupRecord`, `ExecutionVelocity`.
+
+*(Full TypeScript interfaces in PRODUCT_ARCHITECTURE_v3.md §8.)*
 
 ---
 
-## 9. Component Library
+## 10. Component Library
+
+### 10.1 Existing Components
 
 | Component | File | Purpose |
 |-----------|------|---------|
@@ -446,80 +430,107 @@ Attendance: 7 algorithms (see §6.7). Always severity-sorted: critical → watch
 | `RadarWeb` | PerformanceReview.tsx | 5-axis review radar |
 | `Dock` | ui/Dock.tsx | Bottom navigation |
 | `CustomCursor` | ui/CustomCursor.tsx | Dot + ring cursor |
-| `EmptyState` | ui/EmptyState.tsx | 7 branded empty states |
+| `EmptyState` | ui/EmptyState.tsx | 7 existing + 5 v3 planned branded empty states |
 | `ROIWaveChart` | ui/ROIWaveChart.tsx | Catmull-Rom wave |
 | `ThresholdTransition` | ThresholdTransition.tsx | Cinematic entry |
-| `Loader` | landing/Loader.tsx | Landing intro animation |
+| `Loader` | landing/Loader.tsx | Landing intro |
+
+### 10.2 v3 Planned Components
+
+| Component | Planned File | Purpose |
+|-----------|-------------|---------|
+| `DawnSequence` | ui/DawnSequence.tsx | 5-stage Luminary entry animation |
+| `LuminaryButton` | ui/LuminaryButton.tsx | Floating trigger button with pulse dot |
+| `HUDPanel` | ui/HUDPanel.tsx | Floating context panel (tasks, KPIs) |
+| `ConversationThread` | ui/ConversationThread.tsx | Hybrid message display |
+| `VoiceInput` | ui/VoiceInput.tsx | STT microphone + waveform |
+| `NotificationBell` | ui/NotificationBell.tsx | In-app notification center |
+| `EchoTrail` | ui/EchoTrail.tsx | Timeline dots for standup history |
 
 Utility classes: See SKILL.md §1.
 
 ---
 
-## 10. Glossary — Prism Vocabulary
+## 11. Glossary — Complete Prism Vocabulary
 
-| Prism Term | Generic Equivalent | Context |
-|---|---|---|
-| Spectrum | Dashboard / Home | Main hub page |
-| The Prism | Overview chart | Orbital ring visualization |
-| Constellation | Employee gallery | Horizontal card track |
-| Dimension | Metric category | One of the 6 core signals |
-| Signal | Data point | Any metric value |
-| Composite | Average score | Combined score at Prism centre |
-| Node | Employee / person | Used in data contexts |
-| Vector | KPI progress bar | Directional metric display |
-| Temporal | Time-based | Attendance, timesheets |
-| Correlation Engine | What-if sliders | 6-slider physics simulation |
-| Signal Scatter | Scatter plot | 2-dimension comparison |
-| Temporal Rewind | Time slider | Quarter playback |
-| Magnetic | Cursor-attracted | Chart with proximity physics |
-| Ghost Horizon | Forecast chart | Predictive with growth slider |
-| The Race | Leaderboard | Animated bar race |
-| Orbital Presence | Attendance | Attendance page title |
-| Neural Pathways | Learning modules | Employee learning section |
-| Bio-Rhythms | Wellbeing metrics | Stress / burnout / sleep |
-| Resonance | 360° Reviews | Review section |
-| Capital Matrix | Financial summary | ROI / compensation |
-| Impact Nodes | OKR achievements | Goals section |
-| Telemetry | Performance overview | Top stats section |
-| In Orbit | Present | Office attendance |
-| Dark | Absent | Unexplained absence |
-| Standby | Weekend | Non-working day |
-| Protocol | Leave type / process | "PTO Protocol" |
-| Burnout Corridor | Burnout risk pattern | High output + low wellbeing |
-| Flight Risk | Attrition danger | High risk + high ROI |
-| Threshold Transition | App entry animation | Cinematic loading |
+### v3 New Names
 
-**Rule:** Always use evocative names, not generic. New features must follow this pattern.
+| Name | Type | Route/Location | Meaning |
+|------|------|----------------|---------|
+| **Genesis** | Screen | `/app/onboard` | The origin of all signals |
+| **Meridian** | Screen | `/app/roadmap` | The guiding reference line |
+| **Luminary** | Overlay | Floating | A source of light that inspires |
+| **Checkpoint** | Screen | `/app/approvals` | Verified before moving forward |
+| **Synthesis** | Screen | `/app/reports` | Combining signals into unified output |
+| **Calibration** | Screen | `/app/admin` | Tuning the instrument |
+| **Illuminations** | Section | Spectrum | Light revealing hidden patterns |
+| **Meridian Pulse** | Section | Spectrum | Heartbeat of the roadmap |
+| **Echo Trail** | Section | Employee Detail | Echoes of past conversations |
+| **Work Stream** | Section | Employee Detail | Flow of work through a person |
+| **Meridian Alignment** | Metric | The Race | Alignment to the roadmap |
+| **Dawn Sequence** | Animation | Luminary entry | Light filling the room |
+
+### Existing Names
+
+| Name | Location | Meaning |
+|------|----------|---------|
+| The Spectrum | `/app` | Full decomposition of light; the hub |
+| The Prism | Spectrum hero | Instrument that decomposes a beam |
+| Constellation | Spectrum | Employee gallery — stars in formation |
+| The Race | `/app/leaderboard` | Animated bar-race rankings |
+| Orbital Presence | `/app/attendance` | Who is in orbit |
+| 360° Resonance | `/app/review` | Signals resonating between peers |
+| Telemetry | Employee Detail | Remote measurement of signals |
+| Neural Pathways | Employee Detail | Learning — neural connections forming |
+| Bio-Rhythms | Employee Detail | Biological rhythms |
+| Capital Matrix | Employee Detail | ROI / compensation |
+| Impact Nodes | Employee Detail | Points of impact (OKRs) |
+| In Orbit / Dark / Standby | Attendance | Present / Absent / Weekend |
+| Protocol | Attendance | Leave type ("PTO Protocol") |
+| Burnout Corridor | Insight | High output + low wellbeing |
+| Flight Risk | Insight | High attrition + high ROI |
+| Threshold Transition | Entry | Cinematic app loading |
+
+**Naming rule:** Always evocative, never generic. Draw from optics, light, signal processing, navigation, space/physics.
 
 ---
 
-## 11. Performance Architecture
+## 12. Performance Architecture
 
 - Lazy loading: all routes code-split
-- `useMemo`/`useCallback` for expensive computations and event handlers
+- `useMemo`/`useCallback` for expensive computations
 - `requestAnimationFrame` with pending flag for scroll-spy
-- CSS `@keyframes` for ambient blobs (GPU compositor, not JS-driven)
+- CSS `@keyframes` for ambient blobs (GPU compositor)
 - `will-change: transform` on blobs, `prefers-reduced-motion` respected
-- Images: `loading="lazy" decoding="async"` (except landing hero: `eager` + `fetchPriority="high"`)
+- Images: `loading="lazy" decoding="async"` (hero: `eager`)
 - Known areas: extract large components, add virtualisation, replace mock data with API
 
 ---
 
-## 12. AI & Agentic Features Roadmap (v3)
+## 13. AI & Agentic Features (v3)
 
-1. **AI Narrative Intelligence** — LLM daily briefings synthesizing cross-dimensional patterns
-2. **Conversational Analytics** — Chat overlay on Spectrum ("Who is most likely to leave?")
-3. **Automated 1:1 Prep** — AI reads KPIs/reviews/attendance → structured agenda
-4. **Predictive Attrition Agent** — Background monitoring with configurable thresholds
-5. **Smart OKR Suggestions** — Stretch targets for high performers, reduced scope for burnout risks
-6. **NL Report Generation** — "Generate a board-ready Q4 summary" → doc with charts
-7. **Anomaly Detection** — Unsupervised pattern detection surfaced as intelligence cards
+*(Full specifications, AI prompt architecture, data models, phased build plan, and risk mitigations in PRODUCT_ARCHITECTURE_v3.md.)*
 
-**Architecture:** Anthropic API (`/v1/messages`), Sonnet for speed, Opus for depth. Streaming for chat. JSON-mode for structured output. All advisory — no automated actions.
+### Summary
+
+| Feature | Prism Name | Location |
+|---------|-----------|----------|
+| CEO vision → roadmap | Genesis → Meridian | New screens |
+| AI daily standups | Luminary | Floating overlay |
+| Task auto-allocation | Meridian → Tasks | Integrated |
+| Approval queue | Checkpoint | New screen |
+| AI insight generation | Illuminations | Spectrum section |
+| AI performance reviews | Progressive draft | 360° Resonance |
+| AI OKR suggestions | Inline chips | KPI Goals |
+| AI roadmap contribution | Meridian Alignment | The Race |
+| NL report generation | Synthesis | New screen |
+| System configuration | Calibration | New screen (CEO-only) |
+
+**Architecture:** Anthropic API (Sonnet for speed, Opus for depth). D-ID/HeyGen for avatar animation. ElevenLabs for voice cloning + TTS. Progressive rendering (full video → voice + static → waveform → text). Web Speech API for STT (Whisper upgrade path).
 
 ---
 
-## 13. Appendices
+## 14. Appendices
 
 ### A. Browser Support
 
@@ -531,4 +542,5 @@ Chrome/Edge 90+, Safari 15+, Firefox 90+, Mobile Safari/Chrome Android.
 
 ---
 
-*Single source of truth. For component-level UI/UX conventions and copy-paste patterns, see SKILL.md.*
+*For design tokens, copy-paste patterns, and UI conventions: see SKILL.md.*  
+*For v3 AI platform specs, data models, and build plan: see PRODUCT_ARCHITECTURE_v3.md.*

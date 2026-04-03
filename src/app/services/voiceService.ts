@@ -6,7 +6,7 @@
 const getKey = () => (import.meta as any).env?.VITE_ELEVENLABS_API_KEY || '';
 const getDefaultVoice = () => (import.meta as any).env?.VITE_ELEVENLABS_PRISM_VOICE_ID || '';
 
-/** Convert text to speech via ElevenLabs */
+/** Convert text to speech via ElevenLabs, or browser fallback */
 export async function textToSpeech(text: string, voiceId?: string): Promise<ArrayBuffer | null> {
   const key = getKey();
   if (!key) return null;
@@ -29,6 +29,39 @@ export async function textToSpeech(text: string, voiceId?: string): Promise<Arra
     console.warn('ElevenLabs TTS failed:', err);
     return null;
   }
+}
+
+/** Speak text using browser's built-in speech synthesis (zero config, works everywhere) */
+export function speakWithBrowser(text: string, onEnd?: () => void): { cancel: () => void } | null {
+  if (typeof window === 'undefined' || !window.speechSynthesis) return null;
+
+  // Cancel any ongoing speech
+  window.speechSynthesis.cancel();
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.rate = 0.95;
+  utterance.pitch = 0.9;
+  utterance.volume = 1;
+
+  // Try to pick a natural-sounding voice
+  const voices = window.speechSynthesis.getVoices();
+  const preferred = voices.find(v => v.name.includes('Google') && v.lang.startsWith('en'))
+    || voices.find(v => v.name.includes('Samantha') || v.name.includes('Daniel') || v.name.includes('Karen'))
+    || voices.find(v => v.lang.startsWith('en') && v.localService)
+    || voices[0];
+  if (preferred) utterance.voice = preferred;
+
+  utterance.onend = () => onEnd?.();
+  utterance.onerror = () => onEnd?.();
+
+  window.speechSynthesis.speak(utterance);
+
+  return {
+    cancel: () => {
+      window.speechSynthesis.cancel();
+      onEnd?.();
+    },
+  };
 }
 
 /** Play an audio buffer */

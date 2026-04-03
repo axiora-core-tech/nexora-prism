@@ -70,19 +70,17 @@ export function useRoleAccess(): RoleAccess {
   const canAccessAttendance = isManagerOrAbove;
   const canAccessSettings = !isCeo; // CEO uses Calibration
 
-  // Dock visibility (PA §13.8)
-  // Primary: Employee sees Spectrum + Tasks + KPIs
-  //          Manager+: adds Team + The Race
-  const primaryNavItems: string[] = ['/app/kpis', '/app', '/app/tasks'];
+  // Primary dock: Employee sees Spectrum + Sanctum + Tasks + KPIs
+  //               Manager+: adds Team
+  const primaryNavItems: string[] = ['/app/kpis', '/app', '/app/avatar', '/app/tasks'];
   if (isManagerOrAbove) {
     primaryNavItems.unshift('/app/team');
-    primaryNavItems.push('/app/leaderboard');
   }
 
   // Feature tray: role-filtered
   const featureNavItems: string[] = [];
   if (isManagerOrAbove) {
-    featureNavItems.push('/app/review', '/app/attendance');
+    featureNavItems.push('/app/leaderboard', '/app/review', '/app/attendance');
   }
   if (isDeptHeadOrAbove) {
     featureNavItems.push('/app/roadmap');

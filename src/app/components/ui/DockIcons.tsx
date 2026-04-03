@@ -349,3 +349,35 @@ export function IconLuminary({ size=20, color='currentColor', strokeWidth=1.5, c
     </svg>
   );
 }
+
+// ── Avatar — concentric orbital rings (Prism manager identity) ────────
+export function IconAvatar({ size=20, color='currentColor', strokeWidth=1.5, className }: IconProps) {
+  return (
+    <svg {...base(size)} strokeWidth={strokeWidth} className={className} style={{ color }}>
+      <circle cx="12" cy="12" r="10" strokeOpacity="0.15" />
+      <circle cx="12" cy="12" r="7" strokeOpacity="0.25" />
+      <circle cx="12" cy="12" r="4" strokeOpacity="0.4" />
+      <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" opacity="0.5" />
+    </svg>
+  );
+}
+
+// ── The Sanctum — diamond portal with radiating signal arcs ────────
+// The most distinctive icon in the set — a gateway to the Prism intelligence
+export function IconSanctum({ size=20, color='currentColor', strokeWidth=1.5, className }: IconProps) {
+  return (
+    <svg {...base(size)} strokeWidth={strokeWidth} className={className} style={{ color }}>
+      {/* Outer diamond portal */}
+      <polygon points="12,2 22,12 12,22 2,12" strokeOpacity="0.35" fill="none" />
+      {/* Inner diamond */}
+      <polygon points="12,6 18,12 12,18 6,12" strokeOpacity="0.5" fill="none" />
+      {/* Core point — the intelligence center */}
+      <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none" opacity="0.6" />
+      {/* Signal arcs emanating from corners */}
+      <path d="M2 12 Q 0 12 0 10" strokeOpacity="0.2" />
+      <path d="M22 12 Q 24 12 24 10" strokeOpacity="0.2" />
+      <path d="M12 2 Q 12 0 14 0" strokeOpacity="0.2" />
+      <path d="M12 22 Q 12 24 14 24" strokeOpacity="0.2" />
+    </svg>
+  );
+}

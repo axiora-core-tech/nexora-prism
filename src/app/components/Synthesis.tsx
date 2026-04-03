@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
 import { PrismDocument, PrismMetric, PrismPeople, PrismTrend, PrismMeridian, PrismCapital, PrismSpark, PrismTime, PrismVoice } from './ui/PrismIcons';
 import { useNavigate, Navigate } from 'react-router';
@@ -33,10 +33,62 @@ export function Synthesis() {
   const { canAccessSynthesis } = useRoleAccess();
   const [customPrompt, setCustomPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState<string | null>(null);
+  const [activeReport, setActiveReport] = useState<{ id: string; title: string; color: string; content: string[] } | null>(null);
+
+  const reportContent: Record<string, string[]> = {
+    board: [
+      'Q1 2026 closed with 73/100 execution velocity — up 8 points from Q4.',
+      'Engineering delivered the API Gateway 2 weeks ahead of schedule. Marketing content roadmap is 40% behind plan.',
+      'Attrition risk is concentrated in Growth (2 employees flagged). Recommend reallocation of 1 headcount from Engineering for 3 weeks.',
+      `Revenue signal: $${(executionVelocity.revenueEstimate / 1000000).toFixed(1)}M projected based on current operational momentum.`,
+    ],
+    dept: [
+      'Core Architecture: 92% sprint velocity, zero blockers. Leading all dimensions.',
+      'User Experience: Design system completion at 87%. Accessibility audit pending.',
+      'Data Infrastructure: CDN configuration in progress. Ravi Krishnan at 68% utilization — capacity available.',
+      'Growth: Content pipeline bottleneck identified. 2 OKRs at risk of slipping to Q2.',
+    ],
+    perf: [
+      'Top performer: Arjun Sharma — 94 performance score, 47/42 sprint velocity (112%).',
+      'Improvement needed: Neha Gupta — learning progress stalled at 45% on Accessibility module.',
+      'Team average: 78.3 performance score. 3 of 8 employees trending upward.',
+      'Burnout watch: Ravi Krishnan — welfare score dropped 12 points in 30 days.',
+    ],
+    revenue: [
+      `Current projection: $${(executionVelocity.revenueEstimate / 1000000).toFixed(1)}M annually based on execution velocity of ${executionVelocity.score}/100.`,
+      'Engineering cost: $1.2M (on track). Marketing spend: $340K (12% over budget).',
+      'Revenue per employee: $292K — 8% above industry benchmark for series A.',
+      'Risk: Q2 sales pipeline gap could reduce projection by $180K if unaddressed.',
+    ],
+    attrition: [
+      '2 employees flagged as flight risk (>60% probability): Priya Sharma, Ravi Krishnan.',
+      'Primary drivers: compensation gap (Priya), work-life balance (Ravi).',
+      'Estimated replacement cost: $185K per engineer (6-month ramp).',
+      'Recommendation: 1:1 retention conversations within 2 weeks. Budget for $15K equity adjustment.',
+    ],
+    meridian: [
+      '4 of 7 milestones on track. 1 at risk (Content Roadmap). 2 not started.',
+      'Critical path: API Gateway → Load Testing → Security Audit. Currently 2 weeks ahead.',
+      'Dependency bottleneck: User Research Phase 2 blocks both Design System and Growth OKRs.',
+      'Estimated completion: 78% of Meridian deliverable by end of Q2 at current velocity.',
+    ],
+  };
 
   const handleGenerate = (templateId: string) => {
     setIsGenerating(templateId);
-    setTimeout(() => setIsGenerating(null), 2500);
+    setActiveReport(null);
+    const template = reportTemplates.find(t => t.id === templateId);
+    setTimeout(() => {
+      setIsGenerating(null);
+      if (template) {
+        setActiveReport({
+          id: templateId,
+          title: template.title,
+          color: template.color,
+          content: reportContent[templateId] || ['Report generated successfully.'],
+        });
+      }
+    }, 2000);
   };
 
   // Role gate: CEO + Dept Head only (after all hooks)
@@ -92,23 +144,23 @@ export function Synthesis() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
           {/* LEFT: Gauge */}
           <div className="flex flex-col items-center">
-            <svg viewBox="0 0 200 130" width="200" height="130" className="overflow-visible mb-4">
+            <svg viewBox="0 0 200 140" width="200" height="140" className="overflow-visible mb-4">
               {/* Background arc */}
-              <path d="M 20 120 A 80 80 0 0 1 180 120" fill="none" stroke="var(--p-border)" strokeWidth="8" strokeLinecap="round" />
+              <path d="M 20 120 A 80 80 0 0 1 180 120" fill="none" stroke="var(--p-border)" strokeWidth="6" strokeLinecap="round" />
               {/* Score arc — animated */}
               <motion.path
                 d="M 20 120 A 80 80 0 0 1 180 120"
-                fill="none" stroke={evColor} strokeWidth="8" strokeLinecap="round"
-                strokeDasharray="251" // circumference of half circle at r=80
+                fill="none" stroke={evColor} strokeWidth="6" strokeLinecap="round"
+                strokeDasharray={251}
                 initial={{ strokeDashoffset: 251 }}
                 animate={{ strokeDashoffset: 251 - (ev.score / 100) * 251 }}
                 transition={{ duration: 1.5, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
               />
               {/* Score text */}
-              <text x="100" y="105" textAnchor="middle" fill={evColor} fontSize="36" fontFamily="Space Mono, monospace" fontWeight="300">
+              <text x="100" y="100" textAnchor="middle" fill={evColor} fontSize="32" fontFamily="Space Mono, monospace" fontWeight="300">
                 {ev.score}
               </text>
-              <text x="100" y="122" textAnchor="middle" fill="var(--p-text-ghost)" fontSize="10" fontFamily="Space Mono, monospace">
+              <text x="100" y="118" textAnchor="middle" fill="var(--p-text-ghost)" fontSize="10" fontFamily="Space Mono, monospace">
                 of 100
               </text>
               {/* Trend delta */}
@@ -116,27 +168,11 @@ export function Synthesis() {
                 const delta = ev.score - ev.trend[ev.trend.length - 2].score;
                 const deltaColor = delta >= 0 ? '#10b981' : '#f43f5e';
                 return (
-                  <text x="100" y="60" textAnchor="middle" fill={deltaColor} fontSize="11" fontFamily="Space Mono, monospace">
+                  <text x="100" y="55" textAnchor="middle" fill={deltaColor} fontSize="11" fontFamily="Space Mono, monospace">
                     {delta >= 0 ? '↑' : '↓'} {Math.abs(delta)} pts from last quarter
                   </text>
                 );
               })()}
-              {/* Sub-score ring markers at positions around the arc */}
-              {Object.entries(ev.subScores).map(([key, val], i) => {
-                const angle = Math.PI + (i / (Object.keys(ev.subScores).length - 1)) * Math.PI;
-                const r = 95;
-                const x = 100 + Math.cos(angle) * r;
-                const y = 120 + Math.sin(angle) * r;
-                const dotColor = (val as number) >= 75 ? '#10b981' : (val as number) >= 60 ? '#f59e0b' : '#f43f5e';
-                return (
-                  <g key={key}>
-                    <circle cx={x} cy={y} r="3" fill={dotColor} opacity="0.6" />
-                    <text x={x} y={y - 8} textAnchor="middle" fill="var(--p-text-ghost)" fontSize="7" fontFamily="Space Mono, monospace">
-                      {(val as number)}
-                    </text>
-                  </g>
-                );
-              })}
             </svg>
             <p className="text-xs text-center" style={{ color: 'var(--p-text-dim)' }}>Operational momentum against Meridian plan</p>
 
@@ -176,7 +212,7 @@ export function Synthesis() {
             })}
           </div>
 
-          {/* RIGHT: Revenue + AI narrative */}
+          {/* RIGHT: Revenue + Prism narrative */}
           <div>
             <p className="text-[10px] font-mono uppercase tracking-[0.15em] mb-2" style={{ color: 'var(--p-text-ghost)' }}>Revenue signal</p>
             <p className="font-mono text-2xl font-light mb-1" style={{ color: evColor }}>
@@ -186,7 +222,7 @@ export function Synthesis() {
               Estimated from operational data. Market factors may apply.
             </p>
             <div className="rounded-xl p-4" style={{ background: 'rgba(56,189,248,0.03)', border: '1px solid rgba(56,189,248,0.06)' }}>
-              <p className="text-[10px] font-mono uppercase tracking-[0.1em] mb-2" style={{ color: '#38bdf8' }}>AI narrative</p>
+              <p className="text-[10px] font-mono uppercase tracking-[0.1em] mb-2" style={{ color: '#38bdf8' }}>Prism narrative</p>
               <p className="text-xs leading-relaxed" style={{ color: 'var(--p-text-mid)' }}>{ev.narrative}</p>
             </div>
           </div>
@@ -220,6 +256,39 @@ export function Synthesis() {
           ))}
         </div>
       </motion.div>
+
+      {/* Generated report — renders inline after template click */}
+      <AnimatePresence>
+        {activeReport && (
+          <motion.div initial={{ opacity: 0, y: 16, height: 0 }} animate={{ opacity: 1, y: 0, height: 'auto' }} exit={{ opacity: 0, y: -8, height: 0 }}
+            className="rounded-[2rem] p-6 md:p-8 mb-10 relative overflow-hidden"
+            style={{ background: 'var(--p-bg-card)', border: `1px solid ${activeReport.color}20` }}>
+            <div className="absolute top-0 left-0 w-48 h-48 rounded-full blur-[80px] pointer-events-none" style={{ background: `${activeReport.color}06` }} />
+            <div className="flex items-center justify-between mb-6 border-b pb-4" style={{ borderColor: 'var(--p-border)' }}>
+              <h3 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold flex items-center gap-3">
+                <PrismSpark size={11} style={{ color: activeReport.color }} /> {activeReport.title}
+              </h3>
+              <button onClick={() => setActiveReport(null)} className="text-[10px] font-mono uppercase tracking-widest transition-all hover:text-white"
+                style={{ color: 'var(--p-text-ghost)', cursor: 'pointer' }}>Close</button>
+            </div>
+            <div className="space-y-4">
+              {activeReport.content.map((line, i) => (
+                <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 + i * 0.1, duration: 0.4 }}
+                  className="flex gap-3 items-start">
+                  <div className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0" style={{ background: activeReport.color, opacity: 0.5 }} />
+                  <p className="text-sm font-light leading-relaxed" style={{ color: 'var(--p-text-body)' }}>{line}</p>
+                </motion.div>
+              ))}
+            </div>
+            <div className="mt-6 pt-4 border-t flex items-center gap-4" style={{ borderColor: 'var(--p-border)' }}>
+              <span className="text-[10px] font-mono uppercase tracking-widest" style={{ color: 'var(--p-text-ghost)' }}>
+                Generated {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} · Prism Synthesis
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Custom report */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}

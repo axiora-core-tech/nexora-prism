@@ -334,7 +334,7 @@ export function Spectrum() {
       {insights.length > 0 && (
         <div className="px-6 md:px-12 lg:px-24 py-10">
           <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.7}}>
-            <div className="flex items-center gap-2 mb-6"><Brain size={13} className="p-text-mid"/><p className="text-[11px] font-mono uppercase tracking-[0.22em] p-text-ghost">Illuminations — AI-powered patterns</p></div>
+            <div className="flex items-center gap-2 mb-6"><Brain size={13} className="p-text-mid"/><p className="text-[11px] font-mono uppercase tracking-[0.22em] p-text-ghost">Illuminations — Prism-powered patterns</p></div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {insights.slice(0,4).map((ins,i) => { const cfg={critical:{label:'Critical',icon:Flame},watch:{label:'Watch',icon:Eye},opportunity:{label:'Opportunity',icon:Sparkles}}[ins.type]; const Icon=cfg.icon;
                 return (<motion.div key={i} initial={{opacity:0,y:10}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*0.05}} className="rounded-xl p-4 group transition-all duration-300 hover:scale-[1.005]" style={{background:`${ins.color}06`,border:`1px solid ${ins.color}12`,cursor:ins.empId?'pointer':'default'}} onClick={()=>ins.empId&&navigate(`/app/employee/${ins.empId}`)}>

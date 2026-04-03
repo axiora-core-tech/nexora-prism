@@ -6,6 +6,7 @@ import { Dock } from './ui/Dock';
 import { CustomCursor } from './ui/CustomCursor';
 import { LuminaryButton } from './ui/LuminaryButton';
 import { NotificationBell } from './ui/NotificationBell';
+import { useCompanyConfig } from '../stores/companyConfigStore';
 
 /* ═══ LUMINARY CONTEXT — persists across route changes ═══ */
 interface LuminaryContextType {
@@ -47,6 +48,7 @@ const depthMap: Record<string, number> = {
   '/app/approvals': 1,
   '/app/reports': 1,
   '/app/admin': 1,
+  '/app/avatar': 1,
 };
 
 // Position map for lateral sliding — left-to-right order
@@ -69,6 +71,7 @@ const posMap: Record<string, number> = {
   '/app/approvals': 9,
   '/app/reports': 10,
   '/app/admin': 11,
+  '/app/avatar': 12,
 };
 
 function getDepth(path: string): number {
@@ -239,15 +242,13 @@ export function Layout() {
         select                  { cursor: pointer !important; }
       `}} />
 
-      {/* Main content — blurs when Luminary is open */}
+      {/* Main content — no longer blurs when Luminary opens (side panel model) */}
       <main
         className="relative z-10 h-screen overflow-y-auto overflow-x-hidden"
         style={{
           scrollbarWidth: 'none', msOverflowStyle: 'none', backgroundColor: 'var(--p-bg)',
-          filter: luminaryOpen ? 'blur(8px)' : 'none',
-          transform: luminaryOpen ? 'scale(0.96)' : 'scale(1)',
-          opacity: luminaryOpen ? 0.4 : 1,
-          transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+          marginRight: luminaryOpen ? '420px' : '0',
+          transition: 'margin-right 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
         <style dangerouslySetInnerHTML={{__html: `main::-webkit-scrollbar { display: none; }`}} />
@@ -266,20 +267,20 @@ export function Layout() {
       </main>
 
       {/* Notification bell — fixed top right, above everything */}
-      <div className="fixed top-6 right-6 z-[60]" style={{ cursor: 'pointer' }}>
+      <div className="fixed top-6 z-[60]" style={{ cursor: 'pointer', right: luminaryOpen ? '436px' : '24px', transition: 'right 0.4s cubic-bezier(0.16, 1, 0.3, 1)' }}>
         <NotificationBell />
       </div>
 
-      {/* Luminary floating button */}
-      {!hideDock && !luminaryOpen && <LuminaryButton onOpen={luminaryCtx.open} hasPending />}
+      {/* Luminary floating button — always visible (toggles panel) */}
+      {!hideDock && <LuminaryButton onOpen={luminaryCtx.toggle} hasPending />}
 
-      {/* Dock — hidden on Genesis, NO wrapper div with transforms (breaks fixed positioning) */}
-      {!hideDock && !luminaryOpen && <Dock />}
+      {/* Dock — always visible */}
+      {!hideDock && <Dock />}
 
-      {/* Luminary overlay — full conversation experience */}
+      {/* Luminary side panel — slides in from right */}
       <AnimatePresence>
         {luminaryOpen && (
-          <LuminaryOverlay onClose={luminaryCtx.close} messages={luminaryMessages} setMessages={setLuminaryMessages} />
+          <LuminarySidePanel onClose={luminaryCtx.close} messages={luminaryMessages} setMessages={setLuminaryMessages} />
         )}
       </AnimatePresence>
     </div>
@@ -287,8 +288,8 @@ export function Layout() {
   );
 }
 
-/* ═══ LUMINARY OVERLAY — Full conversation experience ═══ */
-function LuminaryOverlay({ onClose, messages, setMessages }: {
+/* ═══ LUMINARY SIDE PANEL — persistent right-side chat ═══ */
+function LuminarySidePanel({ onClose, messages, setMessages }: {
   onClose: () => void;
   messages: { role: 'ai' | 'user'; text: string }[];
   setMessages: React.Dispatch<React.SetStateAction<{ role: 'ai' | 'user'; text: string }[]>>;
@@ -296,13 +297,17 @@ function LuminaryOverlay({ onClose, messages, setMessages }: {
   const [input, setInput] = React.useState('');
   const [isThinking, setIsThinking] = React.useState(false);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
+  const { config } = useCompanyConfig();
+  const personaName = config.personaName || 'Luminary';
+  const toneMap: Record<string, string> = { warm: 'warm, empathetic, and nurturing', direct: 'direct, concise, and data-focused', coaching: 'challenging, Socratic, and growth-oriented', balanced: 'warm when needed, direct when required' };
+  const lengthMap: Record<string, string> = { concise: 'under 60 words', detailed: 'up to 150 words with full context', adaptive: 'under 120 words, adapting to conversation depth' };
 
-  // Generate dynamic greeting on first open (references real employee data)
+  // Generate dynamic greeting on first open
   React.useEffect(() => {
     if (messages.length === 0) {
       import('../mockData').then(({ employees, roadmap }) => {
-        const emp = employees[0]; // First employee for demo
-        const activeTasks = 3; // Would come from task store in production
+        const emp = employees[0];
+        const activeTasks = 3;
         const onTrackMilestones = roadmap?.milestones?.filter((m: any) => m.status === 'in_progress' || m.status === 'completed').length || 0;
         const hour = new Date().getHours();
         const timeGreeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
@@ -312,20 +317,14 @@ function LuminaryOverlay({ onClose, messages, setMessages }: {
         }]);
       });
     }
-  }, []); // Only runs on mount (first open)
+  }, []);
 
-  // ESC key handler (Fix #5)
+  // ESC key to close
   React.useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
-
-  // Lock body scroll when overlay is open (Fix #17)
-  React.useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
-  }, []);
 
   // Auto-scroll to latest message
   React.useEffect(() => {
@@ -339,10 +338,12 @@ function LuminaryOverlay({ onClose, messages, setMessages }: {
     setInput('');
     setIsThinking(true);
 
-    // Try real AI, fallback to mock
-    import('../services/aiService').then(async ({ streamChat, buildLuminaryPrompt }) => {
+    import('../services/aiService').then(async ({ streamChat }) => {
       try {
-        const systemPrompt = 'You are Luminary, the AI manager in Nexora Prism. Be warm, concise, and reference the employee\'s tasks and milestones. Keep responses under 120 words.';
+        const traits = (config.personaTraits || ['empathetic', 'analytical']).join(', ');
+        const tone = toneMap[config.personaTone || 'balanced'];
+        const length = lengthMap[config.personaLength || 'adaptive'];
+        const systemPrompt = `You are ${personaName}, the Prism manager in Nexora Prism. Your tone is ${tone}. Your personality traits are: ${traits}. Keep responses ${length}. Reference the employee's tasks and milestones when relevant.`;
         const chatMessages = [...messages, { role: 'user' as const, text }].map(m => ({
           role: (m.role === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
           content: m.text,
@@ -354,10 +355,8 @@ function LuminaryOverlay({ onClose, messages, setMessages }: {
           setMessages(prev => [...prev.slice(0, -1), { role: 'ai', text: full }]);
         });
         if (!aiText) throw new Error('empty');
-        // Speak the response (TTS) — fire-and-forget
         speakResponse(aiText);
       } catch {
-        // Fallback: mock response
         const mockResponses = [
           'I see you\'re making great progress on the API gateway. The caching layer looks solid at sub-80ms p95. Let me create a task to track the security review sign-off — shall I set the deadline for end of day?',
           'Good update. I\'ll note that the auth proxy is complete. Your next priority from the Meridian is the load testing phase. Want me to break that down into sub-tasks?',
@@ -375,13 +374,12 @@ function LuminaryOverlay({ onClose, messages, setMessages }: {
     });
   }, [input, isThinking, messages]);
 
-  // TTS: attempt to speak AI responses via ElevenLabs, graceful no-op without API key
   const speakResponse = React.useCallback((text: string) => {
     import('../services/voiceService').then(async ({ textToSpeech, playAudio }) => {
       try {
         const audio = await textToSpeech(text);
         if (audio) await playAudio(audio);
-      } catch { /* TTS not configured — silent fallback */ }
+      } catch {}
     }).catch(() => {});
   }, []);
 
@@ -391,168 +389,115 @@ function LuminaryOverlay({ onClose, messages, setMessages }: {
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-      className="fixed inset-0 z-[70] flex items-center justify-center"
+      initial={{ x: 420 }}
+      animate={{ x: 0 }}
+      exit={{ x: 420 }}
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed top-0 right-0 bottom-0 w-[420px] z-[65] flex flex-col"
+      style={{ background: 'var(--p-bg)', borderLeft: '1px solid var(--p-border)' }}
     >
-      {/* Click backdrop to close */}
-      <div className="absolute inset-0" onClick={onClose} style={{ cursor: 'pointer' }} />
-
-      {/* Warm glow background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] rounded-full blur-[120px]"
-          style={{ background: 'radial-gradient(circle, rgba(245,158,11,0.04), rgba(244,63,94,0.02), transparent)' }} />
-      </div>
-
-      {/* Central content */}
-      <motion.div
-        initial={{ scale: 0.92, opacity: 0, y: 30 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.95, opacity: 0, y: 20 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 w-full max-w-2xl mx-4"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Avatar — Prism orbital form with thinking particles */}
-        <div className="flex flex-col items-center mb-6">
-          <div className="w-20 h-20 rounded-full flex items-center justify-center relative mb-3"
-            style={{ background: 'linear-gradient(135deg, rgba(56,189,248,0.1), rgba(192,132,252,0.1))', border: '1px solid rgba(56,189,248,0.2)' }}>
-            {/* Pulsing outer rings — speed varies when thinking */}
-            <motion.div animate={{ scale: [1, 1.08, 1], opacity: [0.3, 0.5, 0.3] }}
-              transition={{ duration: isThinking ? 1.5 : 3, repeat: Infinity }}
-              className="absolute inset-0 rounded-full" style={{ border: '1px solid rgba(56,189,248,0.15)' }} />
-            <motion.div animate={{ scale: [1, 1.15, 1], opacity: [0.15, 0.3, 0.15] }}
-              transition={{ duration: isThinking ? 1.2 : 3, repeat: Infinity, delay: 0.3 }}
-              className="absolute -inset-2 rounded-full" style={{ border: '1px solid rgba(192,132,252,0.1)' }} />
-            <motion.div animate={{ scale: [1, 1.22, 1], opacity: [0.08, 0.18, 0.08] }}
-              transition={{ duration: isThinking ? 1 : 4, repeat: Infinity, delay: 0.6 }}
-              className="absolute -inset-4 rounded-full" style={{ border: '1px solid rgba(244,63,94,0.06)' }} />
-
-            {/* Thinking particles — float upward from avatar when processing */}
-            <AnimatePresence>
-              {isThinking && [0, 1, 2, 3, 4].map(i => (
-                <motion.div key={`tp-${i}`}
-                  initial={{ opacity: 0, y: 0, x: 0 }}
-                  animate={{
-                    opacity: [0, 0.6, 0],
-                    y: [-10, -40 - Math.random() * 20],
-                    x: [0, (Math.random() - 0.5) * 30],
-                  }}
-                  transition={{ duration: 1.5 + Math.random() * 0.8, repeat: Infinity, delay: i * 0.3 }}
-                  className="absolute rounded-full"
-                  style={{
-                    width: 3 + Math.random() * 2, height: 3 + Math.random() * 2,
-                    background: ['#38bdf8', '#c084fc', '#10b981', '#f59e0b', '#f43f5e'][i],
-                    top: '30%', left: `${40 + Math.random() * 20}%`,
-                  }}
-                />
-              ))}
-            </AnimatePresence>
-
-            {/* Prism orbital SVG — 6 concentric rings in dimension colors */}
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-              <circle cx="14" cy="14" r="13" stroke="rgba(244,63,94,0.12)" strokeWidth="0.5" />
-              <circle cx="14" cy="14" r="11" stroke="rgba(16,185,129,0.15)" strokeWidth="0.5" />
-              <circle cx="14" cy="14" r="9"  stroke="rgba(245,158,11,0.18)" strokeWidth="0.5" />
-              <circle cx="14" cy="14" r="7"  stroke="rgba(192,132,252,0.2)" strokeWidth="0.5" />
-              <circle cx="14" cy="14" r="5"  stroke="rgba(56,189,248,0.25)" strokeWidth="0.5" />
-              <circle cx="14" cy="14" r="3"  stroke="rgba(251,146,60,0.3)" strokeWidth="0.5" />
+      {/* Header */}
+      <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--p-border)' }}>
+        <div className="flex items-center gap-3">
+          {/* Mini orbital avatar */}
+          <div className="w-8 h-8 rounded-full flex items-center justify-center relative"
+            style={{ background: 'linear-gradient(135deg, rgba(56,189,248,0.1), rgba(192,132,252,0.1))' }}>
+            {isThinking && (
+              <motion.div animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="absolute inset-0 rounded-full" style={{ border: '1px solid rgba(56,189,248,0.2)' }} />
+            )}
+            <svg width="16" height="16" viewBox="0 0 28 28" fill="none">
+              <circle cx="14" cy="14" r="11" stroke="rgba(56,189,248,0.2)" strokeWidth="0.5" />
+              <circle cx="14" cy="14" r="7" stroke="rgba(192,132,252,0.25)" strokeWidth="0.5" />
+              <circle cx="14" cy="14" r="3" stroke="rgba(56,189,248,0.4)" strokeWidth="0.5" />
               <circle cx="14" cy="14" r="1.2" fill="rgba(56,189,248,0.6)" />
             </svg>
           </div>
-          <p className="text-sm font-light" style={{ color: 'var(--p-text-mid)' }}>
-            <span className="italic font-serif" style={{ color: 'var(--p-text-dim)' }}>Luminary</span>
-            {isThinking && <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }}
-              className="ml-2 text-xs" style={{ color: 'var(--p-text-ghost)' }}>synthesizing…</motion.span>}
-          </p>
-        </div>
-
-        {/* Conversation thread */}
-        <div className="rounded-2xl p-4 mb-4 max-h-[50vh] overflow-y-auto"
-          style={{ background: 'var(--p-bg-card)', border: '1px solid var(--p-border)', backdropFilter: 'blur(20px)', scrollbarWidth: 'none' }}>
-          {messages.map((msg, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i === messages.length - 1 ? 0.1 : 0 }}
-              className={`flex items-start gap-3 mb-4 last:mb-0 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-              {msg.role === 'ai' ? (
-                <div className="w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center" style={{ background: 'rgba(56,189,248,0.1)' }}>
-                  {/* Mini Prism orbital */}
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <circle cx="6" cy="6" r="5" stroke="rgba(56,189,248,0.3)" strokeWidth="0.5" />
-                    <circle cx="6" cy="6" r="3" stroke="rgba(56,189,248,0.5)" strokeWidth="0.5" />
-                    <circle cx="6" cy="6" r="1" fill="rgba(56,189,248,0.8)" />
-                  </svg>
-                </div>
-              ) : (
-                <div className="w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center"
-                  style={{ background: 'rgba(192,132,252,0.1)' }}>
-                  {/* Signal emission — outgoing beam from point */}
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="rgba(192,132,252,0.7)" strokeWidth="0.8">
-                    <circle cx="3" cy="6" r="1.5" fill="rgba(192,132,252,0.4)" stroke="none" />
-                    <line x1="5" y1="6" x2="10" y2="4" /><line x1="5" y1="6" x2="10" y2="6" /><line x1="5" y1="6" x2="10" y2="8" />
-                  </svg>
-                </div>
-              )}
-              <div className={`rounded-xl px-4 py-2.5 max-w-[80%]`}
-                style={{
-                  background: msg.role === 'user' ? 'rgba(192,132,252,0.06)' : 'transparent',
-                  border: msg.role === 'user' ? '1px solid rgba(192,132,252,0.12)' : 'none',
-                }}>
-                <p className="text-sm font-light leading-relaxed" style={{ color: 'var(--p-text-body)' }}>
-                  {msg.text === '...' ? (
-                    /* G2: Prism pulse rings instead of generic ●●● typing dots */
-                    <span className="inline-flex items-center gap-1">
-                      {[0, 0.2, 0.4].map(d => (
-                        <motion.span key={d} animate={{ scale: [0.6, 1, 0.6], opacity: [0.2, 0.8, 0.2] }}
-                          transition={{ duration: 1.2, repeat: Infinity, delay: d }}
-                          className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: '#38bdf8' }} />
-                      ))}
-                    </span>
-                  ) : msg.text}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* Input area with VoiceInput */}
-        <div className="flex items-center gap-3">
-          <LuminaryVoiceButton onTranscript={handleVoiceTranscript} />
-          <div className="flex-1 rounded-xl px-4 py-3" style={{ background: 'var(--p-bg-input)', border: '1px solid var(--p-border)' }}>
-            <input type="text" value={input} onChange={e => setInput(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}
-              placeholder="Type your update…"
-              className="w-full bg-transparent text-sm font-light outline-none"
-              style={{ color: 'var(--p-text-body)', cursor: 'text' }}
-              autoFocus />
+          <div>
+            <p className="text-sm font-light" style={{ color: 'var(--p-text-hi)' }}>
+              <span className="italic font-serif" style={{ color: 'var(--p-text-dim)' }}>{personaName}</span>
+            </p>
+            {isThinking && (
+              <motion.p animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }}
+                className="text-[10px] font-mono" style={{ color: 'var(--p-text-ghost)' }}>synthesizing…</motion.p>
+            )}
           </div>
-          {/* Send button — proper send arrow icon */}
+        </div>
+        <button onClick={onClose} className="w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:bg-white/5"
+          style={{ color: 'var(--p-text-ghost)', cursor: 'pointer' }} data-cursor="Close">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto px-4 py-4" style={{ scrollbarWidth: 'none' }}>
+        {messages.map((msg, i) => (
+          <motion.div key={i} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i === messages.length - 1 ? 0.1 : 0 }}
+            className={`flex items-start gap-2.5 mb-4 last:mb-0 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+            {msg.role === 'ai' ? (
+              <div className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center mt-0.5" style={{ background: 'rgba(56,189,248,0.08)' }}>
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+                  <circle cx="6" cy="6" r="4" stroke="rgba(56,189,248,0.4)" strokeWidth="0.5" />
+                  <circle cx="6" cy="6" r="1" fill="rgba(56,189,248,0.8)" />
+                </svg>
+              </div>
+            ) : (
+              <div className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center mt-0.5" style={{ background: 'rgba(192,132,252,0.08)' }}>
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="rgba(192,132,252,0.6)" strokeWidth="0.8">
+                  <circle cx="3" cy="6" r="1.5" fill="rgba(192,132,252,0.3)" stroke="none" />
+                  <line x1="5" y1="6" x2="10" y2="4" /><line x1="5" y1="6" x2="10" y2="8" />
+                </svg>
+              </div>
+            )}
+            <div className={`rounded-xl px-3.5 py-2 max-w-[85%]`}
+              style={{
+                background: msg.role === 'user' ? 'rgba(192,132,252,0.06)' : 'rgba(56,189,248,0.03)',
+                border: `1px solid ${msg.role === 'user' ? 'rgba(192,132,252,0.1)' : 'rgba(56,189,248,0.06)'}`,
+              }}>
+              <p className="text-[13px] font-light leading-relaxed" style={{ color: 'var(--p-text-body)' }}>
+                {msg.text === '...' ? (
+                  <span className="inline-flex items-center gap-1">
+                    {[0, 0.2, 0.4].map(d => (
+                      <motion.span key={d} animate={{ scale: [0.6, 1, 0.6], opacity: [0.2, 0.8, 0.2] }}
+                        transition={{ duration: 1.2, repeat: Infinity, delay: d }}
+                        className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: '#38bdf8' }} />
+                    ))}
+                  </span>
+                ) : msg.text}
+              </p>
+            </div>
+          </motion.div>
+        ))}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input area */}
+      <div className="px-4 pb-4 pt-2 border-t" style={{ borderColor: 'var(--p-border)' }}>
+        <div className="flex items-center gap-2 rounded-xl px-3 py-2"
+          style={{ background: 'var(--p-bg-card)', border: '1px solid var(--p-border)' }}>
+          <LuminaryVoiceButton onTranscript={handleVoiceTranscript} />
+          <input type="text" value={input} onChange={e => setInput(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}
+            placeholder="Ask Luminary…"
+            className="flex-1 bg-transparent text-sm font-light outline-none"
+            style={{ color: 'var(--p-text-body)' }} />
           <button onClick={handleSend} disabled={!input.trim() || isThinking}
-            className="w-11 h-11 rounded-full flex items-center justify-center transition-all hover:scale-105"
+            className="w-7 h-7 rounded-lg flex items-center justify-center transition-all"
             style={{
-              background: input.trim() ? 'rgba(56,189,248,0.15)' : 'rgba(56,189,248,0.05)',
-              border: `1px solid ${input.trim() ? 'rgba(56,189,248,0.3)' : 'rgba(56,189,248,0.1)'}`,
+              background: input.trim() ? 'rgba(56,189,248,0.15)' : 'transparent',
+              color: input.trim() ? '#38bdf8' : 'var(--p-text-ghost)',
               cursor: 'pointer',
-              opacity: input.trim() ? 1 : 0.5,
-            }}>
-            {/* Signal emission — Prism-branded send icon */}
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <circle cx="4" cy="8" r="2.5" stroke="#38bdf8" strokeWidth="1" opacity="0.5" />
-              <circle cx="4" cy="8" r="1" fill="#38bdf8" />
-              <line x1="6.5" y1="8" x2="14" y2="5" stroke="#38bdf8" strokeWidth="1.2" strokeLinecap="round" />
-              <line x1="6.5" y1="8" x2="14" y2="8" stroke="#38bdf8" strokeWidth="1.2" strokeLinecap="round" />
-              <line x1="6.5" y1="8" x2="14" y2="11" stroke="#38bdf8" strokeWidth="1.2" strokeLinecap="round" />
+            }} data-cursor="Send">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+              <line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" />
             </svg>
           </button>
         </div>
-
-        {/* Close hint */}
-        <p className="text-center text-[10px] font-mono uppercase tracking-[0.2em] mt-3" style={{ color: 'var(--p-text-ghost)' }}>
-          Press <span style={{ color: 'var(--p-text-dim)' }}>ESC</span> to close
-        </p>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }

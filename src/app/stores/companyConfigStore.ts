@@ -12,6 +12,13 @@ export interface CompanyConfig {
   standupReminderTime: string;
   standupTimezone: string;
   missedStandupEscalationHours: number;
+  // Sanctum persona settings
+  personaName: string;
+  personaTone: 'warm' | 'direct' | 'coaching' | 'balanced';
+  personaVoice: 'professional' | 'casual' | 'formal' | 'mentor';
+  personaLength: 'concise' | 'detailed' | 'adaptive';
+  personaTraits: string[];
+  personaGreeting: string;
 }
 
 interface CompanyConfigContextType {

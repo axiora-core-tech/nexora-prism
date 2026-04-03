@@ -19,31 +19,68 @@ export function VoiceInput({ onTranscript, onListeningChange, size = 'md', accen
   const [listening, setListening] = useState(false);
   const [interim, setInterim] = useState('');
   const recognitionRef = useRef<{ stop: () => void } | null>(null);
+  const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastTranscriptRef = useRef('');
   const supported = isSpeechRecognitionSupported();
 
   const iconSize = size === 'lg' ? 24 : size === 'md' ? 18 : 14;
   const btnSize = size === 'lg' ? 'w-16 h-16' : size === 'md' ? 'w-11 h-11' : 'w-8 h-8';
 
+  // Clear silence timer on unmount
+  React.useEffect(() => {
+    return () => { if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current); };
+  }, []);
+
+  const stopAndSubmit = useCallback(() => {
+    recognitionRef.current?.stop();
+    recognitionRef.current = null;
+    setListening(false);
+    onListeningChange?.(false);
+    setInterim('');
+    if (silenceTimerRef.current) { clearTimeout(silenceTimerRef.current); silenceTimerRef.current = null; }
+  }, [onListeningChange]);
+
   const toggle = useCallback(() => {
     if (listening) {
-      recognitionRef.current?.stop();
-      recognitionRef.current = null;
-      setListening(false);
-      onListeningChange?.(false);
-      setInterim('');
+      stopAndSubmit();
     } else {
+      lastTranscriptRef.current = '';
       const rec = startSpeechRecognition(
         (text, isFinal) => {
+          // Reset silence timer on every speech event
+          if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+
           if (isFinal) {
+            lastTranscriptRef.current = text;
             onTranscript(text);
             setInterim('');
+            // Auto-stop after 2s silence following a final transcript
+            silenceTimerRef.current = setTimeout(() => {
+              recognitionRef.current?.stop();
+              recognitionRef.current = null;
+              setListening(false);
+              onListeningChange?.(false);
+              setInterim('');
+            }, 2000);
           } else {
             setInterim(text);
+            // Auto-stop after 3s of only interim (no final)
+            silenceTimerRef.current = setTimeout(() => {
+              if (text.trim()) {
+                onTranscript(text.trim());
+              }
+              recognitionRef.current?.stop();
+              recognitionRef.current = null;
+              setListening(false);
+              onListeningChange?.(false);
+              setInterim('');
+            }, 3000);
           }
         },
         () => {
           setListening(false);
           onListeningChange?.(false);
+          if (silenceTimerRef.current) { clearTimeout(silenceTimerRef.current); silenceTimerRef.current = null; }
         }
       );
       if (rec) {
@@ -52,7 +89,7 @@ export function VoiceInput({ onTranscript, onListeningChange, size = 'md', accen
         onListeningChange?.(true);
       }
     }
-  }, [listening, onTranscript, onListeningChange]);
+  }, [listening, onTranscript, onListeningChange, stopAndSubmit]);
 
   if (!supported) {
     return (
@@ -76,18 +113,6 @@ export function VoiceInput({ onTranscript, onListeningChange, size = 'md', accen
         data-cursor={listening ? 'Stop' : 'Speak'}
       >
         {listening ? <PrismVoice size={iconSize} /> : <PrismVoice size={iconSize} />}
-        {/* Pulse ring when listening */}
-        <AnimatePresence>
-          {listening && (
-            <motion.div
-              initial={{ scale: 1, opacity: 0.6 }}
-              animate={{ scale: 1.8, opacity: 0 }}
-              transition={{ duration: 1.2, repeat: Infinity }}
-              className="absolute inset-0 rounded-full"
-              style={{ border: `2px solid ${accent}` }}
-            />
-          )}
-        </AnimatePresence>
       </motion.button>
 
       {/* Live waveform bars */}

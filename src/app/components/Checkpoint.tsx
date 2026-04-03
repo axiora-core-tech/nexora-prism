@@ -99,10 +99,13 @@ export function Checkpoint() {
         </div>
       </motion.div>
 
-      {/* ═══ APPROVAL CONSTELLATION — radial burst visualization ═══ */}
+      {/* ═══ APPROVAL CONSTELLATION — priority-based orbital map ═══ */}
       <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-        className="flex justify-center mb-12">
+        className="flex flex-col items-center mb-12">
+        <p className="text-[10px] font-mono uppercase tracking-[0.2em] mb-4" style={{ color: 'var(--p-text-ghost)' }}>
+          Priority map — inner ring = urgent, outer ring = low priority
+        </p>
         <svg viewBox="0 0 320 320" width="280" height="280" className="overflow-visible">
           {/* Center pulse */}
           <motion.circle cx="160" cy="160" r="8" fill="#f59e0b" opacity="0.15"

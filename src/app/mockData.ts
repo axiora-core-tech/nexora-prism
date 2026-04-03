@@ -864,6 +864,13 @@ export const companyConfig = {
   standupReminderTime: '09:00',
   standupTimezone: 'Asia/Kolkata',
   missedStandupEscalationHours: 4,
+  // Sanctum persona
+  personaName: 'Luminary',
+  personaTone: 'balanced' as const,
+  personaVoice: 'mentor' as const,
+  personaLength: 'adaptive' as const,
+  personaTraits: ['empathetic', 'analytical', 'encouraging'],
+  personaGreeting: 'Welcome to The Sanctum. I\'m here to help you grow.',
 };
 
 export const visionDocument = {

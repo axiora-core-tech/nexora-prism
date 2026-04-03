@@ -1,5 +1,5 @@
 /**
- * AISourceBadge — Fading "AI suggested" badge for AI-generated tasks
+ * AISourceBadge — Fading "Prism suggested" badge for Prism-generated tasks
  * Shows source type, fades after acceptance.
  */
 import React, { useState, useEffect } from 'react';

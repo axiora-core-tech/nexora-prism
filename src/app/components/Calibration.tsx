@@ -76,6 +76,8 @@ export function Calibration() {
 
   const showToast = useCallback((msg: string) => setToast(msg), []);
 
+  const [emailFreq, setEmailFreq] = useState('Daily digest');
+
   // CEO-only: redirect non-CEO users to Settings (AFTER all hooks)
   if (user?.role_level !== 'ceo') {
     return React.createElement(Navigate, { to: '/app/settings', replace: true });
@@ -90,7 +92,7 @@ export function Calibration() {
   };
   const privacyLevels = [
     { value: 'full_transparency', label: 'Full Transparency', desc: 'Manager sees full transcripts and AI summaries' },
-    { value: 'summary_only', label: 'Summary Only', desc: 'Manager sees AI-generated summaries, not raw transcripts' },
+    { value: 'summary_only', label: 'Summary Only', desc: 'Manager sees Prism-generated summaries, not raw transcripts' },
     { value: 'layered', label: 'Layered', desc: 'Employee can tag topics as private/HR-only' },
   ];
 
@@ -131,85 +133,44 @@ export function Calibration() {
         </div>
       </motion.div>
 
-      {/* ═══ SYSTEM DIAGRAM — interactive node-link visualization ═══ */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="mb-10 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-        <svg viewBox="0 0 700 100" width="100%" style={{ minWidth: 500, maxWidth: 700 }}>
-          {/* Connection spine */}
-          <motion.line x1="50" y1="50" x2="650" y2="50"
-            stroke="var(--p-border)" strokeWidth="1" strokeOpacity="0.2"
-            initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-            transition={{ duration: 1.2, delay: 0.3 }} />
+      {/* Two-column layout: Fixed left nav + scrollable content */}
+      <div className="flex gap-8">
+        {/* Fixed left sidebar — always visible section nav */}
+        <div className="hidden lg:block w-52 flex-shrink-0">
+          <div className="sticky top-8">
+            <p className="text-[10px] font-mono uppercase tracking-[0.2em] mb-4" style={{ color: 'var(--p-text-ghost)' }}>Sections</p>
+            <nav className="space-y-1">
+              {SECTIONS.map(s => {
+                const isActive = activeSection === s.id;
+                return (
+                  <button key={s.id} onClick={() => scrollTo(s.id)}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all group"
+                    style={{
+                      background: isActive ? `${s.color}08` : 'transparent',
+                      border: `1px solid ${isActive ? s.color + '20' : 'transparent'}`,
+                      cursor: 'pointer',
+                    }}
+                    data-cursor={s.label}>
+                    {/* Accent dot */}
+                    <div className="w-2 h-2 rounded-full flex-shrink-0 transition-all"
+                      style={{
+                        background: isActive ? s.color : 'var(--p-text-ghost)',
+                        opacity: isActive ? 1 : 0.3,
+                        transform: isActive ? 'scale(1.3)' : 'scale(1)',
+                      }} />
+                    <span className="text-xs font-mono uppercase tracking-[0.1em] transition-colors"
+                      style={{ color: isActive ? s.color : 'var(--p-text-ghost)' }}>
+                      {s.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
+        </div>
 
-          {/* Section nodes */}
-          {SECTIONS.map((s, i) => {
-            const x = 50 + i * (600 / (SECTIONS.length - 1));
-            const isActive = activeSection === s.id;
-            return (
-              <g key={s.id} style={{ cursor: 'pointer' }} onClick={() => scrollTo(s.id)}>
-                {/* Pulse ring on active */}
-                {isActive && (
-                  <motion.circle cx={x} cy={50} r={20} fill="none" stroke={s.color} strokeWidth="0.5"
-                    animate={{ r: [16, 22, 16], opacity: [0.3, 0.1, 0.3] }}
-                    transition={{ duration: 2, repeat: Infinity }} />
-                )}
-                {/* Ambient glow */}
-                <circle cx={x} cy={50} r={isActive ? 18 : 12} fill={s.color} opacity={isActive ? 0.06 : 0.02} />
-                {/* Node */}
-                <motion.circle cx={x} cy={50} r={isActive ? 8 : 5}
-                  fill={isActive ? s.color : 'transparent'}
-                  stroke={s.color} strokeWidth={isActive ? 1.5 : 0.8}
-                  opacity={isActive ? 0.9 : 0.35}
-                  animate={isActive ? { scale: [1, 1.1, 1] } : {}}
-                  transition={{ duration: 2, repeat: Infinity }} />
-                {/* Label */}
-                <text x={x} y={78} textAnchor="middle" fill={isActive ? s.color : 'var(--p-text-ghost)'}
-                  fontSize="10" fontFamily="Space Mono, monospace"
-                  style={{ transition: 'fill 0.3s' }}>
-                  {s.label}
-                </text>
-              </g>
-            );
-          })}
-
-          {/* Active segment highlight — line from previous to next node */}
-          {(() => {
-            const idx = SECTIONS.findIndex(s => s.id === activeSection);
-            if (idx < 0) return null;
-            const x = 50 + idx * (600 / (SECTIONS.length - 1));
-            const prevX = idx > 0 ? 50 + (idx - 1) * (600 / (SECTIONS.length - 1)) : x;
-            const nextX = idx < SECTIONS.length - 1 ? 50 + (idx + 1) * (600 / (SECTIONS.length - 1)) : x;
-            const color = SECTIONS[idx].color;
-            return (
-              <>
-                <line x1={prevX} y1={50} x2={x} y2={50} stroke={color} strokeWidth="1.5" opacity="0.3" />
-                <line x1={x} y1={50} x2={nextX} y2={50} stroke={color} strokeWidth="1.5" opacity="0.15" />
-              </>
-            );
-          })()}
-        </svg>
-      </motion.div>
-
-      {/* Floating dot sidebar — scroll-spy (kept for narrow screens, hidden when diagram visible) */}
-      <div className="fixed right-6 top-1/2 -translate-y-1/2 z-30 hidden lg:flex flex-col items-center gap-3">
-        {SECTIONS.map(s => (
-          <button key={s.id} onClick={() => scrollTo(s.id)}
-            className="group flex items-center gap-2 transition-all" data-cursor={s.label}>
-            <span className="text-[10px] font-mono uppercase tracking-[0.15em] opacity-0 group-hover:opacity-100 transition-opacity"
-              style={{ color: activeSection === s.id ? s.color : 'var(--p-text-ghost)' }}>{s.label}</span>
-            <div className="w-2 h-2 rounded-full transition-all"
-              style={{
-                background: activeSection === s.id ? s.color : 'var(--p-text-ghost)',
-                transform: activeSection === s.id ? 'scale(1.5)' : 'scale(1)',
-                opacity: activeSection === s.id ? 1 : 0.3,
-              }} />
-          </button>
-        ))}
-      </div>
-
-      {/* Sections */}
-      <div className="space-y-8 max-w-4xl">
+        {/* Scrollable content */}
+        <div className="flex-1 space-y-8 max-w-4xl">
 
         {/* Section 1: Company */}
         <div id="company" ref={el => { sectionRefs.current.company = el; }}>
@@ -284,29 +245,160 @@ export function Calibration() {
           </motion.div>
         </div>
 
-        {/* Section 3: Avatars */}
+        {/* Section 3: Sanctum Persona — Manager personality, tone, voice */}
         <div id="avatars" ref={el => { sectionRefs.current.avatars = el; }}>
           <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="rounded-[2rem] p-6 md:p-8" style={{ background: 'var(--p-bg-card)', border: '1px solid var(--p-border)' }}>
+            className="rounded-[2rem] p-6 md:p-8 relative overflow-hidden" style={{ background: 'var(--p-bg-card)', border: '1px solid var(--p-border)' }}>
+            <div className="absolute top-0 right-0 w-40 h-40 rounded-full blur-[80px] pointer-events-none" style={{ background: 'rgba(192,132,252,0.04)' }} />
             <h3 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold flex items-center gap-3 border-b p-border-mid pb-4 mb-6"
               style={{ color: 'var(--p-text-ghost)', borderColor: 'var(--p-border)' }}>
-              <PrismAvatar size={11} style={{ color: '#c084fc' }} /> Avatar configuration
+              <PrismAvatar size={11} style={{ color: '#c084fc' }} /> Sanctum persona
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {['Manager 1', 'Manager 2', 'Default Prism'].map((name, i) => (
-                <div key={i} className="rounded-xl p-5 text-center transition-all hover:scale-[1.01]"
-                  style={{ background: 'var(--p-bg-card-2)', border: '1px solid var(--p-border)' }}>
-                  <div className="w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center"
-                    style={{ background: i < 2 ? 'rgba(192,132,252,0.06)' : 'rgba(56,189,248,0.06)', border: `1px solid ${i < 2 ? 'rgba(192,132,252,0.15)' : 'rgba(56,189,248,0.15)'}` }}>
-                    <PrismAvatar size={20} style={{ color: i < 2 ? '#c084fc' : '#38bdf8' }} />
-                  </div>
-                  <p className="text-sm font-light mb-1" style={{ color: 'var(--p-text-hi)' }}>{name}</p>
-                  <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded"
-                    style={{ background: i === 2 ? 'rgba(56,189,248,0.12)' : 'rgba(245,158,11,0.12)', color: i === 2 ? '#38bdf8' : '#f59e0b' }}>
-                    {i === 2 ? 'Active' : 'Not set'}
-                  </span>
+
+            {/* Persona name */}
+            <div className="mb-6">
+              <p className="text-xs mb-2" style={{ color: 'var(--p-text-mid)' }}>Manager name</p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                  style={{ background: 'rgba(192,132,252,0.06)', border: '1px solid rgba(192,132,252,0.15)' }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="8" stroke="rgba(192,132,252,0.3)" strokeWidth="0.8" />
+                    <circle cx="12" cy="12" r="4" stroke="rgba(192,132,252,0.5)" strokeWidth="0.8" />
+                    <circle cx="12" cy="12" r="1.5" fill="rgba(192,132,252,0.6)" />
+                  </svg>
                 </div>
-              ))}
+                <input type="text" value={config.personaName || 'Luminary'}
+                  onChange={e => updateConfig({ personaName: e.target.value })}
+                  className="flex-1 bg-transparent text-lg font-light outline-none rounded-xl px-4 py-2"
+                  style={{ color: 'var(--p-text-hi)', background: 'var(--p-bg-input)', border: '1px solid var(--p-border)' }} />
+              </div>
+            </div>
+
+            {/* Communication Tone */}
+            <div className="mb-6">
+              <p className="text-xs mb-3" style={{ color: 'var(--p-text-mid)' }}>Communication tone</p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {([
+                  { value: 'warm', label: 'Warm & Supportive', desc: 'Empathetic, encouraging, nurturing growth', color: '#f59e0b' },
+                  { value: 'direct', label: 'Direct & Data-driven', desc: 'Facts first, minimal padding, efficient', color: '#38bdf8' },
+                  { value: 'coaching', label: 'Coaching & Challenging', desc: 'Pushes boundaries, Socratic, growth-focused', color: '#10b981' },
+                  { value: 'balanced', label: 'Balanced', desc: 'Adapts to context — warm when needed, direct when required', color: '#c084fc' },
+                ] as const).map(t => {
+                  const isActive = (config.personaTone || 'balanced') === t.value;
+                  return (
+                    <button key={t.value} onClick={() => updateConfig({ personaTone: t.value })}
+                      className="rounded-xl p-4 text-left transition-all hover:scale-[1.01]"
+                      style={{
+                        background: isActive ? `${t.color}08` : 'var(--p-bg-card-2)',
+                        border: `1px solid ${isActive ? t.color + '30' : 'var(--p-border)'}`,
+                        cursor: 'pointer',
+                      }}>
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-2 h-2 rounded-full" style={{ background: t.color, opacity: isActive ? 1 : 0.3 }} />
+                        <p className="text-xs font-mono uppercase tracking-[0.1em]" style={{ color: isActive ? t.color : 'var(--p-text-dim)' }}>{t.label}</p>
+                      </div>
+                      <p className="text-[10px] leading-relaxed" style={{ color: 'var(--p-text-ghost)' }}>{t.desc}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Voice Style */}
+            <div className="mb-6">
+              <p className="text-xs mb-3" style={{ color: 'var(--p-text-mid)' }}>Voice style</p>
+              <div className="flex gap-2 flex-wrap">
+                {([
+                  { value: 'professional', label: 'Professional', color: '#38bdf8' },
+                  { value: 'casual', label: 'Casual', color: '#10b981' },
+                  { value: 'formal', label: 'Formal', color: '#f59e0b' },
+                  { value: 'mentor', label: 'Mentor-like', color: '#c084fc' },
+                ] as const).map(v => {
+                  const isActive = (config.personaVoice || 'mentor') === v.value;
+                  return (
+                    <button key={v.value} onClick={() => updateConfig({ personaVoice: v.value })}
+                      className="px-5 py-2.5 rounded-xl text-xs font-mono uppercase tracking-widest transition-all hover:scale-105"
+                      style={{
+                        background: isActive ? `${v.color}10` : 'transparent',
+                        border: `1px solid ${isActive ? v.color + '30' : 'var(--p-border)'}`,
+                        color: isActive ? v.color : 'var(--p-text-ghost)',
+                        cursor: 'pointer',
+                      }}>
+                      {v.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Response Length */}
+            <div className="mb-6">
+              <p className="text-xs mb-3" style={{ color: 'var(--p-text-mid)' }}>Response length</p>
+              <div className="flex gap-2">
+                {([
+                  { value: 'concise', label: 'Concise', desc: 'Under 60 words' },
+                  { value: 'detailed', label: 'Detailed', desc: 'Full context, 120+ words' },
+                  { value: 'adaptive', label: 'Adaptive', desc: 'Matches your energy' },
+                ] as const).map(l => {
+                  const isActive = (config.personaLength || 'adaptive') === l.value;
+                  return (
+                    <button key={l.value} onClick={() => updateConfig({ personaLength: l.value })}
+                      className="flex-1 rounded-xl p-3 text-center transition-all hover:scale-[1.01]"
+                      style={{
+                        background: isActive ? 'rgba(192,132,252,0.06)' : 'var(--p-bg-card-2)',
+                        border: `1px solid ${isActive ? 'rgba(192,132,252,0.25)' : 'var(--p-border)'}`,
+                        cursor: 'pointer',
+                      }}>
+                      <p className="text-xs font-mono mb-0.5" style={{ color: isActive ? '#c084fc' : 'var(--p-text-dim)' }}>{l.label}</p>
+                      <p className="text-[10px]" style={{ color: 'var(--p-text-ghost)' }}>{l.desc}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Personality Traits — toggle pills */}
+            <div className="mb-6">
+              <p className="text-xs mb-3" style={{ color: 'var(--p-text-mid)' }}>Personality traits <span style={{ color: 'var(--p-text-ghost)' }}>(select up to 4)</span></p>
+              <div className="flex gap-2 flex-wrap">
+                {['empathetic', 'analytical', 'encouraging', 'honest', 'patient', 'strategic', 'humorous', 'challenging'].map(trait => {
+                  const traits = config.personaTraits || [];
+                  const isActive = traits.includes(trait);
+                  return (
+                    <button key={trait} onClick={() => {
+                      if (isActive) {
+                        updateConfig({ personaTraits: traits.filter(t => t !== trait) });
+                      } else if (traits.length < 4) {
+                        updateConfig({ personaTraits: [...traits, trait] });
+                      }
+                    }}
+                      className="px-4 py-2 rounded-full text-xs font-mono capitalize transition-all hover:scale-105"
+                      style={{
+                        background: isActive ? 'rgba(192,132,252,0.08)' : 'transparent',
+                        border: `1px solid ${isActive ? 'rgba(192,132,252,0.25)' : 'var(--p-border)'}`,
+                        color: isActive ? '#c084fc' : 'var(--p-text-ghost)',
+                        cursor: 'pointer',
+                        opacity: !isActive && traits.length >= 4 ? 0.3 : 1,
+                      }}>
+                      {isActive && <span style={{ color: '#c084fc' }}>✓ </span>}{trait}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Custom Greeting */}
+            <div>
+              <p className="text-xs mb-2" style={{ color: 'var(--p-text-mid)' }}>Default greeting</p>
+              <textarea
+                value={config.personaGreeting || 'Welcome to The Sanctum. I\'m here to help you grow.'}
+                onChange={e => updateConfig({ personaGreeting: e.target.value })}
+                className="w-full bg-transparent text-sm font-light outline-none resize-none rounded-xl p-4 leading-relaxed"
+                style={{ color: 'var(--p-text-body)', background: 'var(--p-bg-input)', border: '1px solid var(--p-border)', minHeight: '60px' }}
+                rows={2} />
+              <p className="text-[10px] mt-2" style={{ color: 'var(--p-text-ghost)' }}>
+                This greeting opens every Sanctum session. The Prism will adapt it based on time of day and employee context.
+              </p>
             </div>
           </motion.div>
         </div>
@@ -381,8 +473,9 @@ export function Calibration() {
               <p className="text-xs mb-3" style={{ color: 'var(--p-text-mid)' }}>Email frequency</p>
               <div className="flex gap-2">
                 {['Instant', 'Daily digest', 'Weekly digest'].map(f => (
-                  <button key={f} className="px-4 py-2 rounded-xl text-xs font-mono transition-all"
-                    style={{ background: f === 'Daily digest' ? 'rgba(244,63,94,0.08)' : 'transparent', border: `1px solid ${f === 'Daily digest' ? 'rgba(244,63,94,0.25)' : 'var(--p-border)'}`, color: f === 'Daily digest' ? '#f43f5e' : 'var(--p-text-dim)' }}>
+                  <button key={f} onClick={() => { setEmailFreq(f); showToast(`Email frequency: ${f}`); }}
+                    className="px-4 py-2 rounded-xl text-xs font-mono transition-all"
+                    style={{ background: f === emailFreq ? 'rgba(244,63,94,0.08)' : 'transparent', border: `1px solid ${f === emailFreq ? 'rgba(244,63,94,0.25)' : 'var(--p-border)'}`, color: f === emailFreq ? '#f43f5e' : 'var(--p-text-dim)', cursor: 'pointer' }}>
                     {f}
                   </button>
                 ))}
@@ -463,6 +556,7 @@ export function Calibration() {
         </div>
 
       </div>
+      </div>{/* end two-column flex */}
 
       {/* Toast notification */}
       <AnimatePresence>

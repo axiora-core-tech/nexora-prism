@@ -27,6 +27,7 @@ const MeridianPage   = lazy(() => import("./components/Meridian").then(m => ({ d
 const Checkpoint     = lazy(() => import("./components/Checkpoint").then(m => ({ default: m.Checkpoint })));
 const Synthesis      = lazy(() => import("./components/Synthesis").then(m => ({ default: m.Synthesis })));
 const Calibration    = lazy(() => import("./components/Calibration").then(m => ({ default: m.Calibration })));
+const AvatarPage     = lazy(() => import("./components/ui/Avatar").then(m => ({ default: m.Avatar })));
 
 // ─── Loading skeleton — mimics page structure with pulsing blocks ───────────
 // Inline styles for CSS animation (no dependency on theme CSS during chunk load)
@@ -206,6 +207,7 @@ export const router = createBrowserRouter([
       { path: "approvals",   element: withSuspense(Checkpoint) },
       { path: "reports",     element: withSuspense(Synthesis) },
       { path: "admin",       element: withSuspense(Calibration) },
+      { path: "avatar",      element: withSuspense(AvatarPage) },
       { path: "*",            element: <NotFound /> },
     ],
   },

@@ -7,6 +7,7 @@ import {
   IconKPI, IconReviews, IconAttendance,
   IconLeaderboard, IconSettings,
   IconMeridian, IconCheckpoint, IconSynthesis, IconCalibration,
+  IconAvatar, IconSanctum,
 } from './DockIcons';
 import { useRoleAccess } from '../../auth/useRoleAccess';
 
@@ -15,7 +16,7 @@ const ALL_PRIMARY = [
   { Icon: IconTeam,        path: '/app/team',        label: 'Team' },
   { Icon: IconKPI,         path: '/app/kpis',        label: 'KPIs' },
   { Icon: IconSpectrum,    path: '/app',             label: 'Spectrum', center: true },
-  { Icon: IconLeaderboard, path: '/app/leaderboard', label: 'The Race' },
+  { Icon: IconSanctum,     path: '/app/avatar',      label: 'Sanctum' },
   { Icon: IconTasks,       path: '/app/tasks',       label: 'Tasks' },
 ];
 
@@ -25,6 +26,7 @@ const ALL_FEATURE: Record<string, { Icon: typeof IconSpectrum; label: string; co
   '/app/roadmap':     { Icon: IconMeridian,    label: 'Meridian',     color: '#10b981' },
   '/app/approvals':   { Icon: IconCheckpoint,  label: 'Checkpoint',   color: '#f59e0b' },
   '/app/reports':     { Icon: IconSynthesis,   label: 'Synthesis',    color: '#f43f5e' },
+  '/app/leaderboard': { Icon: IconLeaderboard, label: 'The Race',     color: '#f59e0b' },
   '/app/admin':       { Icon: IconCalibration, label: 'Calibration',  color: '#38bdf8' },
   '/app/settings':    { Icon: IconSettings,    label: 'Settings',     color: '#94a3b8' },
 };

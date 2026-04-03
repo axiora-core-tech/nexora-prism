@@ -8,14 +8,26 @@
 
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, ChevronRight,Target, AlertTriangle, Circle } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, ChevronRight, Circle, Target } from 'lucide-react';
 import { PrismMeridian, PrismCascade, PrismKanban, PrismRisk, PrismTarget, PrismTime, PrismComplete, PrismEmpty, PrismFilter } from './ui/PrismIcons';
 import { useNavigate } from 'react-router';
 import { useRoadmap } from '../stores/roadmapStore';
 import { useRoleAccess } from '../auth/useRoleAccess';
 import { EmptyState } from './ui/EmptyState';
 
-type ViewMode = 'signal-path' | 'cascade' | 'kanban';
+type ViewMode = 'signal-path' | 'cascade' | 'kanban' | 'tasks';
+
+// Mock tasks linked to milestones (in production, from task store)
+const milestoneTasks = [
+  { id: 'mt1', title: 'API Gateway cache layer', milestoneId: 'ms1', status: 'in_progress', owner: 'Arjun', priority: 'high', due: 'Apr 15' },
+  { id: 'mt2', title: 'Rate limiting config', milestoneId: 'ms1', status: 'todo', owner: 'Ravi', priority: 'medium', due: 'Apr 18' },
+  { id: 'mt3', title: 'Auth proxy OAuth flow', milestoneId: 'ms2', status: 'done', owner: 'Arjun', priority: 'high', due: 'Apr 10' },
+  { id: 'mt4', title: 'SAML integration research', milestoneId: 'ms2', status: 'in_progress', owner: 'Arjun', priority: 'low', due: 'Apr 20' },
+  { id: 'mt5', title: 'User interview round 2', milestoneId: 'ms3', status: 'in_progress', owner: 'Priya', priority: 'medium', due: 'Apr 8' },
+  { id: 'mt6', title: 'CDN static asset config', milestoneId: 'ms4', status: 'todo', owner: 'Ravi', priority: 'medium', due: 'Apr 22' },
+  { id: 'mt7', title: 'Load test harness setup', milestoneId: 'ms5', status: 'todo', owner: 'Ravi', priority: 'high', due: 'May 1' },
+  { id: 'mt8', title: 'Design system tokens v2', milestoneId: 'ms6', status: 'in_progress', owner: 'Neha', priority: 'medium', due: 'Apr 25' },
+];
 
 const statusConfig = {
   completed: { color: '#38bdf8', label: 'Completed', icon: Circle },
@@ -146,6 +158,7 @@ export function MeridianPage() {
             { id: 'signal-path' as ViewMode, icon: PrismMeridian, label: 'Signal Path' },
             { id: 'cascade' as ViewMode, icon: PrismCascade, label: 'Cascade' },
             { id: 'kanban' as ViewMode, icon: PrismKanban, label: 'Kanban' },
+            { id: 'tasks' as ViewMode, icon: PrismTarget, label: 'Tasks' },
           ]).map(v => (
             <button key={v.id} onClick={() => setViewMode(v.id)}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono transition-all"
@@ -201,6 +214,60 @@ export function MeridianPage() {
         {viewMode === 'kanban' && (
           <motion.div key="kanban" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.4 }}>
             <KanbanView milestones={filtered} />
+          </motion.div>
+        )}
+
+        {/* Tasks View — milestone-linked tasks */}
+        {viewMode === 'tasks' && (
+          <motion.div key="tasks" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.4 }}>
+            <div className="space-y-6">
+              {filtered.map((m: any, mi: number) => {
+                const tasks = milestoneTasks.filter(t => t.milestoneId === m.id);
+                const cfg = (statusConfig as any)[m.status] || statusConfig.not_started;
+                if (tasks.length === 0) return null;
+                return (
+                  <motion.div key={m.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: mi * 0.08 }}
+                    className="rounded-[2rem] p-6" style={{ background: 'var(--p-bg-card)', border: '1px solid var(--p-border)' }}>
+                    <div className="flex items-center gap-3 mb-4 pb-3 border-b" style={{ borderColor: 'var(--p-border)' }}>
+                      <div className="w-2.5 h-2.5 rounded-full" style={{ background: cfg.color }} />
+                      <p className="text-sm font-light" style={{ color: 'var(--p-text-hi)' }}>{m.title}</p>
+                      <span className="text-[10px] font-mono" style={{ color: 'var(--p-text-ghost)' }}>{tasks.length} tasks</span>
+                    </div>
+                    <div className="space-y-2">
+                      {tasks.map((t, ti) => {
+                        const statusColor = t.status === 'done' ? '#10b981' : t.status === 'in_progress' ? '#38bdf8' : 'var(--p-text-ghost)';
+                        const priColor = t.priority === 'high' ? '#f43f5e' : t.priority === 'medium' ? '#f59e0b' : '#38bdf8';
+                        return (
+                          <motion.div key={t.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: mi * 0.08 + ti * 0.04 }}
+                            className="flex items-center gap-3 px-3 py-2 rounded-xl transition-all hover:bg-white/[0.02]"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => navigate('/app/tasks')}>
+                            {/* Status dot */}
+                            <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: statusColor }} />
+                            {/* Title */}
+                            <p className="flex-1 text-xs font-light" style={{ color: 'var(--p-text-body)', textDecoration: t.status === 'done' ? 'line-through' : 'none', opacity: t.status === 'done' ? 0.5 : 1 }}>{t.title}</p>
+                            {/* Priority */}
+                            <span className="text-[10px] font-mono uppercase" style={{ color: priColor }}>{t.priority}</span>
+                            {/* Owner */}
+                            <span className="text-[10px] font-mono" style={{ color: 'var(--p-text-ghost)' }}>{t.owner}</span>
+                            {/* Due */}
+                            <span className="text-[10px] font-mono" style={{ color: 'var(--p-text-ghost)' }}>{t.due}</span>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                );
+              })}
+              {/* Link to full Tasks page */}
+              <button onClick={() => navigate('/app/tasks')}
+                className="w-full rounded-xl py-3 text-xs font-mono uppercase tracking-widest transition-all hover:bg-white/[0.03]"
+                style={{ color: 'var(--p-text-ghost)', border: '1px dashed var(--p-border)', cursor: 'pointer' }}>
+                Open full task manager →
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

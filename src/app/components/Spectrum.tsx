@@ -330,11 +330,11 @@ export function Spectrum() {
         })}
       </div>
 
-      {/* ═══ INTELLIGENCE ═══ */}
+      {/* ═══ ILLUMINATIONS (v3: replaces Intelligence) ═══ */}
       {insights.length > 0 && (
         <div className="px-6 md:px-12 lg:px-24 py-10">
           <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.7}}>
-            <div className="flex items-center gap-2 mb-6"><Brain size={13} className="p-text-mid"/><p className="text-[11px] font-mono uppercase tracking-[0.22em] p-text-ghost">Cross-dimensional patterns</p></div>
+            <div className="flex items-center gap-2 mb-6"><Brain size={13} className="p-text-mid"/><p className="text-[11px] font-mono uppercase tracking-[0.22em] p-text-ghost">Illuminations — AI-powered patterns</p></div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {insights.slice(0,4).map((ins,i) => { const cfg={critical:{label:'Critical',icon:Flame},watch:{label:'Watch',icon:Eye},opportunity:{label:'Opportunity',icon:Sparkles}}[ins.type]; const Icon=cfg.icon;
                 return (<motion.div key={i} initial={{opacity:0,y:10}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*0.05}} className="rounded-xl p-4 group transition-all duration-300 hover:scale-[1.005]" style={{background:`${ins.color}06`,border:`1px solid ${ins.color}12`,cursor:ins.empId?'pointer':'default'}} onClick={()=>ins.empId&&navigate(`/app/employee/${ins.empId}`)}>
@@ -344,6 +344,48 @@ export function Spectrum() {
           </motion.div>
         </div>
       )}
+
+      {/* ═══ MERIDIAN PULSE (v3: roadmap progress widget) ═══ */}
+      <div className="px-6 md:px-12 lg:px-24 py-6">
+        <motion.div initial={{opacity:0,y:16}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{duration:0.7}}>
+          <div className="rounded-[2rem] p-6 md:p-8 relative overflow-hidden" style={{background:'var(--p-bg-card)',border:'1px solid var(--p-border)'}}>
+            <div className="absolute top-0 right-0 w-40 h-40 rounded-full blur-[80px] pointer-events-none" style={{background:'rgba(16,185,129,0.04)'}} />
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <Activity size={13} style={{color:'#10b981'}} />
+                <p className="text-[11px] font-mono uppercase tracking-[0.22em] p-text-ghost">Meridian Pulse</p>
+              </div>
+              <NavLink to="/app/roadmap" className="text-[10px] font-mono uppercase tracking-[0.15em] flex items-center gap-1 transition-colors hover:text-emerald-400" style={{color:'var(--p-text-ghost)'}}>
+                View Meridian <ArrowRight size={10}/>
+              </NavLink>
+            </div>
+            {/* Compact progress bar */}
+            <div className="mb-4">
+              <div className="flex justify-between text-xs mb-2">
+                <span className="p-text-mid">Overall progress</span>
+                <span className="font-mono" style={{color:'#10b981'}}>47%</span>
+              </div>
+              <div className="h-1.5 rounded-full overflow-hidden" style={{background:'var(--p-border)'}}>
+                <motion.div initial={{width:0}} whileInView={{width:'47%'}} viewport={{once:true}} transition={{duration:1.2,ease:[0.16,1,0.3,1]}}
+                  className="h-full rounded-full" style={{background:'linear-gradient(90deg, #10b981, #38bdf8)'}} />
+              </div>
+            </div>
+            {/* Top 3 at-risk milestones */}
+            <div className="space-y-2">
+              {[
+                {title:'API Gateway',dept:'core-arch',pct:65,status:'on-track'},
+                {title:'User Research Phase 2',dept:'growth',pct:40,status:'watch'},
+                {title:'Beta Launch',dept:'growth',pct:0,status:'not-started'},
+              ].map((m,i)=>(<div key={i} className="flex items-center gap-3">
+                <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{background:m.status==='on-track'?'#10b981':m.status==='watch'?'#f59e0b':'var(--p-text-ghost)'}} />
+                <span className="text-xs flex-1" style={{color:'var(--p-text-mid)'}}>{m.title}</span>
+                <span className="text-[10px] font-mono" style={{color:'var(--p-text-ghost)'}}>{m.dept.replace('-',' ')}</span>
+                <span className="text-[10px] font-mono" style={{color:m.pct>=50?'#10b981':m.pct>0?'#f59e0b':'var(--p-text-ghost)'}}>{m.pct}%</span>
+              </div>))}
+            </div>
+          </div>
+        </motion.div>
+      </div>
 
       {/* ═══ ANALYTICS SECTION ═══ */}
       <div className="px-6 md:px-12 lg:px-24 py-8 border-t" style={{borderColor:'var(--p-border)'}}>

@@ -5,7 +5,7 @@ import React, { lazy, Suspense } from "react";
 
 // ─── Lazy-loaded pages ──────────────────────────────────────────────────────
 const LandingPage       = lazy(() => import("./components/landing/LandingPage").then(m => ({ default: m.LandingPage })));
-const SignIn            = lazy(() => import("./components/landing/LandingPage").then(m => ({ default: m.SignIn })));
+const SignIn            = lazy(() => import("./components/SignIn").then(m => ({ default: m.SignIn })));
 const Demo              = lazy(() => import("./components/Demo").then(m => ({ default: m.Demo })));
 const EnterApp          = lazy(() => import("./components/EnterApp").then(m => ({ default: m.EnterApp })));
 const Dashboard         = lazy(() => import("./components/Dashboard").then(m => ({ default: m.Dashboard })));
@@ -20,6 +20,13 @@ const Leaderboard       = lazy(() => import("./components/Leaderboard").then(m =
 const PerformanceReview = lazy(() => import("./components/PerformanceReview").then(m => ({ default: m.PerformanceReview })));
 const Team               = lazy(() => import("./components/Team").then(m => ({ default: m.Team })));
 const Spectrum           = lazy(() => import("./components/Spectrum").then(m => ({ default: m.Spectrum })));
+
+// ─── v3 new pages ──────────────────────────────────────────────────────
+const Genesis        = lazy(() => import("./components/Genesis").then(m => ({ default: m.Genesis })));
+const MeridianPage   = lazy(() => import("./components/Meridian").then(m => ({ default: m.MeridianPage })));
+const Checkpoint     = lazy(() => import("./components/Checkpoint").then(m => ({ default: m.Checkpoint })));
+const Synthesis      = lazy(() => import("./components/Synthesis").then(m => ({ default: m.Synthesis })));
+const Calibration    = lazy(() => import("./components/Calibration").then(m => ({ default: m.Calibration })));
 
 // ─── Loading skeleton — mimics page structure with pulsing blocks ───────────
 // Inline styles for CSS animation (no dependency on theme CSS during chunk load)
@@ -193,6 +200,12 @@ export const router = createBrowserRouter([
       { path: "reviews",      element: withSuspense(PerformanceReview) },
       { path: "tasks",        element: withSuspense(Tasks) },
       { path: "settings",     element: withSuspense(Settings) },
+      // v3 new routes
+      { path: "onboard",     element: withSuspense(Genesis) },
+      { path: "roadmap",     element: withSuspense(MeridianPage) },
+      { path: "approvals",   element: withSuspense(Checkpoint) },
+      { path: "reports",     element: withSuspense(Synthesis) },
+      { path: "admin",       element: withSuspense(Calibration) },
       { path: "*",            element: <NotFound /> },
     ],
   },

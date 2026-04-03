@@ -249,3 +249,103 @@ export function IconSpectrum({ size=20, color='currentColor', strokeWidth=1.5, c
     </svg>
   );
 }
+
+// ═══ V3 ICONS ═══
+
+// ── Meridian — longitude line with nodes along it ─────────────────────────
+export function IconMeridian({ size=20, color='currentColor', strokeWidth=1.5, className }: IconProps) {
+  return (
+    <svg {...base(size)} strokeWidth={strokeWidth} className={className} style={{ color }}>
+      {/* Vertical meridian line */}
+      <line x1="12" y1="2" x2="12" y2="22" strokeOpacity="0.5" />
+      {/* Milestone nodes along the line */}
+      <circle cx="12" cy="5" r="2.5" fill="currentColor" stroke="none" opacity="0.9" />
+      <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none" opacity="0.6" />
+      <circle cx="12" cy="19" r="2" fill="currentColor" stroke="none" opacity="0.4" />
+      {/* Horizontal branch lines */}
+      <line x1="14.5" y1="5" x2="20" y2="5" strokeOpacity="0.3" />
+      <line x1="14" y1="12" x2="18" y2="12" strokeOpacity="0.25" />
+      {/* Glow arc */}
+      <path d="M6 3 Q4 12 6 21" strokeOpacity="0.15" strokeDasharray="1.5 1.5" />
+    </svg>
+  );
+}
+
+// ── Checkpoint — shield with checkmark ────────────────────────────────────
+export function IconCheckpoint({ size=20, color='currentColor', strokeWidth=1.5, className }: IconProps) {
+  return (
+    <svg {...base(size)} strokeWidth={strokeWidth} className={className} style={{ color }}>
+      {/* Shield outline */}
+      <path d="M12 2 L20 6 L20 12 Q20 18 12 22 Q4 18 4 12 L4 6 Z" strokeOpacity="0.5" />
+      {/* Checkmark */}
+      <path d="M8 12 L11 15 L16 9" strokeOpacity="0.9" strokeWidth="2" />
+      {/* Signal lines */}
+      <line x1="12" y1="1" x2="12" y2="3" strokeOpacity="0.3" />
+    </svg>
+  );
+}
+
+// ── Synthesis — converging signals into one output ────────────────────────
+export function IconSynthesis({ size=20, color='currentColor', strokeWidth=1.5, className }: IconProps) {
+  return (
+    <svg {...base(size)} strokeWidth={strokeWidth} className={className} style={{ color }}>
+      {/* Multiple input lines converging */}
+      <line x1="3" y1="5" x2="10" y2="12" strokeOpacity="0.4" />
+      <line x1="3" y1="12" x2="10" y2="12" strokeOpacity="0.5" />
+      <line x1="3" y1="19" x2="10" y2="12" strokeOpacity="0.4" />
+      {/* Central synthesis point */}
+      <circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" opacity="0.7" />
+      {/* Output ray */}
+      <line x1="15" y1="12" x2="22" y2="12" strokeOpacity="0.8" />
+      <path d="M20 10 L22 12 L20 14" strokeOpacity="0.6" />
+      {/* Small input dots */}
+      <circle cx="3" cy="5" r="1" fill="currentColor" stroke="none" opacity="0.3" />
+      <circle cx="3" cy="12" r="1" fill="currentColor" stroke="none" opacity="0.4" />
+      <circle cx="3" cy="19" r="1" fill="currentColor" stroke="none" opacity="0.3" />
+    </svg>
+  );
+}
+
+// ── Calibration — tuning dial with markings ──────────────────────────────
+export function IconCalibration({ size=20, color='currentColor', strokeWidth=1.5, className }: IconProps) {
+  return (
+    <svg {...base(size)} strokeWidth={strokeWidth} className={className} style={{ color }}>
+      {/* Outer ring */}
+      <circle cx="12" cy="12" r="9" strokeOpacity="0.4" />
+      {/* Tick marks around the ring */}
+      {[0, 45, 90, 135, 180, 225, 270, 315].map(deg => {
+        const a = (deg * Math.PI) / 180;
+        const x1 = 12 + 7.5 * Math.cos(a), y1 = 12 + 7.5 * Math.sin(a);
+        const x2 = 12 + 9 * Math.cos(a), y2 = 12 + 9 * Math.sin(a);
+        return <line key={deg} x1={x1} y1={y1} x2={x2} y2={y2} strokeOpacity="0.3" />;
+      })}
+      {/* Centre knob */}
+      <circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" opacity="0.6" />
+      {/* Indicator needle */}
+      <line x1="12" y1="12" x2="12" y2="5" strokeOpacity="0.9" strokeWidth="2" />
+      <circle cx="12" cy="5" r="1" fill="currentColor" stroke="none" opacity="0.9" />
+    </svg>
+  );
+}
+
+// ── Luminary — star with radiating light ─────────────────────────────────
+export function IconLuminary({ size=20, color='currentColor', strokeWidth=1.5, className }: IconProps) {
+  return (
+    <svg {...base(size)} strokeWidth={strokeWidth} className={className} style={{ color }}>
+      {/* Central star point */}
+      <circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" opacity="0.8" />
+      {/* Radiating light rays */}
+      <line x1="12" y1="2" x2="12" y2="7" strokeOpacity="0.5" />
+      <line x1="12" y1="17" x2="12" y2="22" strokeOpacity="0.5" />
+      <line x1="2" y1="12" x2="7" y2="12" strokeOpacity="0.5" />
+      <line x1="17" y1="12" x2="22" y2="12" strokeOpacity="0.5" />
+      {/* Diagonal rays — shorter */}
+      <line x1="5.5" y1="5.5" x2="8" y2="8" strokeOpacity="0.3" />
+      <line x1="16" y1="16" x2="18.5" y2="18.5" strokeOpacity="0.3" />
+      <line x1="18.5" y1="5.5" x2="16" y2="8" strokeOpacity="0.3" />
+      <line x1="8" y1="16" x2="5.5" y2="18.5" strokeOpacity="0.3" />
+      {/* Outer glow ring */}
+      <circle cx="12" cy="12" r="8" strokeOpacity="0.15" strokeDasharray="2 2" />
+    </svg>
+  );
+}

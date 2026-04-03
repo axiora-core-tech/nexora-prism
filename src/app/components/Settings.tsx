@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, Navigate } from 'react-router';
 import { useTheme } from '../auth/ThemeContext';
 import { useAuth } from '../auth/AuthContext';
+import { useRoleAccess } from '../auth/useRoleAccess';
 import { motion, AnimatePresence } from 'motion/react';
 import { Settings as SettingsIcon, Terminal, Bell, Shield, Users, BarChart2, RefreshCw, ChevronRight, Check, AlertTriangle, Zap, Moon, Sun, Globe, Lock, Eye, Sliders, LogOut, ArrowLeft } from 'lucide-react';
 
@@ -46,8 +47,9 @@ type Section = 'performance' | 'notifications' | 'team' | 'security' | 'integrat
 
 export function Settings() {
   const navigate = useNavigate();
-  const { logout, user } = useAuth();
+  const { logout, user, switchRole } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { isCeo } = useRoleAccess();
   const [activeSection, setActiveSection] = useState<Section>('performance');
   const [saved, setSaved] = useState(false);
   const [terminalLog, setTerminalLog] = useState<{cmd: string; out: string}[]>([]);
@@ -109,6 +111,11 @@ export function Settings() {
     dataRetention: '24 months',
     exportControl: true,
   });
+
+  // CEO uses Calibration instead of Settings (PA §7.9)
+  if (isCeo) {
+    return <Navigate to="/app/admin" replace />;
+  }
 
   const handleSave = () => {
     try {
@@ -227,6 +234,41 @@ export function Settings() {
 
         {/* Content */}
         <div className="flex-1">
+          {/* Role switcher — visible when user has multiple roles */}
+          {user && user.available_roles && user.available_roles.length > 1 && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+              className="bg-white/[0.02] border p-border rounded-[2rem] p-6 mb-6 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-40 h-40 rounded-full blur-[80px] pointer-events-none" style={{ background: 'rgba(56,189,248,0.04)' }} />
+              <h2 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold mb-4 flex items-center gap-4 border-b p-border-mid pb-4">
+                <Users size={12} style={{ color: '#38bdf8' }} /> Signal Identity
+              </h2>
+              <p className="text-xs p-text-dim mb-4">You have access to multiple roles. Switch your active perspective — the Dock and screens will adapt.</p>
+              <div className="flex gap-2 flex-wrap">
+                {user.available_roles.map(r => {
+                  const isActive = user.role_level === r;
+                  const labels: Record<string, string> = { ceo: 'CEO', department_head: 'Dept Head', manager: 'Manager', employee: 'Employee' };
+                  const colors: Record<string, string> = { ceo: '#f43f5e', department_head: '#c084fc', manager: '#10b981', employee: '#38bdf8' };
+                  return (
+                    <button key={r} onClick={() => switchRole(r)}
+                      className="px-5 py-2.5 rounded-xl text-xs font-mono uppercase tracking-widest transition-all hover:scale-105"
+                      style={{
+                        background: isActive ? `${colors[r]}12` : 'rgba(255,255,255,0.02)',
+                        border: `1px solid ${isActive ? colors[r] + '30' : 'rgba(255,255,255,0.06)'}`,
+                        color: isActive ? colors[r] : 'rgba(255,255,255,0.3)',
+                      }}>
+                      {isActive && <Check size={10} className="inline mr-1.5" style={{ color: colors[r] }} />}
+                      {labels[r] || r}
+                    </button>
+                  );
+                })}
+              </div>
+              {user.role_level && (
+                <p className="text-[10px] font-mono mt-3" style={{ color: 'var(--p-text-ghost)' }}>
+                  Active: <span style={{ color: '#38bdf8' }}>{user.role_level.replace('_', ' ')}</span> — Dock and screens reflect this role
+                </p>
+              )}
+            </motion.div>
+          )}
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSection}

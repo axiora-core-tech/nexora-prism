@@ -6,7 +6,8 @@ import React from 'react';
 import { motion } from 'motion/react';
 
 interface EmptyStateProps {
-  variant: 'tasks' | 'reviews' | 'no-results' | 'no-data' | 'kpis' | 'attendance' | 'leaderboard';
+  variant: 'tasks' | 'reviews' | 'no-results' | 'no-data' | 'kpis' | 'attendance' | 'leaderboard'
+    | 'genesis' | 'meridian' | 'checkpoint' | 'synthesis' | 'calibration';
   action?: { label: string; onClick: () => void };
   className?: string;
 }
@@ -134,6 +135,89 @@ const CONFIG = {
     headline: 'Rankings not yet calculated.',
     body: 'Signal hierarchy forms once performance data is recorded for at least two team members.',
     cta: undefined,
+  },
+  genesis: {
+    mark: (
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round">
+        {/* Light beam entering prism */}
+        <line x1="24" y1="2" x2="24" y2="14" opacity="0.5" />
+        {/* Prism */}
+        <polygon points="24,14 36,38 12,38" opacity="0.4" />
+        {/* Spectrum rays */}
+        <line x1="16" y1="38" x2="8" y2="46" opacity="0.3" stroke="#f43f5e" />
+        <line x1="20" y1="38" x2="16" y2="46" opacity="0.3" stroke="#10b981" />
+        <line x1="24" y1="38" x2="24" y2="46" opacity="0.3" stroke="#f59e0b" />
+        <line x1="28" y1="38" x2="32" y2="46" opacity="0.3" stroke="#38bdf8" />
+        <line x1="32" y1="38" x2="40" y2="46" opacity="0.3" stroke="#c084fc" />
+      </svg>
+    ),
+    headline: 'Your Genesis awaits.',
+    body: 'Upload your vision document or speak it aloud. Prism will decompose it into an actionable roadmap.',
+    cta: 'Begin your Genesis',
+  },
+  meridian: {
+    mark: (
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round">
+        {/* Vertical meridian line */}
+        <line x1="24" y1="4" x2="24" y2="44" strokeDasharray="2 2" opacity="0.3" />
+        {/* Empty milestone nodes */}
+        <circle cx="24" cy="12" r="4" strokeDasharray="1.5 1.5" opacity="0.3" />
+        <circle cx="24" cy="24" r="4" strokeDasharray="1.5 1.5" opacity="0.3" />
+        <circle cx="24" cy="36" r="4" strokeDasharray="1.5 1.5" opacity="0.3" />
+      </svg>
+    ),
+    headline: 'No roadmap active.',
+    body: 'Complete Genesis to generate your Meridian — the guiding reference line for your company.',
+    cta: 'Start Genesis',
+  },
+  checkpoint: {
+    mark: (
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round">
+        {/* Shield */}
+        <path d="M24 4 L40 12 L40 24 Q40 36 24 44 Q8 36 8 24 L8 12 Z" opacity="0.3" />
+        {/* Empty check */}
+        <circle cx="24" cy="22" r="6" strokeDasharray="1.5 1.5" opacity="0.4" />
+      </svg>
+    ),
+    headline: 'All signals clear.',
+    body: 'No approvals pending. When tasks need sign-off, they will appear here for review.',
+    cta: undefined,
+  },
+  synthesis: {
+    mark: (
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round">
+        {/* Converging lines */}
+        <line x1="4" y1="10" x2="20" y2="24" opacity="0.3" />
+        <line x1="4" y1="24" x2="20" y2="24" opacity="0.3" />
+        <line x1="4" y1="38" x2="20" y2="24" opacity="0.3" />
+        {/* Output document */}
+        <rect x="26" y="14" width="16" height="20" rx="2" opacity="0.4" />
+        <line x1="30" y1="20" x2="38" y2="20" opacity="0.25" />
+        <line x1="30" y1="24" x2="38" y2="24" opacity="0.25" />
+        <line x1="30" y1="28" x2="36" y2="28" opacity="0.25" />
+      </svg>
+    ),
+    headline: 'No reports generated yet.',
+    body: 'Choose a template or describe what you need. Prism will synthesize your data into a report.',
+    cta: 'Create first report',
+  },
+  calibration: {
+    mark: (
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round">
+        {/* Dial */}
+        <circle cx="24" cy="24" r="16" opacity="0.3" />
+        <circle cx="24" cy="24" r="4" opacity="0.5" />
+        <line x1="24" y1="24" x2="24" y2="10" opacity="0.6" />
+        {/* Tick marks */}
+        {[0,60,120,180,240,300].map((d,i) => {
+          const a = (d * Math.PI) / 180;
+          return <line key={i} x1={24+14*Math.cos(a)} y1={24+14*Math.sin(a)} x2={24+16*Math.cos(a)} y2={24+16*Math.sin(a)} opacity="0.3" />;
+        })}
+      </svg>
+    ),
+    headline: 'System awaiting calibration.',
+    body: 'Configure your company settings, avatar preferences, and privacy model to tune the Prism instrument.',
+    cta: 'Begin calibration',
   },
 };
 

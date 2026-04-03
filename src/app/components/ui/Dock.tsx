@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { NavLink } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronUp } from 'lucide-react';
@@ -6,24 +6,42 @@ import {
   IconSpectrum, IconTeam, IconTasks,
   IconKPI, IconReviews, IconAttendance,
   IconLeaderboard, IconSettings,
+  IconMeridian, IconCheckpoint, IconSynthesis, IconCalibration,
 } from './DockIcons';
+import { useRoleAccess } from '../../auth/useRoleAccess';
 
-const primaryNav = [
-  { Icon: IconTeam,       path: '/app/team',        label: 'Team' },
-  { Icon: IconKPI,        path: '/app/kpis',        label: 'KPIs' },
-  { Icon: IconSpectrum,   path: '/app',             label: 'Spectrum', center: true },
-  { Icon: IconLeaderboard,path: '/app/leaderboard', label: 'Rankings' },
-  { Icon: IconTasks,      path: '/app/tasks',       label: 'Tasks' },
+// Full registry of all nav items — filtered by role at runtime
+const ALL_PRIMARY = [
+  { Icon: IconTeam,        path: '/app/team',        label: 'Team' },
+  { Icon: IconKPI,         path: '/app/kpis',        label: 'KPIs' },
+  { Icon: IconSpectrum,    path: '/app',             label: 'Spectrum', center: true },
+  { Icon: IconLeaderboard, path: '/app/leaderboard', label: 'The Race' },
+  { Icon: IconTasks,       path: '/app/tasks',       label: 'Tasks' },
 ];
 
-const featureNav = [
-  { Icon: IconReviews,     path: '/app/review',     label: '360° Reviews', color: '#c084fc' },
-  { Icon: IconAttendance,  path: '/app/attendance', label: 'Attendance',   color: '#38bdf8' },
-  { Icon: IconSettings,    path: '/app/settings',   label: 'Settings',     color: '#94a3b8' },
-];
+const ALL_FEATURE: Record<string, { Icon: typeof IconSpectrum; label: string; color: string }> = {
+  '/app/review':     { Icon: IconReviews,     label: '360° Reviews', color: '#c084fc' },
+  '/app/attendance':  { Icon: IconAttendance,  label: 'Attendance',   color: '#38bdf8' },
+  '/app/roadmap':     { Icon: IconMeridian,    label: 'Meridian',     color: '#10b981' },
+  '/app/approvals':   { Icon: IconCheckpoint,  label: 'Checkpoint',   color: '#f59e0b' },
+  '/app/reports':     { Icon: IconSynthesis,   label: 'Synthesis',    color: '#f43f5e' },
+  '/app/admin':       { Icon: IconCalibration, label: 'Calibration',  color: '#38bdf8' },
+  '/app/settings':    { Icon: IconSettings,    label: 'Settings',     color: '#94a3b8' },
+};
 
 export function Dock() {
   const [expanded, setExpanded] = useState(false);
+  const { primaryNavItems, featureNavItems } = useRoleAccess();
+
+  // Filter primary nav by role-allowed paths
+  const primaryNav = useMemo(() =>
+    ALL_PRIMARY.filter(item => primaryNavItems.includes(item.path)),
+  [primaryNavItems]);
+
+  // Build feature nav from role-allowed paths
+  const featureNav = useMemo(() =>
+    featureNavItems.map(path => ({ path, ...ALL_FEATURE[path] })).filter(item => item.Icon),
+  [featureNavItems]);
 
   return (
     <motion.div

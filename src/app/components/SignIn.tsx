@@ -38,8 +38,7 @@ export function SignIn() {
       if (!email.trim()) { setError('Email is required.'); return; }
       if (pass.trim().length < 6) { setError('Passphrase must be at least 6 characters.'); return; }
     }
-    login(email.trim() || 'user@prism.app', name.trim() || undefined);
-    // Go straight to /enter — ThresholdTransition plays, then auto-navigates to /app
+    login(email.trim() || 'demo@nexora.com', name.trim() || undefined);
     navigate('/enter');
   };
 
@@ -261,6 +260,30 @@ export function SignIn() {
                     + Add another
                   </button>
                 </>
+              )}
+
+              {/* Demo hint — which email to use */}
+              {mode === 'login' && (
+                <div className="rounded-xl p-3" style={{ background: 'rgba(56,189,248,0.04)', border: '1px solid rgba(56,189,248,0.08)' }}>
+                  <p className="text-[10px] font-mono uppercase tracking-[0.15em] mb-2" style={{ color: '#38bdf8' }}>Demo accounts</p>
+                  <div className="space-y-1">
+                    {[
+                      { email: 'ceo@nexora.com', label: 'CEO' },
+                      { email: 'priya@nexora.com', label: 'Dept Head' },
+                      { email: 'arjun@nexora.com', label: 'Manager' },
+                      { email: 'ravi@nexora.com', label: 'Employee' },
+                      { email: 'demo@nexora.com', label: 'All roles' },
+                    ].map(a => (
+                      <button key={a.email} type="button"
+                        onClick={() => { setEmail(a.email); setPass('prism'); }}
+                        className="w-full flex items-center justify-between px-2 py-1 rounded-lg text-[10px] font-mono transition-all hover:bg-white/[0.04]"
+                        style={{ color: email === a.email ? '#38bdf8' : 'rgba(255,255,255,0.25)' }}>
+                        <span>{a.email}</span>
+                        <span className="uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.15)' }}>{a.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               )}
 
               {/* Error */}

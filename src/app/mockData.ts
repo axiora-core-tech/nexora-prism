@@ -843,3 +843,261 @@ export const globalKPIData = {
   burnoutIndex: 38,
   engagementScore: 78,
 };
+
+// ═══════════════════════════════════════════════════════════════════════
+// V3 ENTITIES — AI COO Platform Data
+// ═══════════════════════════════════════════════════════════════════════
+
+export const companyConfig = {
+  id: 'c1',
+  name: 'Nexora',
+  privacyLevel: 'layered' as const,
+  conversationMemoryDays: 30 as 7 | 30 | 90 | -1,
+  annualRevenueTarget: 3200000,
+  departmentBudgets: [
+    { departmentId: 'core-arch', budget: 800000 },
+    { departmentId: 'ux', budget: 600000 },
+    { departmentId: 'data-infra', budget: 700000 },
+    { departmentId: 'growth', budget: 500000 },
+  ],
+  financialDataSource: 'manual' as const,
+  standupReminderTime: '09:00',
+  standupTimezone: 'Asia/Kolkata',
+  missedStandupEscalationHours: 4,
+};
+
+export const visionDocument = {
+  id: 'v1',
+  uploadedAt: '2026-01-15T10:00:00Z',
+  rawText: 'We are building an AI-powered workforce management platform that transforms how CEOs run their companies. Our goal is to make every operational decision data-driven while keeping the human element at the centre.',
+  mission: 'Empower every CEO with an AI Chief Operating Officer',
+  problemStatements: [
+    'CEOs spend 60% of time on operational oversight instead of strategy',
+    'Employee performance data is siloed across 5+ tools',
+    'Performance reviews are subjective and delayed by months',
+  ],
+  revenueTargets: [
+    { period: 'Q1 2026', target: 600000 },
+    { period: 'Q2 2026', target: 800000 },
+    { period: 'Q3 2026', target: 900000 },
+    { period: 'Q4 2026', target: 900000 },
+  ],
+  resources: { money: 2000000, headcount: 8, timeMonths: 12 },
+  targetAudience: 'CEOs of 10-50 person companies',
+  techApproach: 'React SPA with Anthropic Claude API for AI capabilities',
+  constraints: ['No external funding', 'Remote-first team', 'Ship MVP in 6 months'],
+};
+
+export const roadmap = {
+  id: 'r1',
+  visionId: 'v1',
+  status: 'active' as const,
+  milestones: [
+    { id: 'm1', title: 'Authentication System', description: 'Complete auth with SSO and role-based access', departmentId: 'core-arch',
+      startDate: '2026-01-20', targetDate: '2026-03-15', status: 'completed' as const, progress: 100,
+      okrs: [{ id: 'okr1', title: 'Implement OAuth2 + RBAC', target: 100, current: 100, unit: '%' }],
+      dependencies: [] },
+    { id: 'm2', title: 'Design System v2', description: 'Component library refresh with Prism tokens', departmentId: 'ux',
+      startDate: '2026-02-01', targetDate: '2026-04-01', status: 'completed' as const, progress: 100,
+      okrs: [{ id: 'okr2', title: 'Ship 40 UI components', target: 40, current: 40, unit: 'components' }],
+      dependencies: ['m1'] },
+    { id: 'm3', title: 'API Gateway', description: 'Rate limiting, caching, auth proxy for all services', departmentId: 'core-arch',
+      startDate: '2026-03-20', targetDate: '2026-05-10', status: 'in_progress' as const, progress: 65,
+      okrs: [{ id: 'okr3', title: 'Achieve <100ms p95 latency', target: 100, current: 65, unit: '%' }],
+      dependencies: ['m1'] },
+    { id: 'm4', title: 'User Research Phase 2', description: 'Enterprise customer interviews and usability testing', departmentId: 'growth',
+      startDate: '2026-03-01', targetDate: '2026-05-25', status: 'in_progress' as const, progress: 40,
+      okrs: [{ id: 'okr4', title: 'Complete 25 enterprise interviews', target: 25, current: 10, unit: 'interviews' }],
+      dependencies: [] },
+    { id: 'm5', title: 'Beta Launch', description: 'Invite-only beta with 10 companies, monitoring + feedback loop', departmentId: 'growth',
+      startDate: '2026-05-15', targetDate: '2026-06-30', status: 'not_started' as const, progress: 0,
+      okrs: [{ id: 'okr5', title: 'Onboard 10 beta companies', target: 10, current: 0, unit: 'companies' }],
+      dependencies: ['m3', 'm4'] },
+    { id: 'm6', title: 'Scale Infrastructure', description: 'Multi-tenant architecture, CDN, monitoring stack', departmentId: 'data-infra',
+      startDate: '2026-05-20', targetDate: '2026-07-15', status: 'not_started' as const, progress: 0,
+      okrs: [{ id: 'okr6', title: 'Support 100 concurrent orgs', target: 100, current: 0, unit: 'orgs' }],
+      dependencies: ['m3'] },
+    { id: 'm7', title: 'GA Release', description: 'Public launch with self-serve onboarding and billing', departmentId: 'growth',
+      startDate: '2026-07-01', targetDate: '2026-08-30', status: 'not_started' as const, progress: 0,
+      okrs: [{ id: 'okr7', title: 'Achieve 50 paying customers', target: 50, current: 0, unit: 'customers' }],
+      dependencies: ['m5', 'm6'] },
+  ],
+  risks: [
+    { id: 'rk1', title: 'Beta feedback may require scope change', severity: 'medium' as const, mitigation: 'Build modular — any component can be swapped independently' },
+    { id: 'rk2', title: 'Infrastructure costs at scale unpredictable', severity: 'high' as const, mitigation: 'Usage-based pricing model, aggressive caching, cost alerts at thresholds' },
+    { id: 'rk3', title: 'Key engineer burnout risk', severity: 'medium' as const, mitigation: 'Monitor wellbeing scores, enforce PTO, hire backup for critical path' },
+  ],
+  gaps: [
+    { id: 'g1', type: 'skill' as const, title: 'No dedicated DevOps engineer', suggestion: 'Hire or contract DevOps for Scale Infrastructure milestone' },
+    { id: 'g2', type: 'resource' as const, title: 'Marketing budget insufficient for GA', suggestion: 'Reallocate $50K from engineering tooling budget' },
+  ],
+};
+
+// 14 days of standup conversations for employee e1 (Arjun)
+const _genConvDate = (daysAgo: number) => {
+  const d = new Date('2026-03-31');
+  d.setDate(d.getDate() - daysAgo);
+  return d.toISOString().split('T')[0];
+};
+
+export const conversations = [
+  { id: 'conv-1', employeeId: 'e1', date: _genConvDate(0), type: 'daily_standup' as const,
+    messages: [
+      { id: 'msg-1a', role: 'ai_manager' as const, content: 'Good morning Arjun. How is the API gateway caching layer progressing?', timestamp: `${_genConvDate(0)}T09:01:00Z`, isPrivate: false },
+      { id: 'msg-1b', role: 'employee' as const, content: 'Caching layer is done and deployed to staging. Running load tests now — looking good so far, p95 is under 80ms.', timestamp: `${_genConvDate(0)}T09:02:00Z`, isPrivate: false },
+      { id: 'msg-1c', role: 'ai_manager' as const, content: 'Excellent progress. Any blockers for moving to production?', timestamp: `${_genConvDate(0)}T09:02:30Z`, isPrivate: false },
+      { id: 'msg-1d', role: 'employee' as const, content: 'Need final sign-off from the security review. Should have it by end of day.', timestamp: `${_genConvDate(0)}T09:03:00Z`, isPrivate: false },
+    ],
+    aiSummary: 'Caching layer deployed to staging. Load tests show p95 under 80ms. Awaiting security review sign-off.',
+    sentiment: 'positive' as const, topicsDiscussed: ['API gateway', 'caching', 'load testing', 'security review'],
+    actionItems: [{ description: 'Follow up on security review sign-off' }],
+    blockers: ['Security review pending'], wins: ['Caching layer completed, p95 under 80ms'], hasPrivateContent: false, privateMessageIds: [] },
+  { id: 'conv-2', employeeId: 'e1', date: _genConvDate(1), type: 'daily_standup' as const,
+    messages: [
+      { id: 'msg-2a', role: 'ai_manager' as const, content: 'Morning Arjun. What are you working on today?', timestamp: `${_genConvDate(1)}T09:01:00Z`, isPrivate: false },
+      { id: 'msg-2b', role: 'employee' as const, content: 'Finishing up the rate limiter integration tests. Hit a tricky edge case with concurrent requests but I think I have a fix.', timestamp: `${_genConvDate(1)}T09:02:00Z`, isPrivate: false },
+    ],
+    aiSummary: 'Working on rate limiter integration tests. Edge case with concurrency being resolved.',
+    sentiment: 'neutral' as const, topicsDiscussed: ['rate limiter', 'integration tests'],
+    actionItems: [], blockers: [], wins: [], hasPrivateContent: false, privateMessageIds: [] },
+  { id: 'conv-3', employeeId: 'e1', date: _genConvDate(2), type: 'daily_standup' as const,
+    messages: [
+      { id: 'msg-3a', role: 'ai_manager' as const, content: 'Hi Arjun. How did the rate limiter edge case go?', timestamp: `${_genConvDate(2)}T09:01:00Z`, isPrivate: false },
+      { id: 'msg-3b', role: 'employee' as const, content: 'Fixed it. The issue was a race condition in the token bucket. All tests green now.', timestamp: `${_genConvDate(2)}T09:02:00Z`, isPrivate: false },
+    ],
+    aiSummary: 'Rate limiter edge case fixed — race condition in token bucket resolved. All tests passing.',
+    sentiment: 'positive' as const, topicsDiscussed: ['rate limiter', 'bug fix'],
+    actionItems: [], blockers: [], wins: ['Race condition bug fixed'], hasPrivateContent: false, privateMessageIds: [] },
+  // Missed day (weekend)
+  { id: 'conv-4', employeeId: 'e1', date: _genConvDate(5), type: 'daily_standup' as const,
+    messages: [
+      { id: 'msg-4a', role: 'ai_manager' as const, content: 'Welcome back, Arjun. How was the weekend? Ready for the week?', timestamp: `${_genConvDate(5)}T09:01:00Z`, isPrivate: false },
+      { id: 'msg-4b', role: 'employee' as const, content: 'Good weekend. Starting on the auth proxy module today. Should take about 3 days.', timestamp: `${_genConvDate(5)}T09:02:00Z`, isPrivate: false },
+    ],
+    aiSummary: 'Starting auth proxy module. Estimated 3-day effort.',
+    sentiment: 'positive' as const, topicsDiscussed: ['auth proxy'],
+    actionItems: [{ description: 'Complete auth proxy module by Wednesday' }], blockers: [], wins: [], hasPrivateContent: false, privateMessageIds: [] },
+  { id: 'conv-5', employeeId: 'e1', date: _genConvDate(6), type: 'daily_standup' as const,
+    messages: [
+      { id: 'msg-5a', role: 'ai_manager' as const, content: 'How is the auth proxy coming along?', timestamp: `${_genConvDate(6)}T09:01:00Z`, isPrivate: false },
+      { id: 'msg-5b', role: 'employee' as const, content: 'Slower than expected. The JWT validation library has a bug with RS256. I might need to write a custom validator.', timestamp: `${_genConvDate(6)}T09:02:00Z`, isPrivate: false },
+    ],
+    aiSummary: 'Auth proxy slower than expected due to JWT library bug. May need custom validator.',
+    sentiment: 'concerned' as const, topicsDiscussed: ['auth proxy', 'JWT', 'library bug'],
+    actionItems: [{ description: 'Evaluate custom JWT validator vs library patch' }], blockers: ['JWT library RS256 bug'], wins: [], hasPrivateContent: false, privateMessageIds: [] },
+  // Missed standup day
+  { id: 'conv-6', employeeId: 'e1', date: _genConvDate(8), type: 'daily_standup' as const,
+    messages: [
+      { id: 'msg-6a', role: 'ai_manager' as const, content: 'Hi Arjun, I noticed you missed standup yesterday. Everything okay?', timestamp: `${_genConvDate(8)}T09:01:00Z`, isPrivate: false },
+      { id: 'msg-6b', role: 'employee' as const, content: 'Yeah, sorry — had a dentist appointment. Auth proxy is done though! Custom validator works great.', timestamp: `${_genConvDate(8)}T09:02:00Z`, isPrivate: false },
+    ],
+    aiSummary: 'Missed yesterday (dentist). Auth proxy completed with custom JWT validator.',
+    sentiment: 'positive' as const, topicsDiscussed: ['auth proxy', 'missed standup'],
+    actionItems: [], blockers: [], wins: ['Auth proxy completed with custom validator'], hasPrivateContent: false, privateMessageIds: [] },
+  { id: 'conv-7', employeeId: 'e1', date: _genConvDate(9), type: 'daily_standup' as const,
+    messages: [
+      { id: 'msg-7a', role: 'ai_manager' as const, content: 'Good morning. What is the focus for today?', timestamp: `${_genConvDate(9)}T09:01:00Z`, isPrivate: false },
+      { id: 'msg-7b', role: 'employee' as const, content: 'Starting on the caching layer now. Redis cluster is ready — Ravi set it up yesterday.', timestamp: `${_genConvDate(9)}T09:02:00Z`, isPrivate: false },
+    ],
+    aiSummary: 'Starting caching layer. Redis cluster provisioned by Ravi.',
+    sentiment: 'positive' as const, topicsDiscussed: ['caching layer', 'Redis'],
+    actionItems: [], blockers: [], wins: ['Redis cluster ready'], hasPrivateContent: false, privateMessageIds: [] },
+  { id: 'conv-8', employeeId: 'e1', date: _genConvDate(10), type: 'daily_standup' as const,
+    messages: [
+      { id: 'msg-8a', role: 'ai_manager' as const, content: 'How is the caching implementation going?', timestamp: `${_genConvDate(10)}T09:01:00Z`, isPrivate: false },
+      { id: 'msg-8b', role: 'employee' as const, content: 'Good progress. Cache invalidation strategy is trickier than I thought but I have a solid approach now.', timestamp: `${_genConvDate(10)}T09:02:00Z`, isPrivate: false },
+      { id: 'msg-8c', role: 'employee' as const, content: 'Also, I have been feeling a bit overwhelmed with the timeline. Can we talk about priorities?', timestamp: `${_genConvDate(10)}T09:03:00Z`, isPrivate: true },
+    ],
+    aiSummary: 'Caching progressing. Cache invalidation strategy solidified. Employee expressed feeling overwhelmed with timeline.',
+    sentiment: 'concerned' as const, topicsDiscussed: ['caching', 'cache invalidation', 'workload'],
+    actionItems: [{ description: 'Review priority list with manager' }], blockers: [], wins: ['Cache invalidation strategy defined'], hasPrivateContent: true, privateMessageIds: ['msg-8c'] },
+];
+
+export const conversationExtracts = [
+  { employeeId: 'e1', extractedAt: '2026-03-31',
+    ongoingBlockers: ['Security review sign-off pending'],
+    commitmentsMade: ['API gateway caching layer delivery', 'Auth proxy module delivery'],
+    winsNoted: ['Rate limiter completed', 'Custom JWT validator built', 'p95 latency under 80ms'],
+    concernsRaised: ['Feeling overwhelmed with timeline'],
+    keyTopics: ['API gateway', 'caching', 'auth proxy', 'infrastructure'],
+    sentimentTrend: 'stable' as const },
+  { employeeId: 'e2', extractedAt: '2026-03-31',
+    ongoingBlockers: [],
+    commitmentsMade: ['Design system v2 components'],
+    winsNoted: ['All 40 components shipped on time'],
+    concernsRaised: [],
+    keyTopics: ['design system', 'UI components'],
+    sentimentTrend: 'improving' as const },
+];
+
+// Pending approvals for Checkpoint
+export const pendingApprovals = [
+  { id: 'ap1', type: 'task_assignment' as const, title: 'API Refactor — Cache Layer', employeeId: 'e1', employeeName: 'Arjun Mehta',
+    department: 'Core Architecture', priority: 'high' as const, createdAt: '2026-03-28', deadline: '2026-04-15',
+    source: 'ai_roadmap' as const, milestoneTitle: 'API Gateway',
+    botRecommendation: 'Approve — aligns with Arjun\'s current workstream and skill profile. Capacity check: 72% utilized.',
+    status: 'pending' as const },
+  { id: 'ap2', type: 'deadline_extension' as const, title: 'User Research Report — 3 day extension', employeeId: 'e4', employeeName: 'Priya Sharma',
+    department: 'Growth', priority: 'medium' as const, createdAt: '2026-03-30', deadline: '2026-04-08',
+    source: 'negotiation' as const, milestoneTitle: 'User Research Phase 2',
+    botRecommendation: 'Approve — minimal milestone impact, 5-day buffer remains. Employee cited scheduling conflicts with enterprise interviews.',
+    status: 'pending' as const },
+  { id: 'ap3', type: 'task_assignment' as const, title: 'CDN Configuration for Static Assets', employeeId: 'e3', employeeName: 'Ravi Krishnan',
+    department: 'Data Infrastructure', priority: 'medium' as const, createdAt: '2026-03-29', deadline: '2026-04-20',
+    source: 'ai_roadmap' as const, milestoneTitle: 'Scale Infrastructure',
+    botRecommendation: 'Approve — Ravi has infrastructure expertise. Note: this starts before milestone official start date as a pre-requisite.',
+    status: 'pending' as const },
+  { id: 'ap4', type: 'scope_change' as const, title: 'Reduce OAuth scope to Google+GitHub only', employeeId: 'e1', employeeName: 'Arjun Mehta',
+    department: 'Core Architecture', priority: 'low' as const, createdAt: '2026-03-27', deadline: '2026-04-10',
+    source: 'negotiation' as const, milestoneTitle: 'Authentication System',
+    botRecommendation: 'Consider — removing SAML reduces effort by ~2 weeks but limits enterprise readiness. Suggest deferring SAML to post-beta instead of removing.',
+    status: 'pending' as const },
+  { id: 'ap5', type: 'task_assignment' as const, title: 'Write Beta Onboarding Email Sequence', employeeId: 'e5', employeeName: 'Anika Desai',
+    department: 'Growth', priority: 'high' as const, createdAt: '2026-03-30', deadline: '2026-04-12',
+    source: 'ai_roadmap' as const, milestoneTitle: 'Beta Launch',
+    botRecommendation: 'Approve — Anika has content writing strengths. Task directly supports beta milestone.',
+    status: 'pending' as const },
+];
+
+// Generated reports for Synthesis
+export const generatedReports = [
+  { id: 'rpt1', type: 'board_summary' as const, title: 'Q1 2026 Board Summary', generatedAt: '2026-03-31T14:00:00Z', generatedBy: 'CEO' },
+  { id: 'rpt2', type: 'department_review' as const, title: 'Core Architecture — March Review', generatedAt: '2026-03-28T10:00:00Z', generatedBy: 'CEO' },
+  { id: 'rpt3', type: 'attrition_risk' as const, title: 'Attrition Risk Assessment — Q1', generatedAt: '2026-03-25T16:00:00Z', generatedBy: 'CEO' },
+];
+
+// Avatar configurations
+export const avatarConfigs = [
+  { id: 'av1', managerId: 'mgr1', departmentId: 'core-arch', photoUrl: '', animatedAvatarId: '',
+    voiceType: 'prism' as const, clonedVoiceId: '',
+    adaptiveRules: { highPerformer: 'Direct, ambitious, growth-oriented', steadyPerformer: 'Encouraging, supportive', underperformer: 'Patient, structured, milestone-focused', newEmployee: 'Warm, welcoming, explanatory' } },
+];
+
+// Execution Velocity
+export const executionVelocity = {
+  score: 73,
+  trend: [
+    { quarter: 'Q3 2025', score: 58 },
+    { quarter: 'Q4 2025', score: 65 },
+    { quarter: 'Q1 2026', score: 71 },
+    { quarter: 'Current', score: 73 },
+  ],
+  subScores: {
+    milestoneCompletion: 82,
+    taskVelocity: 71,
+    standupEngagement: 78,
+    blockerResolution: 61,
+  },
+  revenueEstimate: 2336000,
+  narrative: 'Engineering is 2 weeks ahead on the auth milestone, but marketing\'s content roadmap is 40% behind plan. The sales pipeline gap in Q2 OKRs is the largest risk to the revenue target. Recommendation: reallocate 1 headcount from engineering to marketing for 3 weeks.',
+};
+
+// User accounts — maps login email to roles and employee records
+export const userAccounts = [
+  { email: 'ceo@nexora.com',   name: 'Vikram Patel',   availableRoles: ['ceo'] as const,                          defaultRole: 'ceo' as const,             employeeId: null },
+  { email: 'arjun@nexora.com', name: 'Arjun Sharma',   availableRoles: ['manager', 'employee'] as const,          defaultRole: 'manager' as const,         employeeId: 'e1' },
+  { email: 'priya@nexora.com', name: 'Priya Sharma',   availableRoles: ['department_head', 'manager'] as const,   defaultRole: 'department_head' as const, employeeId: 'e4' },
+  { email: 'ravi@nexora.com',  name: 'Ravi Krishnan',  availableRoles: ['employee'] as const,                     defaultRole: 'employee' as const,        employeeId: 'e3' },
+  { email: 'neha@nexora.com',  name: 'Neha Gupta',     availableRoles: ['employee'] as const,                     defaultRole: 'employee' as const,        employeeId: 'e2' },
+  { email: 'demo@nexora.com',  name: 'Demo User',      availableRoles: ['ceo', 'department_head', 'manager', 'employee'] as const, defaultRole: 'ceo' as const, employeeId: 'e1' },
+];

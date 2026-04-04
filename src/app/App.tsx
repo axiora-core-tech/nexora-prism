@@ -7,6 +7,7 @@ import { CompanyConfigProvider } from './stores/companyConfigStore';
 import { RoadmapProvider } from './stores/roadmapStore';
 import { ConversationProvider } from './stores/conversationStore';
 import { AvatarProvider } from './stores/avatarStore';
+import { TaskStoreProvider } from './stores/taskStore';
 
 export default function App() {
   return (
@@ -16,7 +17,9 @@ export default function App() {
           <RoadmapProvider>
             <ConversationProvider>
               <AvatarProvider>
-                <RouterProvider router={router} />
+                <TaskStoreProvider>
+                  <RouterProvider router={router} />
+                </TaskStoreProvider>
               </AvatarProvider>
             </ConversationProvider>
           </RoadmapProvider>

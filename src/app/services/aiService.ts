@@ -5,7 +5,12 @@
 
 const API_URL = 'https://api.anthropic.com/v1/messages';
 const getModel = () => (import.meta as any).env?.VITE_AI_MODEL || 'claude-sonnet-4-20250514';
-const getKey = () => (import.meta as any).env?.VITE_ANTHROPIC_API_KEY || '';
+const getKey = () => {
+  const key = (import.meta as any).env?.VITE_ANTHROPIC_API_KEY || '';
+  // Skip placeholder keys
+  if (!key || key.includes('your-key') || key.includes('your_key') || key.length < 20) return '';
+  return key;
+};
 
 interface ChatMessage {
   role: 'user' | 'assistant';

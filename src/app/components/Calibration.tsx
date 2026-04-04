@@ -387,7 +387,87 @@ export function Calibration() {
               </div>
             </div>
 
-            {/* Custom Greeting */}
+            {/* Avatar photo */}
+            <div className="mb-6">
+              <p className="text-xs mb-3" style={{ color: 'var(--p-text-mid)' }}>Avatar photo</p>
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0" style={{ border: '1px solid rgba(192,132,252,0.2)' }}>
+                  <img src={config.personaPhoto || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=512&auto=format&fit=crop&crop=face'}
+                    alt="Avatar" className="w-full h-full object-cover" />
+                </div>
+                <div className="flex-1">
+                  <button onClick={() => {
+                    const input = document.createElement('input');
+                    input.type = 'file'; input.accept = 'image/*';
+                    input.onchange = (e: any) => {
+                      const file = e.target.files?.[0]; if (!file) return;
+                      const reader = new FileReader();
+                      reader.onload = (ev) => {
+                        const data = ev.target?.result as string;
+                        updateConfig({ personaPhoto: data });
+                        try { localStorage.setItem('prism_sanctum_avatar_photo', data); } catch {}
+                      };
+                      reader.readAsDataURL(file);
+                    };
+                    input.click();
+                  }}
+                    className="px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-widest transition-all hover:scale-105"
+                    style={{ background: 'rgba(192,132,252,0.06)', border: '1px solid rgba(192,132,252,0.15)', color: '#c084fc', cursor: 'pointer' }}>
+                    Upload photo
+                  </button>
+                  <p className="text-[10px] mt-1.5" style={{ color: 'var(--p-text-ghost)' }}>This face appears in The Sanctum during conversations.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Voice tuning */}
+            <div className="mb-6">
+              <p className="text-xs mb-3" style={{ color: 'var(--p-text-mid)' }}>Voice tuning</p>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="flex justify-between text-[10px] font-mono mb-1.5">
+                    <span style={{ color: 'var(--p-text-ghost)' }}>Speed</span>
+                    <span style={{ color: '#c084fc' }}>{(config.personaVoiceRate || 0.95).toFixed(2)}</span>
+                  </div>
+                  <input type="range" min="0.7" max="1.3" step="0.05" value={config.personaVoiceRate || 0.95}
+                    onChange={e => updateConfig({ personaVoiceRate: parseFloat(e.target.value) })}
+                    className="w-full h-1 rounded-full appearance-none cursor-pointer"
+                    style={{ accentColor: '#c084fc', background: 'var(--p-border)' }} />
+                  <div className="flex justify-between text-[9px] mt-1" style={{ color: 'var(--p-text-ghost)' }}>
+                    <span>Slow</span><span>Fast</span>
+                  </div>
+                </div>
+                <div>
+                  <div className="flex justify-between text-[10px] font-mono mb-1.5">
+                    <span style={{ color: 'var(--p-text-ghost)' }}>Pitch</span>
+                    <span style={{ color: '#c084fc' }}>{(config.personaVoicePitch || 0.95).toFixed(2)}</span>
+                  </div>
+                  <input type="range" min="0.5" max="1.5" step="0.05" value={config.personaVoicePitch || 0.95}
+                    onChange={e => updateConfig({ personaVoicePitch: parseFloat(e.target.value) })}
+                    className="w-full h-1 rounded-full appearance-none cursor-pointer"
+                    style={{ accentColor: '#c084fc', background: 'var(--p-border)' }} />
+                  <div className="flex justify-between text-[9px] mt-1" style={{ color: 'var(--p-text-ghost)' }}>
+                    <span>Low</span><span>High</span>
+                  </div>
+                </div>
+              </div>
+              <button onClick={() => {
+                const u = new SpeechSynthesisUtterance('Hello, I am your Prism manager. How can I help you today?');
+                u.rate = config.personaVoiceRate || 0.95; u.pitch = config.personaVoicePitch || 0.95;
+                const voices = window.speechSynthesis?.getVoices() || [];
+                const pick = voices.find(v => /Google.*US|Samantha|Daniel|Karen/i.test(v.name) && v.lang.startsWith('en'))
+                  || voices.find(v => v.lang.startsWith('en')) || voices[0];
+                if (pick) u.voice = pick;
+                window.speechSynthesis?.cancel();
+                window.speechSynthesis?.speak(u);
+              }}
+                className="mt-3 px-4 py-2 rounded-xl text-[10px] font-mono uppercase tracking-widest transition-all hover:scale-105"
+                style={{ background: 'rgba(192,132,252,0.04)', border: '1px solid rgba(192,132,252,0.1)', color: 'var(--p-text-ghost)', cursor: 'pointer' }}>
+                ▶ Preview voice
+              </button>
+            </div>
+
+            {/* Default greeting */}
             <div>
               <p className="text-xs mb-2" style={{ color: 'var(--p-text-mid)' }}>Default greeting</p>
               <textarea

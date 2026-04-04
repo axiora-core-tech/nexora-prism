@@ -871,6 +871,9 @@ export const companyConfig = {
   personaLength: 'adaptive' as const,
   personaTraits: ['empathetic', 'analytical', 'encouraging'],
   personaGreeting: 'Welcome to The Sanctum. I\'m here to help you grow.',
+  personaPhoto: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=512&auto=format&fit=crop&crop=face',
+  personaVoiceRate: 0.95,
+  personaVoicePitch: 0.95,
 };
 
 export const visionDocument = {

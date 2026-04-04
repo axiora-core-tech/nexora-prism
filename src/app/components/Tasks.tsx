@@ -9,6 +9,7 @@ import {
   Timer, TrendingUp, GitBranch,
 } from 'lucide-react';
 import { employees } from '../mockData';
+import { useSanctumTasks } from '../stores/taskStore';
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 type Priority  = 'critical' | 'high' | 'medium' | 'low';
@@ -832,12 +833,40 @@ function NewTaskModal({ tasks, onClose, onAdd }: { tasks: Task[]; onClose: () =>
 /* ─── Main Tasks Page ────────────────────────────────────────────────────── */
 export function Tasks() {
   const navigate = useNavigate();
+  const { sanctumTasks } = useSanctumTasks();
   const [tasks, setTasks]             = useState<Task[]>(initialTasks);
   const [showModal, setShowModal]     = useState(false);
   const [openTaskId, setOpenTaskId]   = useState<string | null>(null);
   const [filterOwner, setFilterOwner] = useState<string | null>(null);
   const [filterPriority, setFilterPriority] = useState<Priority | null>(null);
   const [view, setView]               = useState<'board' | 'list'>('board');
+
+  // Merge Sanctum-created tasks into the task list
+  useEffect(() => {
+    const sanctumIds = new Set(tasks.filter(t => t.id.startsWith('sanctum-')).map(t => t.id));
+    const newSanctumTasks = sanctumTasks
+      .filter(st => !sanctumIds.has(st.id))
+      .map(st => ({
+        id: st.id,
+        title: st.title,
+        desc: st.desc,
+        status: st.status as Status,
+        priority: st.priority as Priority,
+        owner: st.owner,
+        ownerId: st.ownerId,
+        due: st.due,
+        tags: st.tags,
+        storyPoints: st.storyPoints,
+        estimatedHours: st.estimatedHours,
+        loggedHours: st.loggedHours,
+        parentId: st.parentId,
+        comments: st.comments,
+        attachments: st.attachments,
+      }));
+    if (newSanctumTasks.length > 0) {
+      setTasks(prev => [...newSanctumTasks, ...prev]);
+    }
+  }, [sanctumTasks]);
 
   const openTask = openTaskId ? tasks.find(t => t.id === openTaskId) ?? null : null;
 

@@ -19,6 +19,9 @@ export interface CompanyConfig {
   personaLength: 'concise' | 'detailed' | 'adaptive';
   personaTraits: string[];
   personaGreeting: string;
+  personaPhoto: string;
+  personaVoiceRate: number;
+  personaVoicePitch: number;
 }
 
 interface CompanyConfigContextType {

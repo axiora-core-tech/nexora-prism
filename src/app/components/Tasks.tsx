@@ -455,8 +455,9 @@ function TaskDetail({
               </p>
               <div className="flex flex-wrap gap-1.5">
                 {task.tags.map(t => (
-                  <span key={t} className="px-2 py-0.5 rounded-full text-xs font-mono p-bg-card border p-border p-text-dim uppercase tracking-widest">
-                    {t}
+                  <span key={t} className={`px-2 py-0.5 rounded-full text-xs font-mono uppercase tracking-widest ${t === 'Sanctum' ? '' : 'p-bg-card border p-border p-text-dim'}`}
+                    style={t === 'Sanctum' ? { background: 'rgba(56,189,248,0.08)', color: '#38bdf8', border: '1px solid rgba(56,189,248,0.2)', boxShadow: '0 0 8px rgba(56,189,248,0.1)' } : undefined}>
+                    {t === 'Sanctum' ? '◆ Sanctum' : t}
                   </span>
                 ))}
               </div>
@@ -638,7 +639,10 @@ function TaskCard({
         <div className="flex items-start justify-between gap-2 mb-3">
           <div className="flex flex-wrap gap-1">
             {task.tags.map(tag => (
-              <span key={tag} className="px-1.5 py-0.5 rounded-full text-xs font-mono p-bg-card-2 p-text-ghost border p-border uppercase tracking-widest">{tag}</span>
+              <span key={tag} className={`px-1.5 py-0.5 rounded-full text-xs font-mono uppercase tracking-widest ${tag === 'Sanctum' ? '' : 'p-bg-card-2 p-text-ghost border p-border'}`}
+                style={tag === 'Sanctum' ? { background: 'rgba(56,189,248,0.08)', color: '#38bdf8', border: '1px solid rgba(56,189,248,0.2)', boxShadow: '0 0 8px rgba(56,189,248,0.1)' } : undefined}>
+                {tag === 'Sanctum' ? '◆ Sanctum' : tag}
+              </span>
             ))}
           </div>
           <span className="text-xs font-mono uppercase tracking-widest flex-shrink-0" style={{ color: pCfg.color }}>
@@ -841,31 +845,33 @@ export function Tasks() {
   const [filterPriority, setFilterPriority] = useState<Priority | null>(null);
   const [view, setView]               = useState<'board' | 'list'>('board');
 
-  // Merge Sanctum-created tasks into the task list
+  // Merge Sanctum-created tasks (callback form avoids stale state)
   useEffect(() => {
-    const sanctumIds = new Set(tasks.filter(t => t.id.startsWith('sanctum-')).map(t => t.id));
-    const newSanctumTasks = sanctumTasks
-      .filter(st => !sanctumIds.has(st.id))
-      .map(st => ({
-        id: st.id,
-        title: st.title,
-        desc: st.desc,
-        status: st.status as Status,
-        priority: st.priority as Priority,
-        owner: st.owner,
-        ownerId: st.ownerId,
-        due: st.due,
-        tags: st.tags,
-        storyPoints: st.storyPoints,
-        estimatedHours: st.estimatedHours,
-        loggedHours: st.loggedHours,
-        parentId: st.parentId,
-        comments: st.comments,
-        attachments: st.attachments,
-      }));
-    if (newSanctumTasks.length > 0) {
-      setTasks(prev => [...newSanctumTasks, ...prev]);
-    }
+    if (sanctumTasks.length === 0) return;
+    setTasks(prev => {
+      const existingIds = new Set(prev.map(t => t.id));
+      const newTasks = sanctumTasks
+        .filter(st => !existingIds.has(st.id))
+        .map(st => ({
+          id: st.id,
+          title: st.title,
+          desc: st.desc,
+          status: st.status as Status,
+          priority: st.priority as Priority,
+          owner: st.owner,
+          ownerId: st.ownerId,
+          due: st.due,
+          tags: st.tags,
+          storyPoints: st.storyPoints,
+          estimatedHours: st.estimatedHours,
+          loggedHours: st.loggedHours,
+          parentId: st.parentId,
+          comments: st.comments || [],
+          attachments: st.attachments || [],
+        }));
+      if (newTasks.length === 0) return prev;
+      return [...newTasks, ...prev];
+    });
   }, [sanctumTasks]);
 
   const openTask = openTaskId ? tasks.find(t => t.id === openTaskId) ?? null : null;

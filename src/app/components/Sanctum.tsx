@@ -467,10 +467,27 @@ export function SanctumPage() {
     setTasks(prev => prev.map(t => {
       if (t.id !== id) return t;
       const due = new Date(); due.setDate(due.getDate() + 7);
-      addSanctumTask({ id: `sanctum-${id}`, title: t.text, desc: 'Agreed in The Sanctum', status: 'active', priority: 'medium', owner: userName, ownerId: user?.email || 'e1', due: due.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }), tags: ['Sanctum'], storyPoints: 3, estimatedHours: 4, loggedHours: 0, parentId: null, source: 'sanctum', comments: [], attachments: [] });
+      addSanctumTask({
+        id: `sanctum-${id}`,
+        title: t.text,
+        desc: 'Agreed in The Sanctum',
+        status: 'active',
+        priority: 'medium',
+        owner: user?.name || userName,
+        ownerId: user?.employeeId || 'e1',
+        due: due.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        tags: ['Sanctum'],
+        storyPoints: 3,
+        estimatedHours: 4,
+        loggedHours: 0,
+        parentId: null,
+        source: 'sanctum',
+        comments: [],
+        attachments: [],
+      });
       return { ...t, status: 'agreed' as const };
     }));
-  }, [addSanctumTask, userName, user?.email]);
+  }, [addSanctumTask, userName, user?.name, user?.employeeId]);
 
   // ═══════ GATEWAY ═══════
   if (mode === 'gateway') return (

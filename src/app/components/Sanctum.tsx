@@ -370,6 +370,7 @@ export function SanctumPage() {
   const [activePanels, setActivePanels] = useState<PanelId[]>([]);
   const [entered, setEntered] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [generatingVideo, setGeneratingVideo] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const msgCount = useRef(0);
@@ -390,44 +391,59 @@ export function SanctumPage() {
   useEffect(() => { return () => { if (typeof window !== 'undefined') window.speechSynthesis?.cancel(); }; }, [mode]);
   useEffect(() => { if (typeof window !== 'undefined' && window.speechSynthesis) { window.speechSynthesis.getVoices(); window.speechSynthesis.addEventListener?.('voiceschanged', () => window.speechSynthesis.getVoices()); } }, []);
 
-  // TTS
-  // TTS: ElevenLabs → browser fallback. D-ID video in parallel.
+  // Voice+Video: D-ID (voice+video synchronized) or ElevenLabs (voice only)
   const speak = useCallback(async (text: string) => {
     setExpression('speaking'); setIsSpeaking(true);
     const done = () => { setIsSpeaking(false); setExpression('smiling'); setTimeout(() => setExpression('idle'), 1000); };
 
-    // D-ID: generate talking video in background (doesn't block voice)
+    // PATH A: D-ID configured — video provides BOTH voice and lip-synced animation (synchronized)
     if (isDIDConfigured() && photo) {
-      console.log('[Sanctum] Starting D-ID video generation...');
-      createTalkingVideo(photo, text).then(url => {
-        if (url) { setVideoUrl(url); setTimeout(() => videoRef.current?.play(), 100); }
-      });
+      console.log('[Sanctum] D-ID mode: generating synchronized voice+video...');
+      setGeneratingVideo(true);
+      try {
+        const url = await createTalkingVideo(photo, text);
+        setGeneratingVideo(false);
+        if (url) {
+          console.log('[Sanctum] D-ID video ready — playing with audio');
+          setVideoUrl(url);
+          // Wait for video to finish playing
+          await new Promise<void>(resolve => {
+            setTimeout(() => {
+              const vid = videoRef.current;
+              if (vid) {
+                vid.onended = () => { setVideoUrl(null); resolve(); };
+                vid.play().catch(() => resolve());
+              } else { resolve(); }
+            }, 150);
+          });
+          done(); return;
+        }
+      } catch (err) { console.warn('[Sanctum] D-ID failed:', err); setGeneratingVideo(false); }
+      // D-ID failed — fall through to ElevenLabs
     }
 
-    // Voice: try ElevenLabs first
+    // PATH B: ElevenLabs (voice only, fast)
     try {
-      console.log('[Sanctum] Trying ElevenLabs...');
+      console.log('[Sanctum] ElevenLabs mode...');
       const { textToSpeech, playAudio } = await import('../services/voiceService');
       const audio = await textToSpeech(text);
       if (audio && audio.byteLength > 0) {
-        console.log('[Sanctum] ElevenLabs audio:', audio.byteLength, 'bytes — playing');
+        console.log('[Sanctum] ElevenLabs playing:', audio.byteLength, 'bytes');
         await playAudio(audio);
         done(); return;
       }
-      console.log('[Sanctum] ElevenLabs: no audio returned');
     } catch (err) { console.warn('[Sanctum] ElevenLabs error:', err); }
 
-    // Browser fallback
+    // PATH C: Browser TTS fallback
     if (typeof window !== 'undefined' && window.speechSynthesis) {
-      console.log('[Sanctum] Using browser TTS');
+      console.log('[Sanctum] Browser TTS');
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
       u.rate = vRate; u.pitch = vPitch; u.volume = 1;
       const voices = window.speechSynthesis.getVoices();
       const pick = voices.find(v => /Google.*US|Samantha|Daniel|Karen|Zira|David/i.test(v.name) && v.lang.startsWith('en')) || voices.find(v => v.lang.startsWith('en') && !v.name.includes('espeak')) || voices[0];
       if (pick) u.voice = pick;
-      u.onend = done;
-      u.onerror = () => { console.warn('[Sanctum] Browser TTS error'); setIsSpeaking(false); setExpression('idle'); };
+      u.onend = done; u.onerror = () => { setIsSpeaking(false); setExpression('idle'); };
       window.speechSynthesis.speak(u);
     } else { setTimeout(done, 2000 + text.length * 18); }
   }, [vRate, vPitch, photo]);
@@ -646,7 +662,7 @@ RULES:
           }}>
             <motion.div animate={{ scale: expression === 'speaking' ? [1, 1.02, 0.985, 1.015, 1] : [1, 1.005, 1] }} transition={{ duration: expression === 'speaking' ? 0.35 : 3, repeat: Infinity }} className="w-full h-full">
               {videoUrl ? (
-                <video ref={videoRef} src={videoUrl} className="w-full h-full object-cover rounded-full" autoPlay playsInline muted onEnded={() => setVideoUrl(null)} />
+                <video ref={videoRef} src={videoUrl} className="w-full h-full object-cover rounded-full" playsInline />
               ) : (
                 <img src={photo} alt={pName} className="w-full h-full object-cover rounded-full" />
               )}
@@ -764,7 +780,8 @@ RULES:
               <div className="flex gap-[2px]">{[0, 1, 2, 3, 4].map(i => <motion.div key={i} animate={{ height: [3, 10 + Math.random() * 5, 3] }} transition={{ duration: 0.35, repeat: Infinity, delay: i * 0.07 }} style={{ width: 2, borderRadius: 1, background: '#38bdf8', opacity: 0.7 }} />)}</div>
               <span className="text-[9px] font-mono uppercase tracking-widest" style={{ color: '#38bdf8' }}>Listening</span>
             </motion.div>}
-            {isThinking && <span className="text-[9px] font-mono uppercase tracking-widest" style={{ color: '#c084fc' }}>Processing</span>}
+            {isThinking && !generatingVideo && <span className="text-[9px] font-mono uppercase tracking-widest" style={{ color: '#c084fc' }}>Processing</span>}
+            {generatingVideo && <span className="text-[9px] font-mono uppercase tracking-widest" style={{ color: '#10b981' }}>Generating avatar...</span>}
             {isSpeaking && <span className="text-[9px] font-mono uppercase tracking-widest" style={{ color: '#38bdf8' }}>{pName} speaking</span>}
           </div>
           <div className="flex items-center gap-3 rounded-2xl px-4 py-3 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))', backdropFilter: 'blur(24px) saturate(1.3)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.04)' }}>

@@ -9,11 +9,17 @@ const getModel = () => {
   return (import.meta as any).env?.VITE_AI_MODEL || 'claude-sonnet-4-20250514';
 };
 const getKey = () => {
-  // Check localStorage first (set from Calibration UI), then .env
   let key = '';
-  try { key = localStorage.getItem('prism_anthropic_key') || ''; } catch {}
-  if (!key) key = (import.meta as any).env?.VITE_ANTHROPIC_API_KEY || '';
-  if (!key || key.includes('your-key') || key.includes('your_key') || key.length < 20) return '';
+  // 1. Check localStorage (set from Calibration UI)
+  try { key = (localStorage.getItem('prism_anthropic_key') || '').trim(); } catch {}
+  // 2. Fall back to .env
+  if (!key) key = ((import.meta as any).env?.VITE_ANTHROPIC_API_KEY || '').trim();
+  // 3. Only reject exact known placeholders
+  if (!key || key === 'sk-ant-your-key-here' || key === 'your-key-here') {
+    console.warn('[Claude] getKey: rejected placeholder:', key?.slice(0, 20));
+    return '';
+  }
+  console.log('[Claude] getKey: found key starting with', key.slice(0, 12) + '...');
   return key;
 };
 

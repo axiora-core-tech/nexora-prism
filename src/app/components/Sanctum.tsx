@@ -436,6 +436,11 @@ export function SanctumPage() {
   const genReply = useCallback(async (userText: string): Promise<string> => {
     try {
       const { streamChat } = await import('../services/aiService');
+
+      // Debug: log key status
+      const lsKey = localStorage.getItem('prism_anthropic_key') || '';
+      const envKey = (import.meta as any).env?.VITE_ANTHROPIC_API_KEY || '';
+      console.log('[Sanctum] API key check — localStorage:', lsKey ? `${lsKey.slice(0, 15)}...` : 'EMPTY', '| .env:', envKey ? `${envKey.slice(0, 15)}...` : 'EMPTY');
       const sys = `You are ${pName}, an AI manager persona inside Nexora Prism — an enterprise COO platform.
 
 PERSONALITY: ${toneMap[pTone] || 'balanced'}. Traits: ${pTraits}.
@@ -472,14 +477,22 @@ RULES:
       });
 
       if (!out || out.includes('demo mode') || out.includes('API key')) {
+        console.warn('[Sanctum] Claude returned demo/empty response. out=', out?.slice(0, 50));
+        console.warn('[Sanctum] → This means getKey() returned empty. Set your API key in Calibration → AI Engine, or check .env');
         const fallback = smartReply(userText, msgCount.current);
         setMessages(prev => [...prev.slice(0, -1), { role: 'prism', text: fallback }]);
         return fallback;
       }
+      console.log('[Sanctum] Claude response received:', out.slice(0, 60) + '...');
       return out;
     } catch (err) {
       console.error('[Sanctum] Claude API error:', err);
       const fallback = smartReply(userText, msgCount.current);
+      setMessages(prev => {
+        const last = prev[prev.length - 1];
+        if (last?.text === '...' || last?.text === '…') return [...prev.slice(0, -1), { role: 'prism', text: fallback }];
+        return [...prev, { role: 'prism', text: fallback }];
+      });
       return fallback;
     }
   }, [messages, pName, pTone, pTraits, userName, user?.email]);
@@ -626,27 +639,49 @@ RULES:
       <div className="absolute inset-0 flex flex-col items-center z-[8]" style={{ paddingTop: '8%' }}>
         <div className="absolute rounded-full blur-[90px]" style={{ width: 300, height: 300, top: '5%', background: 'radial-gradient(circle, rgba(56,189,248,0.06), rgba(192,132,252,0.02), transparent)' }} />
         <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }} className="relative">
-          <div className="w-40 h-40 rounded-full overflow-hidden relative" style={{ border: `2px solid rgba(56,189,248,${isSpeaking ? 0.25 : 0.12})`, boxShadow: '0 0 80px rgba(56,189,248,0.06), inset 0 0 40px rgba(0,0,0,0.4)', transition: 'border-color 0.3s' }}>
-            <motion.div animate={{ scale: expression === 'speaking' ? [1, 1.015, 0.99, 1.01, 1] : [1, 1.005, 1] }} transition={{ duration: expression === 'speaking' ? 0.35 : 3, repeat: Infinity }} className="w-full h-full">
+          <div className="w-40 h-40 rounded-full overflow-hidden relative" style={{
+            border: `2px solid rgba(56,189,248,${isSpeaking ? 0.4 : expression === 'thinking' ? 0.3 : expression === 'smiling' ? 0.2 : 0.12})`,
+            boxShadow: isSpeaking ? '0 0 60px rgba(56,189,248,0.15), 0 0 120px rgba(56,189,248,0.06), inset 0 0 40px rgba(0,0,0,0.4)' : expression === 'thinking' ? '0 0 60px rgba(56,189,248,0.1), inset 0 0 40px rgba(0,0,0,0.4)' : expression === 'smiling' ? '0 0 40px rgba(16,185,129,0.1), inset 0 0 30px rgba(0,0,0,0.3)' : '0 0 80px rgba(56,189,248,0.06), inset 0 0 40px rgba(0,0,0,0.4)',
+            transition: 'border-color 0.3s, box-shadow 0.5s',
+          }}>
+            <motion.div animate={{ scale: expression === 'speaking' ? [1, 1.02, 0.985, 1.015, 1] : [1, 1.005, 1] }} transition={{ duration: expression === 'speaking' ? 0.35 : 3, repeat: Infinity }} className="w-full h-full">
               {videoUrl ? (
-                <video ref={videoRef} src={videoUrl} className="w-full h-full object-cover rounded-full" autoPlay playsInline onEnded={() => setVideoUrl(null)} />
+                <video ref={videoRef} src={videoUrl} className="w-full h-full object-cover rounded-full" autoPlay playsInline muted onEnded={() => setVideoUrl(null)} />
               ) : (
                 <img src={photo} alt={pName} className="w-full h-full object-cover rounded-full" />
               )}
             </motion.div>
-            <AnimatePresence>{isSpeaking && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute bottom-0 left-0 right-0 h-[28%] pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.5), transparent)', borderRadius: '0 0 100px 100px' }}>
-                <div className="absolute bottom-[20%] left-1/2 -translate-x-1/2 flex items-end gap-[2px]">
-                  {[0, 1, 2, 3, 4, 3, 2, 1, 0].map((b, i) => <motion.div key={i} animate={{ height: [2 + b, 6 + b * 2, 2 + b] }} transition={{ duration: 0.12, repeat: Infinity, delay: i * 0.015 }} style={{ width: 2, borderRadius: 1, background: '#38bdf8', opacity: 0.7 }} />)}
+            {/* Lip sync — bigger bars, hidden when D-ID video playing */}
+            <AnimatePresence>{isSpeaking && !videoUrl && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute bottom-0 left-0 right-0 h-[32%] pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.6), transparent)', borderRadius: '0 0 100px 100px' }}>
+                <div className="absolute bottom-[18%] left-1/2 -translate-x-1/2 flex items-end gap-[3px]">
+                  {[0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0].map((b, i) => <motion.div key={i} animate={{ height: [3 + b, 10 + b * 3, 3 + b] }} transition={{ duration: 0.1 + Math.random() * 0.06, repeat: Infinity, delay: i * 0.012 }} style={{ width: 3, borderRadius: 2, background: '#38bdf8', opacity: 0.8 }} />)}
                 </div>
               </motion.div>
             )}</AnimatePresence>
-            {expression === 'thinking' && <div className="absolute inset-0 rounded-full" style={{ background: 'rgba(56,189,248,0.06)' }} />}
+            {/* Thinking — pulsing blue + scan line */}
+            <AnimatePresence>{expression === 'thinking' && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 rounded-full pointer-events-none">
+                <div className="absolute inset-0 rounded-full" style={{ background: 'rgba(56,189,248,0.12)' }} />
+                <div className="absolute inset-0 rounded-full" style={{ background: 'radial-gradient(circle at 50% 30%, rgba(56,189,248,0.18), transparent 60%)', animation: 'thinkPulse 1.5s ease-in-out infinite' }} />
+                <motion.div animate={{ top: ['10%', '90%', '10%'] }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                  className="absolute left-[10%] right-[10%] h-[2px]" style={{ background: 'linear-gradient(to right, transparent, rgba(56,189,248,0.4), transparent)', filter: 'blur(1px)' }} />
+              </motion.div>
+            )}</AnimatePresence>
+            {/* Smiling — warm green glow */}
+            <AnimatePresence>{expression === 'smiling' && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="absolute inset-0 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle at 50% 60%, rgba(16,185,129,0.12), transparent 70%)' }} />
+            )}</AnimatePresence>
           </div>
           {[4, 8, 12].map((s, i) => <div key={i} className="absolute rounded-full" style={{ inset: -s * 4, border: `1px solid rgba(56,189,248,${0.08 - i * 0.02})`, animation: `breathe ${4 + i * 0.5}s ease-in-out infinite ${i * 0.4}s` }} />)}
-          <AnimatePresence>{expression === 'thinking' && [0, 1, 2].map(i => (
-            <motion.div key={i} initial={{ opacity: 0, y: 0 }} animate={{ opacity: [0, 0.5, 0], y: [-8, -30] }} transition={{ duration: 1, repeat: Infinity, delay: i * 0.3 }}
-              className="absolute rounded-full" style={{ width: 3, height: 3, background: ['#38bdf8', '#c084fc', '#10b981'][i], top: '20%', left: `${35 + i * 15}%` }} />
+          {/* Thinking particles — 5 colorful */}
+          <AnimatePresence>{expression === 'thinking' && [0, 1, 2, 3, 4].map(i => (
+            <motion.div key={i} initial={{ opacity: 0, y: 0, scale: 0 }}
+              animate={{ opacity: [0, 0.7, 0], y: [-5, -45], scale: [0, 1.2, 0.3] }}
+              transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.2 }}
+              className="absolute rounded-full"
+              style={{ width: 4, height: 4, background: ['#38bdf8', '#c084fc', '#10b981', '#f59e0b', '#38bdf8'][i], top: '15%', left: `${25 + i * 12}%`, boxShadow: `0 0 6px ${['#38bdf8', '#c084fc', '#10b981', '#f59e0b', '#38bdf8'][i]}40` }} />
           ))}</AnimatePresence>
         </motion.div>
         <motion.p animate={{ opacity: expression !== 'idle' ? 1 : 0 }} className="mt-3 text-[9px] font-mono uppercase tracking-widest z-10" style={{ color: expression === 'speaking' ? '#38bdf8' : '#c084fc' }}>

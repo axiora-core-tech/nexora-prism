@@ -29,11 +29,14 @@ export async function streamChat(
   onText?: (fullText: string) => void,
 ): Promise<string> {
   const key = getKey();
+  console.log('[Claude] Key:', key ? key.slice(0, 15) + '...' : 'NONE');
   if (!key) {
-    const fallback = 'I\'m your Luminary — currently in demo mode. Configure your Anthropic API key in .env to enable live AI conversations.';
+    console.warn('[Claude] No API key — demo mode');
+    const fallback = 'I\'m your Luminary — currently in demo mode. Configure your Anthropic API key in Calibration > AI Engine.';
     onText?.(fallback);
     return fallback;
   }
+  console.log('[Claude] Calling API with model:', getModel());
 
   const response = await fetch(API_URL, {
     method: 'POST',
@@ -52,6 +55,12 @@ export async function streamChat(
     }),
   });
 
+  if (!response.ok) {
+    const errText = await response.text();
+    console.error('[Claude] API error:', response.status, errText);
+    throw new Error('Claude API error: ' + response.status);
+  }
+  console.log('[Claude] Streaming response...');
   const reader = response.body?.getReader();
   const decoder = new TextDecoder();
   let fullText = '';

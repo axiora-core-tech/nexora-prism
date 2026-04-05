@@ -731,6 +731,18 @@ export function Calibration() {
               <p className="text-[9px]" style={{ color: 'var(--p-text-ghost)' }}>Find voice IDs at elevenlabs.io/voice-library. Try "Adam" (pNInz6obpgDQGcFmaJgB) or "Rachel" (21m00Tcm4TlvDq8ikWAM).</p>
             </div>
 
+            {/* D-ID Avatar */}
+            <div className="mb-6">
+              <p className="text-xs font-medium mb-1" style={{ color: 'var(--p-text-mid)' }}>D-ID Talking Avatar</p>
+              <p className="text-[10px] mb-3" style={{ color: 'var(--p-text-ghost)' }}>Generates a talking-head video from your avatar photo. Adds 5-15s per response. <a href="https://studio.d-id.com" target="_blank" rel="noopener noreferrer" style={{ color: '#10b981' }}>Get key</a></p>
+              <input type="password" placeholder="D-ID API Key (Basic auth)"
+                defaultValue={(() => { try { return localStorage.getItem('prism_did_key') || ''; } catch { return ''; } })()}
+                onChange={e => { try { const v = e.target.value.trim(); if (v) localStorage.setItem('prism_did_key', v); else localStorage.removeItem('prism_did_key'); } catch {} }}
+                className="w-full bg-transparent text-sm font-mono outline-none rounded-xl px-4 py-3"
+                style={{ color: 'var(--p-text-body)', background: 'var(--p-bg-input)', border: '1px solid var(--p-border)' }} />
+              <p className="text-[9px] mt-2" style={{ color: 'var(--p-text-ghost)' }}>When configured, the avatar photo will animate as a talking head during responses. Voice plays immediately via ElevenLabs while the video generates in background.</p>
+            </div>
+
             <p className="text-[9px]" style={{ color: 'var(--p-text-ghost)' }}>All keys stored in browser only. Never sent to Nexora servers.</p>
 
           </motion.div>

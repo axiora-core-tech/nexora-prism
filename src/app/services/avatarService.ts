@@ -1,49 +1,42 @@
 /**
- * Avatar Service — D-ID / HeyGen video generation
- * Demo: placeholder with animated geometric form. Production: real avatar API.
+ * Avatar Service — D-ID Talks API
+ * Generates talking-head video from photo + text.
  */
 
-const getKey = () => (import.meta as any).env?.VITE_DID_API_KEY || '';
+const getKey = () => {
+  try { const k = localStorage.getItem('prism_did_key'); if (k) return k; } catch {}
+  const envKey = (import.meta as any).env?.VITE_DID_API_KEY || '';
+  return envKey.includes('your-key') ? '' : envKey;
+};
 
-export interface AvatarVideoRequest {
-  photoUrl: string;
-  audioUrl: string;
-  text?: string;
-}
+const API = 'https://api.d-id.com';
 
-/** Generate avatar video from photo + audio */
-export async function generateAvatarVideo(request: AvatarVideoRequest): Promise<string | null> {
+export async function createTalkingVideo(photoUrl: string, text: string, voiceId?: string): Promise<string | null> {
   const key = getKey();
-  if (!key) {
-    console.info('D-ID API key not configured — using default Prism avatar');
-    return null;
-  }
-
+  if (!key) { console.log('[D-ID] No API key'); return null; }
   try {
-    const response = await fetch('https://api.d-id.com/talks', {
+    console.log('[D-ID] Creating talk...');
+    const res = await fetch(`${API}/talks`, {
       method: 'POST',
       headers: { 'Authorization': `Basic ${key}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        source_url: request.photoUrl,
-        script: request.audioUrl
-          ? { type: 'audio', audio_url: request.audioUrl }
-          : { type: 'text', input: request.text || '' },
+        source_url: 'https://res.cloudinary.com/drflqs5jo/image/upload/v1775416042/Axiora_BO_olkl2n.jpg',
+        script: { type: 'text', input: text, provider: { type: 'microsoft', voice_id: voiceId || 'en-US-GuyNeural' } },
+        config: { fluent: true, stitch: true },
       }),
     });
-    const data = await response.json();
-    return data.result_url || null;
-  } catch (err) {
-    console.warn('D-ID avatar generation failed:', err);
+    if (!res.ok) { console.warn('[D-ID] Create failed:', res.status); return null; }
+    const { id } = await res.json();
+    console.log('[D-ID] Polling for', id);
+    for (let i = 0; i < 30; i++) {
+      await new Promise(r => setTimeout(r, 1000));
+      const poll = await fetch(`${API}/talks/${id}`, { headers: { 'Authorization': `Basic ${key}` } });
+      const data = await poll.json();
+      if (data.status === 'done' && data.result_url) { console.log('[D-ID] Video ready'); return data.result_url; }
+      if (data.status === 'error') { console.warn('[D-ID] Error:', data); return null; }
+    }
     return null;
-  }
+  } catch (err) { console.warn('[D-ID]', err); return null; }
 }
 
-/** Check if avatar service is configured */
-export function isAvatarServiceConfigured(): boolean {
-  return !!getKey();
-}
-
-/** Get the default Prism avatar type (geometric form) */
-export function getDefaultAvatarType(): 'geometric' | 'photo' {
-  return getKey() ? 'photo' : 'geometric';
-}
+export function isDIDConfigured(): boolean { return !!getKey(); }

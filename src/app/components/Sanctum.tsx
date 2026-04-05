@@ -14,6 +14,7 @@ import { useAuth } from '../auth/AuthContext';
 import { useCompanyConfig } from '../stores/companyConfigStore';
 import { useSanctumTasks } from '../stores/taskStore';
 import { VoiceInput } from './ui/VoiceInput';
+import { createTalkingVideo, isDIDConfigured } from '../services/avatarService';
 
 // ═══════════════════════════════════════════════════════
 // TYPES
@@ -368,6 +369,8 @@ export function SanctumPage() {
   const [showChat, setShowChat] = useState(true);
   const [activePanels, setActivePanels] = useState<PanelId[]>([]);
   const [entered, setEntered] = useState(false);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const msgCount = useRef(0);
 
@@ -388,34 +391,46 @@ export function SanctumPage() {
   useEffect(() => { if (typeof window !== 'undefined' && window.speechSynthesis) { window.speechSynthesis.getVoices(); window.speechSynthesis.addEventListener?.('voiceschanged', () => window.speechSynthesis.getVoices()); } }, []);
 
   // TTS
-  // TTS — tries ElevenLabs first (real voice), falls back to browser
+  // TTS: ElevenLabs → browser fallback. D-ID video in parallel.
   const speak = useCallback(async (text: string) => {
     setExpression('speaking'); setIsSpeaking(true);
+    const done = () => { setIsSpeaking(false); setExpression('smiling'); setTimeout(() => setExpression('idle'), 1000); };
+
+    // D-ID: generate talking video in background (doesn't block voice)
+    if (isDIDConfigured() && photo) {
+      console.log('[Sanctum] Starting D-ID video generation...');
+      createTalkingVideo(photo, text).then(url => {
+        if (url) { setVideoUrl(url); setTimeout(() => videoRef.current?.play(), 100); }
+      });
+    }
+
+    // Voice: try ElevenLabs first
     try {
+      console.log('[Sanctum] Trying ElevenLabs...');
       const { textToSpeech, playAudio } = await import('../services/voiceService');
       const audio = await textToSpeech(text);
-      if (audio) {
+      if (audio && audio.byteLength > 0) {
+        console.log('[Sanctum] ElevenLabs audio:', audio.byteLength, 'bytes — playing');
         await playAudio(audio);
-        setIsSpeaking(false); setExpression('smiling');
-        setTimeout(() => setExpression('idle'), 1000);
-        return;
+        done(); return;
       }
-    } catch {}
-    // Browser TTS fallback
+      console.log('[Sanctum] ElevenLabs: no audio returned');
+    } catch (err) { console.warn('[Sanctum] ElevenLabs error:', err); }
+
+    // Browser fallback
     if (typeof window !== 'undefined' && window.speechSynthesis) {
+      console.log('[Sanctum] Using browser TTS');
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
       u.rate = vRate; u.pitch = vPitch; u.volume = 1;
       const voices = window.speechSynthesis.getVoices();
       const pick = voices.find(v => /Google.*US|Samantha|Daniel|Karen|Zira|David/i.test(v.name) && v.lang.startsWith('en')) || voices.find(v => v.lang.startsWith('en') && !v.name.includes('espeak')) || voices[0];
       if (pick) u.voice = pick;
-      u.onend = () => { setIsSpeaking(false); setExpression('smiling'); setTimeout(() => setExpression('idle'), 1000); };
-      u.onerror = () => { setIsSpeaking(false); setExpression('idle'); };
+      u.onend = done;
+      u.onerror = () => { console.warn('[Sanctum] Browser TTS error'); setIsSpeaking(false); setExpression('idle'); };
       window.speechSynthesis.speak(u);
-    } else {
-      setTimeout(() => { setIsSpeaking(false); setExpression('smiling'); setTimeout(() => setExpression('idle'), 1000); }, 2000 + text.length * 18);
-    }
-  }, [vRate, vPitch]);
+    } else { setTimeout(done, 2000 + text.length * 18); }
+  }, [vRate, vPitch, photo]);
 
   // AI reply
   const genReply = useCallback(async (userText: string): Promise<string> => {
@@ -444,6 +459,8 @@ RULES:
 
       const chat = messages.concat({ role: 'user', text: userText }).map(m => ({ role: (m.role === 'user' ? 'user' : 'assistant') as 'user' | 'assistant', content: m.text }));
 
+      console.log('[Sanctum] Calling Claude API...', chat.length, 'messages');
+
       // Add a streaming placeholder message
       setMessages(prev => [...prev, { role: 'prism', text: '…' }]);
 
@@ -460,7 +477,8 @@ RULES:
         return fallback;
       }
       return out;
-    } catch {
+    } catch (err) {
+      console.error('[Sanctum] Claude API error:', err);
       const fallback = smartReply(userText, msgCount.current);
       return fallback;
     }
@@ -597,13 +615,24 @@ RULES:
         </div>
       </div>
 
+      {/* Connection status */}
+      <div className="flex-shrink-0 flex items-center justify-center gap-4 py-1 z-20">
+        <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full" style={{ background: '#38bdf8', boxShadow: '0 0 4px #38bdf8' }} /><span className="text-[7px] font-mono uppercase tracking-widest" style={{ color: 'rgba(56,189,248,0.5)' }}>Claude</span></div>
+        <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full" style={{ background: '#c084fc', boxShadow: '0 0 4px #c084fc' }} /><span className="text-[7px] font-mono uppercase tracking-widest" style={{ color: 'rgba(192,132,252,0.5)' }}>Voice</span></div>
+        {isDIDConfigured() && <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full" style={{ background: '#10b981', boxShadow: '0 0 4px #10b981' }} /><span className="text-[7px] font-mono uppercase tracking-widest" style={{ color: 'rgba(16,185,129,0.5)' }}>Avatar</span></div>}
+      </div>
+
       {/* Avatar center */}
       <div className="absolute inset-0 flex flex-col items-center z-[8]" style={{ paddingTop: '8%' }}>
         <div className="absolute rounded-full blur-[90px]" style={{ width: 300, height: 300, top: '5%', background: 'radial-gradient(circle, rgba(56,189,248,0.06), rgba(192,132,252,0.02), transparent)' }} />
         <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }} className="relative">
           <div className="w-40 h-40 rounded-full overflow-hidden relative" style={{ border: `2px solid rgba(56,189,248,${isSpeaking ? 0.25 : 0.12})`, boxShadow: '0 0 80px rgba(56,189,248,0.06), inset 0 0 40px rgba(0,0,0,0.4)', transition: 'border-color 0.3s' }}>
             <motion.div animate={{ scale: expression === 'speaking' ? [1, 1.015, 0.99, 1.01, 1] : [1, 1.005, 1] }} transition={{ duration: expression === 'speaking' ? 0.35 : 3, repeat: Infinity }} className="w-full h-full">
-              <img src={photo} alt={pName} className="w-full h-full object-cover rounded-full" />
+              {videoUrl ? (
+                <video ref={videoRef} src={videoUrl} className="w-full h-full object-cover rounded-full" autoPlay playsInline onEnded={() => setVideoUrl(null)} />
+              ) : (
+                <img src={photo} alt={pName} className="w-full h-full object-cover rounded-full" />
+              )}
             </motion.div>
             <AnimatePresence>{isSpeaking && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute bottom-0 left-0 right-0 h-[28%] pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.5), transparent)', borderRadius: '0 0 100px 100px' }}>

@@ -445,8 +445,9 @@ export function SanctumPage() {
     });
   }, [isThinking, isSpeaking, genReply, speak]);
 
-  const onVoice = useCallback((t: string) => process(t), [process]);
-  const onListenChange = useCallback((l: boolean) => setIsListening(l), []);
+  const [voiceInterim, setVoiceInterim] = useState('');
+  const onVoice = useCallback((t: string) => { setVoiceInterim(''); process(t); }, [process]);
+  const onListenChange = useCallback((l: boolean) => { setIsListening(l); if (!l) setVoiceInterim(''); }, []);
   const onSend = useCallback(() => { if (!input.trim()) return; process(input); setInput(''); }, [input, process]);
   const dismissPanel = useCallback((id: PanelId) => setActivePanels(prev => prev.filter(p => p !== id)), []);
 
@@ -651,10 +652,12 @@ export function SanctumPage() {
           </div>
           <div className="flex items-center gap-3 rounded-2xl px-4 py-3 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))', backdropFilter: 'blur(24px) saturate(1.3)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.04)' }}>
             <div className="absolute top-0 left-4 right-4 h-[1px]" style={{ background: 'linear-gradient(90deg, transparent, rgba(56,189,248,0.15), rgba(192,132,252,0.1), transparent)' }} />
-            <VoiceInput onTranscript={onVoice} onListeningChange={onListenChange} size="md" accent="#38bdf8" />
+            <div className="flex-shrink-0 w-11 overflow-hidden">
+              <VoiceInput onTranscript={onVoice} onListeningChange={onListenChange} size="md" accent="#38bdf8" />
+            </div>
             <div className="flex-1 rounded-xl px-3 py-2" style={{ background: 'rgba(255,255,255,0.02)' }}>
               <input type="text" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') onSend(); }}
-                placeholder={`Speak or type to ${pName}…`} className="w-full bg-transparent text-sm font-light outline-none" style={{ color: 'rgba(255,255,255,0.7)' }} />
+                placeholder={isListening ? 'Listening…' : `Speak or type to ${pName}…`} className="w-full bg-transparent text-sm font-light outline-none" style={{ color: 'rgba(255,255,255,0.7)' }} />
             </div>
             <button onClick={onSend} disabled={!input.trim() || isThinking || isSpeaking} className="w-9 h-9 rounded-lg flex items-center justify-center hover:scale-105 flex-shrink-0"
               style={{ background: input.trim() ? 'rgba(56,189,248,0.08)' : 'transparent', border: `1px solid ${input.trim() ? 'rgba(56,189,248,0.2)' : 'rgba(255,255,255,0.06)'}`, color: input.trim() ? '#38bdf8' : 'rgba(255,255,255,0.15)', cursor: 'pointer' }}>

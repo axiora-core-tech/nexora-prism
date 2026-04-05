@@ -47,54 +47,55 @@ const pulseStyle = `
 
 function PageSkeleton() {
   return (
-    <div style={{ padding: 'clamp(4rem, 8vh, 8rem) clamp(1rem, 4vw, 5rem)', maxWidth: 1400, margin: '0 auto', color: 'rgba(255,255,255,0.5)' }}>
-      <style>{pulseStyle}</style>
-      
-      {/* Back button skeleton */}
-      <div className="sk-pulse" style={{ width: 60, height: 14, marginBottom: 32, opacity: 0.03 }} />
-      
-      {/* Hero section */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 48, paddingBottom: 48, borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-        <div>
-          {/* Subtitle */}
-          <div className="sk-pulse" style={{ width: 180, height: 12, marginBottom: 24 }} />
-          {/* Title */}
-          <div className="sk-pulse sk-pulse-delay" style={{ width: 320, height: 48, borderRadius: 4 }} />
-        </div>
-        <div style={{ display: 'flex', gap: 40 }}>
-          <div>
-            <div className="sk-pulse" style={{ width: 80, height: 10, marginBottom: 12 }} />
-            <div className="sk-pulse sk-pulse-delay" style={{ width: 64, height: 36 }} />
-          </div>
-          <div>
-            <div className="sk-pulse sk-pulse-delay-2" style={{ width: 80, height: 10, marginBottom: 12 }} />
-            <div className="sk-pulse sk-pulse-delay" style={{ width: 64, height: 36 }} />
-          </div>
-        </div>
+    <div style={{
+      position: 'fixed', inset: 0, display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center', gap: 24,
+      background: '#050810', zIndex: 9999,
+    }}>
+      <style>{`
+        @keyframes prismSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes prismPulse { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.08); } }
+        @keyframes prismFade { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+      `}</style>
+
+      {/* Ambient glow */}
+      <div style={{
+        position: 'absolute', width: 300, height: 300, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(56,189,248,0.06), rgba(192,132,252,0.03), transparent)',
+        filter: 'blur(60px)',
+      }} />
+
+      {/* Spinner ring */}
+      <div style={{ position: 'relative', width: 48, height: 48 }}>
+        <div style={{
+          position: 'absolute', inset: 0, borderRadius: '50%',
+          border: '2px solid rgba(56,189,248,0.06)',
+        }} />
+        <div style={{
+          position: 'absolute', inset: 0, borderRadius: '50%',
+          border: '2px solid transparent',
+          borderTopColor: 'rgba(56,189,248,0.5)',
+          borderRightColor: 'rgba(192,132,252,0.3)',
+          animation: 'prismSpin 1.2s linear infinite',
+        }} />
+        {/* Inner orb */}
+        <div style={{
+          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+          width: 10, height: 10, borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(56,189,248,0.8), rgba(56,189,248,0.2))',
+          boxShadow: '0 0 12px rgba(56,189,248,0.3)',
+          animation: 'prismPulse 2s ease-in-out infinite',
+        }} />
       </div>
 
-      {/* Content blocks */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, marginBottom: 32 }}>
-        <div className="sk-pulse" style={{ height: 100, borderRadius: 16 }} />
-        <div className="sk-pulse sk-pulse-delay" style={{ height: 100, borderRadius: 16 }} />
-        <div className="sk-pulse sk-pulse-delay-2" style={{ height: 100, borderRadius: 16 }} />
-      </div>
-
-      {/* Main content area */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 16 }}>
-        <div className="sk-pulse" style={{ height: 260, borderRadius: 20 }} />
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div className="sk-pulse sk-pulse-delay" style={{ height: 120, borderRadius: 20 }} />
-          <div className="sk-pulse sk-pulse-delay-2" style={{ height: 120, borderRadius: 20 }} />
-        </div>
-      </div>
-
-      {/* Rows */}
-      <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {[0, 1, 2, 3].map(i => (
-          <div key={i} className={`sk-pulse ${i > 0 ? 'sk-pulse-delay' : ''} ${i > 1 ? 'sk-pulse-delay-2' : ''}`}
-            style={{ height: 52, borderRadius: 12 }} />
-        ))}
+      {/* Loading text */}
+      <div style={{
+        fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
+        fontSize: 9, letterSpacing: '0.25em', textTransform: 'uppercase',
+        color: 'rgba(56,189,248,0.35)',
+        animation: 'prismFade 2s ease-in-out infinite',
+      }}>
+        Loading
       </div>
     </div>
   );

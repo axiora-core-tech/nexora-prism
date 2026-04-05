@@ -164,10 +164,10 @@ export function Layout() {
   return (
     <LuminaryContext.Provider value={luminaryCtx}>
     <div
-      className={`prism-shell min-h-screen font-sans overflow-hidden relative cursor-none p-bg ${isLight ? 'prism-light' : 'prism-dark'}`}
+      className={`prism-shell min-h-screen font-sans overflow-hidden relative p-bg ${isLight ? 'prism-light' : 'prism-dark'}`}
       style={{ backgroundColor: 'var(--p-bg)', color: 'var(--p-text-hi)' }}
     >
-      <CustomCursor />
+      {/* <CustomCursor /> — disabled, using default cursor */}
       
       {/* ═══ THE PRISM ATMOSPHERE — noise + gradient mesh + depth particles ═══ */}
       <style dangerouslySetInnerHTML={{ __html: `

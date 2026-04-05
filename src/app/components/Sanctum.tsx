@@ -393,17 +393,18 @@ export function SanctumPage() {
 
   // Voice: D-ID (video+voice synced) → ElevenLabs → browser TTS
   const speak = useCallback(async (text: string) => {
-    const done = () => { setIsSpeaking(false); setExpression('smiling'); setTimeout(() => setExpression('idle'), 1200); };
+    const done = () => { setIsSpeaking(false); setGeneratingVideo(false); setExpression('smiling'); setTimeout(() => setExpression('idle'), 1200); };
 
     // PATH A: D-ID — generates video with its own voice, synced lips
     if (isDIDConfigured() && photo) {
-      console.log('[Sanctum] D-ID: sending text, waiting for video...');
-      setExpression('speaking'); setIsSpeaking(true); setGeneratingVideo(true);
+      console.log('[Sanctum] D-ID: generating avatar video...');
+      setGeneratingVideo(true); setExpression('thinking'); // NOT speaking yet
       try {
         const url = await createTalkingVideo(photo, text);
         setGeneratingVideo(false);
         if (url) {
-          console.log('[Sanctum] D-ID video ready — playing');
+          console.log('[Sanctum] D-ID video ready — now speaking');
+          setExpression('speaking'); setIsSpeaking(true); // NOW speaking
           setVideoUrl(url);
           await new Promise<void>(resolve => {
             setTimeout(() => {
@@ -417,7 +418,7 @@ export function SanctumPage() {
           done(); return;
         }
       } catch (err) { console.warn('[Sanctum] D-ID failed:', err); }
-      setGeneratingVideo(false);
+      setGeneratingVideo(false); setExpression('idle');
     }
 
     // PATH B: ElevenLabs (voice only, instant)
@@ -513,7 +514,7 @@ RULES:
 
   // Process input
   const process = useCallback((text: string) => {
-    if (!text.trim() || isThinking || isSpeaking) return;
+    if (!text.trim() || isThinking || isSpeaking || generatingVideo) return;
     const t = text.trim();
     setMessages(prev => [...prev, { role: 'user', text: t }]);
     setIsThinking(true); setExpression('thinking');
@@ -699,7 +700,7 @@ RULES:
           ))}</AnimatePresence>
         </motion.div>
         <motion.p animate={{ opacity: expression !== 'idle' || generatingVideo ? 1 : 0 }} className="mt-3 text-[9px] font-mono uppercase tracking-widest z-10" style={{ color: generatingVideo ? '#10b981' : expression === 'speaking' ? '#38bdf8' : '#c084fc' }}>
-          {generatingVideo ? 'responding' : expression === 'speaking' ? 'speaking' : expression === 'thinking' ? 'processing' : ''}
+          {generatingVideo ? 'generating avatar' : expression === 'speaking' ? 'speaking' : expression === 'thinking' ? 'processing' : ''}
         </motion.p>
         <p className="mt-1 text-[10px] tracking-[0.25em] uppercase" style={{ color: 'rgba(56,189,248,0.35)' }}>{pName}</p>
         {/* Orb */}
@@ -791,7 +792,7 @@ RULES:
               <input type="text" value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') onSend(); }}
                 placeholder={isListening ? 'Listening…' : `Speak or type to ${pName}…`} className="w-full bg-transparent text-sm font-light outline-none" style={{ color: 'rgba(255,255,255,0.7)' }} />
             </div>
-            <button onClick={onSend} disabled={!input.trim() || isThinking || isSpeaking} className="w-9 h-9 rounded-lg flex items-center justify-center hover:scale-105 flex-shrink-0"
+            <button onClick={onSend} disabled={!input.trim() || isThinking || isSpeaking || generatingVideo} className="w-9 h-9 rounded-lg flex items-center justify-center hover:scale-105 flex-shrink-0"
               style={{ background: input.trim() ? 'rgba(56,189,248,0.08)' : 'transparent', border: `1px solid ${input.trim() ? 'rgba(56,189,248,0.2)' : 'rgba(255,255,255,0.06)'}`, color: input.trim() ? '#38bdf8' : 'rgba(255,255,255,0.15)', cursor: 'pointer' }}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>
             </button>

@@ -655,9 +655,10 @@ RULES:
         <div className="absolute rounded-full blur-[90px]" style={{ width: 300, height: 300, top: '5%', background: 'radial-gradient(circle, rgba(56,189,248,0.06), rgba(192,132,252,0.02), transparent)' }} />
         <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }} className="relative">
           <div className="w-40 h-40 rounded-full overflow-hidden relative" style={{
-            border: `2px solid rgba(56,189,248,${isSpeaking ? 0.4 : expression === 'thinking' ? 0.3 : expression === 'smiling' ? 0.2 : 0.12})`,
-            boxShadow: isSpeaking ? '0 0 60px rgba(56,189,248,0.15), 0 0 120px rgba(56,189,248,0.06), inset 0 0 40px rgba(0,0,0,0.4)' : expression === 'thinking' ? '0 0 60px rgba(56,189,248,0.1), inset 0 0 40px rgba(0,0,0,0.4)' : expression === 'smiling' ? '0 0 40px rgba(16,185,129,0.1), inset 0 0 30px rgba(0,0,0,0.3)' : '0 0 80px rgba(56,189,248,0.06), inset 0 0 40px rgba(0,0,0,0.4)',
+            border: `2px solid rgba(56,189,248,${generatingVideo ? 0.5 : isSpeaking ? 0.4 : expression === 'thinking' ? 0.3 : expression === 'smiling' ? 0.2 : 0.12})`,
+            boxShadow: generatingVideo ? '0 0 40px rgba(56,189,248,0.2), 0 0 80px rgba(56,189,248,0.08), inset 0 0 40px rgba(0,0,0,0.4)' : isSpeaking ? '0 0 60px rgba(56,189,248,0.15), 0 0 120px rgba(56,189,248,0.06), inset 0 0 40px rgba(0,0,0,0.4)' : expression === 'thinking' ? '0 0 60px rgba(56,189,248,0.1), inset 0 0 40px rgba(0,0,0,0.4)' : expression === 'smiling' ? '0 0 40px rgba(16,185,129,0.1), inset 0 0 30px rgba(0,0,0,0.3)' : '0 0 80px rgba(56,189,248,0.06), inset 0 0 40px rgba(0,0,0,0.4)',
             transition: 'border-color 0.3s, box-shadow 0.5s',
+            animation: generatingVideo ? 'borderCharge 2s ease-in-out infinite' : 'none',
           }}>
             <motion.div animate={{ scale: expression === 'speaking' ? [1, 1.02, 0.985, 1.015, 1] : [1, 1.005, 1] }} transition={{ duration: expression === 'speaking' ? 0.35 : 3, repeat: Infinity }} className="w-full h-full">
               {videoUrl ? (
@@ -688,6 +689,31 @@ RULES:
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 className="absolute inset-0 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle at 50% 60%, rgba(16,185,129,0.12), transparent 70%)' }} />
             )}</AnimatePresence>
+            {/* D-ID generating — holographic scan lines */}
+            <AnimatePresence>{generatingVideo && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 rounded-full pointer-events-none overflow-hidden">
+                {/* Dim overlay */}
+                <div className="absolute inset-0 rounded-full" style={{ background: 'rgba(5,8,16,0.25)' }} />
+                {/* Sweeping scan line */}
+                <motion.div
+                  animate={{ top: ['-10%', '110%'] }}
+                  transition={{ duration: 1.8, repeat: Infinity, ease: 'linear' }}
+                  className="absolute left-0 right-0 h-[3px]"
+                  style={{ background: 'linear-gradient(to right, transparent 5%, rgba(56,189,248,0.5) 30%, rgba(56,189,248,0.8) 50%, rgba(56,189,248,0.5) 70%, transparent 95%)', boxShadow: '0 0 12px rgba(56,189,248,0.3), 0 0 4px rgba(56,189,248,0.6)', filter: 'blur(0.5px)' }}
+                />
+                {/* Faint horizontal grid lines */}
+                <div className="absolute inset-0" style={{
+                  backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 7px, rgba(56,189,248,0.04) 7px, rgba(56,189,248,0.04) 8px)',
+                }} />
+                {/* Subtle data readout shimmer */}
+                <motion.div
+                  animate={{ opacity: [0.03, 0.08, 0.03] }}
+                  transition={{ duration: 2.5, repeat: Infinity }}
+                  className="absolute inset-0 rounded-full"
+                  style={{ background: 'radial-gradient(circle at 50% 40%, rgba(56,189,248,0.12), transparent 60%)' }}
+                />
+              </motion.div>
+            )}</AnimatePresence>
           </div>
           {[4, 8, 12].map((s, i) => <div key={i} className="absolute rounded-full" style={{ inset: -s * 4, border: `1px solid rgba(56,189,248,${0.08 - i * 0.02})`, animation: `breathe ${4 + i * 0.5}s ease-in-out infinite ${i * 0.4}s` }} />)}
           {/* Thinking particles — 5 colorful */}
@@ -699,8 +725,8 @@ RULES:
               style={{ width: 4, height: 4, background: ['#38bdf8', '#c084fc', '#10b981', '#f59e0b', '#38bdf8'][i], top: '15%', left: `${25 + i * 12}%`, boxShadow: `0 0 6px ${['#38bdf8', '#c084fc', '#10b981', '#f59e0b', '#38bdf8'][i]}40` }} />
           ))}</AnimatePresence>
         </motion.div>
-        <motion.p animate={{ opacity: expression !== 'idle' || generatingVideo ? 1 : 0 }} className="mt-3 text-[9px] font-mono uppercase tracking-widest z-10" style={{ color: generatingVideo ? '#10b981' : expression === 'speaking' ? '#38bdf8' : '#c084fc' }}>
-          {generatingVideo ? 'generating avatar' : expression === 'speaking' ? 'speaking' : expression === 'thinking' ? 'processing' : ''}
+        <motion.p animate={{ opacity: (expression === 'speaking' || expression === 'thinking') && !generatingVideo ? 1 : 0 }} className="mt-3 text-[9px] font-mono uppercase tracking-widest z-10" style={{ color: expression === 'speaking' ? '#38bdf8' : '#c084fc' }}>
+          {expression === 'speaking' ? 'speaking' : expression === 'thinking' && !generatingVideo ? 'processing' : ''}
         </motion.p>
         <p className="mt-1 text-[10px] tracking-[0.25em] uppercase" style={{ color: 'rgba(56,189,248,0.35)' }}>{pName}</p>
         {/* Orb */}
@@ -780,7 +806,11 @@ RULES:
               <span className="text-[9px] font-mono uppercase tracking-widest" style={{ color: '#38bdf8' }}>Listening</span>
             </motion.div>}
             {isThinking && !generatingVideo && <span className="text-[9px] font-mono uppercase tracking-widest" style={{ color: '#c084fc' }}>Processing</span>}
-            {generatingVideo && <span className="text-[9px] font-mono uppercase tracking-widest" style={{ color: '#10b981' }}>Generating avatar...</span>}
+            {generatingVideo && <motion.span animate={{ opacity: [0.3, 0.7, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }} className="flex items-center gap-1">
+              <span className="w-1 h-1 rounded-full" style={{ background: '#38bdf8' }} />
+              <span className="w-1 h-1 rounded-full" style={{ background: '#38bdf8', opacity: 0.6 }} />
+              <span className="w-1 h-1 rounded-full" style={{ background: '#38bdf8', opacity: 0.3 }} />
+            </motion.span>}
             {isSpeaking && <span className="text-[9px] font-mono uppercase tracking-widest" style={{ color: '#38bdf8' }}>{pName} speaking</span>}
           </div>
           <div className="flex items-center gap-3 rounded-2xl px-4 py-3 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))', backdropFilter: 'blur(24px) saturate(1.3)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.04)' }}>
@@ -803,6 +833,8 @@ RULES:
       <style>{`
         @keyframes breathe { 0%,100% { transform:scale(1); opacity:0.5; } 50% { transform:scale(1.03); opacity:1; } }
         @keyframes dustF { 0%,100% { transform:translateY(0); opacity:0.06; } 50% { transform:translateY(-30px); opacity:0.2; } }
+        @keyframes thinkPulse { 0%,100% { opacity:0.1; } 50% { opacity:0.2; } }
+        @keyframes borderCharge { 0%,100% { border-color: rgba(56,189,248,0.2); box-shadow: 0 0 20px rgba(56,189,248,0.06); } 50% { border-color: rgba(56,189,248,0.6); box-shadow: 0 0 50px rgba(56,189,248,0.2), 0 0 100px rgba(56,189,248,0.08); } }
       `}</style>
     </div>
   );

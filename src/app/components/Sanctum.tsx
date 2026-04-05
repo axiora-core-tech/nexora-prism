@@ -391,52 +391,50 @@ export function SanctumPage() {
   useEffect(() => { return () => { if (typeof window !== 'undefined') window.speechSynthesis?.cancel(); }; }, [mode]);
   useEffect(() => { if (typeof window !== 'undefined' && window.speechSynthesis) { window.speechSynthesis.getVoices(); window.speechSynthesis.addEventListener?.('voiceschanged', () => window.speechSynthesis.getVoices()); } }, []);
 
-  // Voice+Video: D-ID (voice+video synchronized) or ElevenLabs (voice only)
+  // Voice: D-ID (video+voice synced) → ElevenLabs → browser TTS
   const speak = useCallback(async (text: string) => {
-    setExpression('speaking'); setIsSpeaking(true);
-    const done = () => { setIsSpeaking(false); setExpression('smiling'); setTimeout(() => setExpression('idle'), 1000); };
+    const done = () => { setIsSpeaking(false); setExpression('smiling'); setTimeout(() => setExpression('idle'), 1200); };
 
-    // PATH A: D-ID configured — video provides BOTH voice and lip-synced animation (synchronized)
+    // PATH A: D-ID — generates video with its own voice, synced lips
     if (isDIDConfigured() && photo) {
-      console.log('[Sanctum] D-ID mode: generating synchronized voice+video...');
-      setGeneratingVideo(true);
+      console.log('[Sanctum] D-ID: sending text, waiting for video...');
+      setExpression('speaking'); setIsSpeaking(true); setGeneratingVideo(true);
       try {
         const url = await createTalkingVideo(photo, text);
         setGeneratingVideo(false);
         if (url) {
-          console.log('[Sanctum] D-ID video ready — playing with audio');
+          console.log('[Sanctum] D-ID video ready — playing');
           setVideoUrl(url);
-          // Wait for video to finish playing
           await new Promise<void>(resolve => {
             setTimeout(() => {
               const vid = videoRef.current;
               if (vid) {
                 vid.onended = () => { setVideoUrl(null); resolve(); };
-                vid.play().catch(() => resolve());
-              } else { resolve(); }
-            }, 150);
+                vid.play().catch(() => { setVideoUrl(null); resolve(); });
+              } else resolve();
+            }, 200);
           });
           done(); return;
         }
-      } catch (err) { console.warn('[Sanctum] D-ID failed:', err); setGeneratingVideo(false); }
-      // D-ID failed — fall through to ElevenLabs
+      } catch (err) { console.warn('[Sanctum] D-ID failed:', err); }
+      setGeneratingVideo(false);
     }
 
-    // PATH B: ElevenLabs (voice only, fast)
+    // PATH B: ElevenLabs (voice only, instant)
+    setExpression('speaking'); setIsSpeaking(true);
     try {
-      console.log('[Sanctum] ElevenLabs mode...');
+      console.log('[Sanctum] ElevenLabs...');
       const { textToSpeech, playAudio } = await import('../services/voiceService');
       const audio = await textToSpeech(text);
       if (audio && audio.byteLength > 0) {
-        console.log('[Sanctum] ElevenLabs playing:', audio.byteLength, 'bytes');
+        console.log('[Sanctum] Playing', audio.byteLength, 'bytes');
         await playAudio(audio);
         done(); return;
       }
-    } catch (err) { console.warn('[Sanctum] ElevenLabs error:', err); }
+    } catch (err) { console.warn('[Sanctum] ElevenLabs failed:', err); }
 
-    // PATH C: Browser TTS fallback
+    // PATH C: Browser TTS
     if (typeof window !== 'undefined' && window.speechSynthesis) {
-      console.log('[Sanctum] Browser TTS');
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
       u.rate = vRate; u.pitch = vPitch; u.volume = 1;
@@ -700,8 +698,8 @@ RULES:
               style={{ width: 4, height: 4, background: ['#38bdf8', '#c084fc', '#10b981', '#f59e0b', '#38bdf8'][i], top: '15%', left: `${25 + i * 12}%`, boxShadow: `0 0 6px ${['#38bdf8', '#c084fc', '#10b981', '#f59e0b', '#38bdf8'][i]}40` }} />
           ))}</AnimatePresence>
         </motion.div>
-        <motion.p animate={{ opacity: expression !== 'idle' ? 1 : 0 }} className="mt-3 text-[9px] font-mono uppercase tracking-widest z-10" style={{ color: expression === 'speaking' ? '#38bdf8' : '#c084fc' }}>
-          {expression === 'speaking' ? 'speaking' : expression === 'thinking' ? 'processing' : ''}
+        <motion.p animate={{ opacity: expression !== 'idle' || generatingVideo ? 1 : 0 }} className="mt-3 text-[9px] font-mono uppercase tracking-widest z-10" style={{ color: generatingVideo ? '#10b981' : expression === 'speaking' ? '#38bdf8' : '#c084fc' }}>
+          {generatingVideo ? 'responding' : expression === 'speaking' ? 'speaking' : expression === 'thinking' ? 'processing' : ''}
         </motion.p>
         <p className="mt-1 text-[10px] tracking-[0.25em] uppercase" style={{ color: 'rgba(56,189,248,0.35)' }}>{pName}</p>
         {/* Orb */}

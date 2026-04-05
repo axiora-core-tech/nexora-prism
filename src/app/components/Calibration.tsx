@@ -24,6 +24,7 @@ const SECTIONS = [
   { id: 'notifications', label: 'Alerts', icon: Bell, color: '#f43f5e' },
   { id: 'integrations', label: 'Signals', icon: Link2, color: '#fb923c' },
   { id: 'financial', label: 'Capital', icon: DollarSign, color: '#10b981' },
+  { id: 'ai', label: 'AI Engine', icon: Bot, color: '#38bdf8' },
 ];
 
 const integrations: { name: string; status: string; Icon: typeof PrismMetric }[] = [
@@ -638,7 +639,83 @@ export function Calibration() {
       </div>
       </div>{/* end two-column flex */}
 
-      {/* Toast notification */}
+
+        {/* Section 8: AI Engine */}
+        <div id="ai" ref={el => { sectionRefs.current.ai = el; }}>
+          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="rounded-[2rem] p-6 md:p-8" style={{ background: 'var(--p-bg-card)', border: '1px solid var(--p-border)' }}>
+            <h3 className="p-text-lo uppercase tracking-[0.2em] text-sm font-semibold flex items-center gap-3 border-b p-border-mid pb-4 mb-6"
+              style={{ color: 'var(--p-text-ghost)', borderColor: 'var(--p-border)' }}>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m-7.07-15.07 2.83 2.83m8.49 8.49 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.49-8.49 2.83-2.83"/></svg>
+              AI Engine Configuration
+            </h3>
+
+            <div className="mb-6">
+              <p className="text-xs mb-2" style={{ color: 'var(--p-text-mid)' }}>Anthropic API Key</p>
+              <p className="text-[10px] mb-3" style={{ color: 'var(--p-text-ghost)' }}>
+                Connect The Sanctum to Claude for real AI conversations. Get your key from <a href="https://console.anthropic.com" target="_blank" rel="noopener noreferrer" style={{ color: '#38bdf8', textDecoration: 'underline' }}>console.anthropic.com</a>
+              </p>
+              <div className="flex gap-3">
+                <input
+                  type="password"
+                  placeholder="sk-ant-api03-..."
+                  defaultValue={(() => { try { return localStorage.getItem('prism_anthropic_key') || ''; } catch { return ''; } })()}
+                  onChange={e => {
+                    const val = e.target.value.trim();
+                    try {
+                      if (val) localStorage.setItem('prism_anthropic_key', val);
+                      else localStorage.removeItem('prism_anthropic_key');
+                    } catch {}
+                  }}
+                  className="flex-1 bg-transparent text-sm font-mono outline-none rounded-xl px-4 py-3"
+                  style={{ color: 'var(--p-text-body)', background: 'var(--p-bg-input)', border: '1px solid var(--p-border)' }}
+                />
+                <button
+                  onClick={() => {
+                    const key = localStorage.getItem('prism_anthropic_key') || '';
+                    if (!key || key.length < 20) { setToast('Enter a valid API key first'); return; }
+                    fetch('https://api.anthropic.com/v1/messages', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+                      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 10, messages: [{ role: 'user', content: 'hi' }] }),
+                    }).then(r => {
+                      if (r.ok) setToast('API key verified — Claude is connected');
+                      else setToast('API key invalid or expired');
+                    }).catch(() => setToast('Connection failed — check your network'));
+                  }}
+                  className="px-5 py-3 rounded-xl text-xs font-mono uppercase tracking-widest transition-all hover:scale-105"
+                  style={{ background: 'rgba(56,189,248,0.06)', border: '1px solid rgba(56,189,248,0.15)', color: '#38bdf8', cursor: 'pointer' }}
+                >
+                  Test
+                </button>
+              </div>
+              <p className="text-[10px] mt-2" style={{ color: 'var(--p-text-ghost)' }}>
+                Stored in your browser only. Never sent to our servers. Used for direct Sanctum conversations.
+              </p>
+            </div>
+
+            <div className="mb-4">
+              <p className="text-xs mb-2" style={{ color: 'var(--p-text-mid)' }}>Model</p>
+              <div className="flex gap-2">
+                {['claude-sonnet-4-20250514', 'claude-haiku-4-5-20251001'].map(m => {
+                  const current = (() => { try { return localStorage.getItem('prism_ai_model') || 'claude-sonnet-4-20250514'; } catch { return 'claude-sonnet-4-20250514'; } })();
+                  const isActive = current === m;
+                  return (
+                    <button key={m} onClick={() => { try { localStorage.setItem('prism_ai_model', m); setToast('Model updated to ' + m.split('-').slice(0,2).join(' ')); } catch {} }}
+                      className="px-4 py-2.5 rounded-xl text-[10px] font-mono transition-all hover:scale-[1.02]"
+                      style={{ background: isActive ? 'rgba(56,189,248,0.06)' : 'transparent', border: `1px solid ${isActive ? 'rgba(56,189,248,0.2)' : 'var(--p-border)'}`, color: isActive ? '#38bdf8' : 'var(--p-text-ghost)', cursor: 'pointer' }}>
+                      {m.includes('sonnet') ? 'Sonnet 4' : 'Haiku 4.5'}
+                      {isActive && <span className="ml-2" style={{ color: '#10b981' }}>✓</span>}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+          </motion.div>
+        </div>
+
+            {/* Toast notification */}
       <AnimatePresence>
         {toast && (
           <motion.div

@@ -4,10 +4,15 @@
  */
 
 const API_URL = 'https://api.anthropic.com/v1/messages';
-const getModel = () => (import.meta as any).env?.VITE_AI_MODEL || 'claude-sonnet-4-20250514';
+const getModel = () => {
+  try { const m = localStorage.getItem('prism_ai_model'); if (m) return m; } catch {}
+  return (import.meta as any).env?.VITE_AI_MODEL || 'claude-sonnet-4-20250514';
+};
 const getKey = () => {
-  const key = (import.meta as any).env?.VITE_ANTHROPIC_API_KEY || '';
-  // Skip placeholder keys
+  // Check localStorage first (set from Calibration UI), then .env
+  let key = '';
+  try { key = localStorage.getItem('prism_anthropic_key') || ''; } catch {}
+  if (!key) key = (import.meta as any).env?.VITE_ANTHROPIC_API_KEY || '';
   if (!key || key.includes('your-key') || key.includes('your_key') || key.length < 20) return '';
   return key;
 };

@@ -410,14 +410,50 @@ export function SanctumPage() {
   const genReply = useCallback(async (userText: string): Promise<string> => {
     try {
       const { streamChat } = await import('../services/aiService');
-      const sys = `You are ${pName}, AI manager in Nexora Prism. Style: ${toneMap[pTone]}. Traits: ${pTraits}. Session with ${userName}. Context: perf 87/100, velocity ${HUD.velocity.value}, sprint ${HUD.sprint.done}/${HUD.sprint.total}, ${HUD.milestones.length} milestones. Under 100 words. Use "shall I..." for actions. No markdown.`;
+      const sys = `You are ${pName}, an AI manager persona inside Nexora Prism — an enterprise COO platform.
+
+PERSONALITY: ${toneMap[pTone] || 'balanced'}. Traits: ${pTraits}.
+EMPLOYEE: ${userName} (${user?.email || 'employee'})
+
+LIVE DATA YOU CAN REFERENCE:
+- Performance score: 87/100 (up 4 from last quarter)
+- Execution velocity: ${HUD.velocity.value}/100 (delta +${HUD.velocity.delta})
+- Sprint: ${HUD.sprint.done}/${HUD.sprint.total} tasks done, ${HUD.sprint.daysLeft} days left, velocity ${HUD.sprint.velocity}
+- Team: ${HUD.team.map(t => t.name.split('.')[0] + ' ' + t.score + (t.risk ? ' ⚠' : '')).join(', ')}
+- Milestones: ${HUD.milestones.map(m => m.name + ' ' + m.pct + '%').join(', ')}
+- Welfare: ${HUD.welfare.value}/100 (delta +${HUD.welfare.delta})
+- Revenue: $${HUD.revenue.projected}M projected / $${HUD.revenue.target}M target
+
+RULES:
+- Keep responses under 80 words, conversational, no bullet points
+- Reference specific data naturally when relevant
+- When suggesting an action, phrase as "Shall I..." or "Want me to..." so it extracts as a task
+- Never use markdown formatting or asterisks
+- Be genuinely helpful, not performative`;
+
       const chat = messages.concat({ role: 'user', text: userText }).map(m => ({ role: (m.role === 'user' ? 'user' : 'assistant') as 'user' | 'assistant', content: m.text }));
+
+      // Add a streaming placeholder message
+      setMessages(prev => [...prev, { role: 'prism', text: '…' }]);
+
       let out = '';
-      await streamChat(sys, chat, s => { out = s; });
-      if (!out || out.includes('demo mode') || out.includes('API key')) return smartReply(userText, msgCount.current);
+      await streamChat(sys, chat, s => {
+        out = s;
+        // Live-update the last message with streamed text
+        setMessages(prev => [...prev.slice(0, -1), { role: 'prism', text: s }]);
+      });
+
+      if (!out || out.includes('demo mode') || out.includes('API key')) {
+        const fallback = smartReply(userText, msgCount.current);
+        setMessages(prev => [...prev.slice(0, -1), { role: 'prism', text: fallback }]);
+        return fallback;
+      }
       return out;
-    } catch { return smartReply(userText, msgCount.current); }
-  }, [messages, pName, pTone, pTraits, userName]);
+    } catch {
+      const fallback = smartReply(userText, msgCount.current);
+      return fallback;
+    }
+  }, [messages, pName, pTone, pTraits, userName, user?.email]);
 
   // Process input
   const process = useCallback((text: string) => {
@@ -431,7 +467,13 @@ export function SanctumPage() {
     if (panels.length > 0) setActivePanels(prev => [...new Set([...prev, ...panels])]);
 
     genReply(t).then(r => {
-      setMessages(prev => [...prev, { role: 'prism', text: r }]);
+      // If streaming was used, message is already in place. Otherwise add it.
+      setMessages(prev => {
+        const last = prev[prev.length - 1];
+        if (last?.role === 'prism' && last.text === r) return prev; // already there from streaming
+        if (last?.role === 'prism' && last.text === '…') return [...prev.slice(0, -1), { role: 'prism', text: r }]; // replace placeholder
+        return [...prev, { role: 'prism', text: r }];
+      });
       // Also detect from reply
       const rp = detectPanels(r);
       if (rp.length > 0) setActivePanels(prev => [...new Set([...prev, ...rp])]);

@@ -627,7 +627,6 @@ RULES:
           <div key={i} className="absolute top-0" style={{ left: r.left, width: r.w, height: '100%', background: `linear-gradient(180deg, rgba(56,189,248,${r.op}) 0%, rgba(56,189,248,${r.op * 0.3}) 40%, transparent 75%)`, transform: `skewX(${r.skew}deg)`, transformOrigin: 'top', filter: 'blur(18px)' }} />
         ))}
         <div className="absolute bottom-0 left-0 right-0 h-[30%]" style={{ background: 'linear-gradient(to top, rgba(56,189,248,0.02), transparent)' }} />
-        {Array.from({ length: 20 }).map((_, i) => <div key={i} className="absolute rounded-full" style={{ width: 1.5, height: 1.5, background: `rgba(255,255,255,${0.06 + Math.random() * 0.1})`, top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%`, animation: `dustF ${10 + Math.random() * 12}s ease-in-out infinite ${Math.random() * 8}s` }} />)}
       </div>
 
       {/* Top bar */}
@@ -638,17 +637,10 @@ RULES:
         </button>
         <div className="flex items-center gap-4">
           <span className="text-[10px] font-mono" style={{ color: 'rgba(255,255,255,0.15)' }}>{new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
-          <motion.div animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 2, repeat: Infinity }} className="w-1.5 h-1.5 rounded-full" style={{ background: '#38bdf8' }} />
           <span className="text-[10px] font-mono uppercase tracking-widest" style={{ color: '#38bdf8' }}>{pName}</span>
         </div>
       </div>
 
-      {/* Connection status */}
-      <div className="flex-shrink-0 flex items-center justify-center gap-4 py-1 z-20">
-        <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full" style={{ background: '#38bdf8', boxShadow: '0 0 4px #38bdf8' }} /><span className="text-[7px] font-mono uppercase tracking-widest" style={{ color: 'rgba(56,189,248,0.5)' }}>Claude</span></div>
-        <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full" style={{ background: '#c084fc', boxShadow: '0 0 4px #c084fc' }} /><span className="text-[7px] font-mono uppercase tracking-widest" style={{ color: 'rgba(192,132,252,0.5)' }}>Voice</span></div>
-        {isDIDConfigured() && <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full" style={{ background: '#10b981', boxShadow: '0 0 4px #10b981' }} /><span className="text-[7px] font-mono uppercase tracking-widest" style={{ color: 'rgba(16,185,129,0.5)' }}>Avatar</span></div>}
-      </div>
 
       {/* Avatar center */}
       <div className="absolute inset-0 flex flex-col items-center z-[8]" style={{ paddingTop: '8%' }}>
@@ -660,13 +652,13 @@ RULES:
             transition: 'border-color 0.3s, box-shadow 0.5s',
             animation: generatingVideo ? 'borderCharge 2s ease-in-out infinite' : 'none',
           }}>
-            <motion.div animate={{ scale: expression === 'speaking' ? [1, 1.02, 0.985, 1.015, 1] : [1, 1.005, 1] }} transition={{ duration: expression === 'speaking' ? 0.35 : 3, repeat: Infinity }} className="w-full h-full">
+            <div className="w-full h-full">
               {videoUrl ? (
                 <video ref={videoRef} src={videoUrl} className="w-full h-full object-cover rounded-full" playsInline />
               ) : (
                 <img src={photo} alt={pName} className="w-full h-full object-cover rounded-full" />
               )}
-            </motion.div>
+            </div>
             {/* Lip sync — bigger bars, hidden when D-ID video playing */}
             <AnimatePresence>{isSpeaking && !videoUrl && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute bottom-0 left-0 right-0 h-[32%] pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.6), transparent)', borderRadius: '0 0 100px 100px' }}>
@@ -715,20 +707,9 @@ RULES:
               </motion.div>
             )}</AnimatePresence>
           </div>
-          {[4, 8, 12].map((s, i) => <div key={i} className="absolute rounded-full" style={{ inset: -s * 4, border: `1px solid rgba(56,189,248,${0.08 - i * 0.02})`, animation: `breathe ${4 + i * 0.5}s ease-in-out infinite ${i * 0.4}s` }} />)}
-          {/* Thinking particles — 5 colorful */}
-          <AnimatePresence>{expression === 'thinking' && [0, 1, 2, 3, 4].map(i => (
-            <motion.div key={i} initial={{ opacity: 0, y: 0, scale: 0 }}
-              animate={{ opacity: [0, 0.7, 0], y: [-5, -45], scale: [0, 1.2, 0.3] }}
-              transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.2 }}
-              className="absolute rounded-full"
-              style={{ width: 4, height: 4, background: ['#38bdf8', '#c084fc', '#10b981', '#f59e0b', '#38bdf8'][i], top: '15%', left: `${25 + i * 12}%`, boxShadow: `0 0 6px ${['#38bdf8', '#c084fc', '#10b981', '#f59e0b', '#38bdf8'][i]}40` }} />
-          ))}</AnimatePresence>
         </motion.div>
-        <motion.p animate={{ opacity: (expression === 'speaking' || expression === 'thinking') && !generatingVideo ? 1 : 0 }} className="mt-3 text-[9px] font-mono uppercase tracking-widest z-10" style={{ color: expression === 'speaking' ? '#38bdf8' : '#c084fc' }}>
-          {expression === 'speaking' ? 'speaking' : expression === 'thinking' && !generatingVideo ? 'processing' : ''}
-        </motion.p>
-        <p className="mt-1 text-[10px] tracking-[0.25em] uppercase" style={{ color: 'rgba(56,189,248,0.35)' }}>{pName}</p>
+
+
         {/* Orb */}
         <div className="mt-4 relative w-10 h-10 flex items-center justify-center">
           <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.8, 0.4] }} transition={{ duration: 4, repeat: Infinity }} className="absolute w-12 h-12 rounded-full" style={{ background: 'radial-gradient(circle, rgba(56,189,248,0.2), transparent)' }} />
@@ -806,12 +787,8 @@ RULES:
               <span className="text-[9px] font-mono uppercase tracking-widest" style={{ color: '#38bdf8' }}>Listening</span>
             </motion.div>}
             {isThinking && !generatingVideo && <span className="text-[9px] font-mono uppercase tracking-widest" style={{ color: '#c084fc' }}>Processing</span>}
-            {generatingVideo && <motion.span animate={{ opacity: [0.3, 0.7, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }} className="flex items-center gap-1">
-              <span className="w-1 h-1 rounded-full" style={{ background: '#38bdf8' }} />
-              <span className="w-1 h-1 rounded-full" style={{ background: '#38bdf8', opacity: 0.6 }} />
-              <span className="w-1 h-1 rounded-full" style={{ background: '#38bdf8', opacity: 0.3 }} />
-            </motion.span>}
-            {isSpeaking && <span className="text-[9px] font-mono uppercase tracking-widest" style={{ color: '#38bdf8' }}>{pName} speaking</span>}
+
+
           </div>
           <div className="flex items-center gap-3 rounded-2xl px-4 py-3 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))', backdropFilter: 'blur(24px) saturate(1.3)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.04)' }}>
             <div className="absolute top-0 left-4 right-4 h-[1px]" style={{ background: 'linear-gradient(90deg, transparent, rgba(56,189,248,0.15), rgba(192,132,252,0.1), transparent)' }} />
@@ -832,7 +809,6 @@ RULES:
 
       <style>{`
         @keyframes breathe { 0%,100% { transform:scale(1); opacity:0.5; } 50% { transform:scale(1.03); opacity:1; } }
-        @keyframes dustF { 0%,100% { transform:translateY(0); opacity:0.06; } 50% { transform:translateY(-30px); opacity:0.2; } }
         @keyframes thinkPulse { 0%,100% { opacity:0.1; } 50% { opacity:0.2; } }
         @keyframes borderCharge { 0%,100% { border-color: rgba(56,189,248,0.2); box-shadow: 0 0 20px rgba(56,189,248,0.06); } 50% { border-color: rgba(56,189,248,0.6); box-shadow: 0 0 50px rgba(56,189,248,0.2), 0 0 100px rgba(56,189,248,0.08); } }
       `}</style>

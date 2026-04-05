@@ -734,7 +734,7 @@ export function Calibration() {
             {/* D-ID Avatar */}
             <div className="mb-6">
               <p className="text-xs font-medium mb-1" style={{ color: 'var(--p-text-mid)' }}>D-ID Talking Avatar</p>
-              <p className="text-[10px] mb-3" style={{ color: 'var(--p-text-ghost)' }}>Generates a talking-head video from your avatar photo. Adds 5-15s per response. <a href="https://studio.d-id.com" target="_blank" rel="noopener noreferrer" style={{ color: '#10b981' }}>Get key</a></p>
+              <p className="text-[10px] mb-3" style={{ color: 'var(--p-text-ghost)' }}>Generates a talking-head video with your ElevenLabs voice synced to lip movement. Set your ElevenLabs Voice ID above — D-ID will use it automatically. <a href="https://studio.d-id.com" target="_blank" rel="noopener noreferrer" style={{ color: '#10b981' }}>Get key</a></p>
               <input type="password" placeholder="D-ID API Key (Basic auth)"
                 defaultValue={(() => { try { return localStorage.getItem('prism_did_key') || ''; } catch { return ''; } })()}
                 onChange={e => { try { const v = e.target.value.trim(); if (v) localStorage.setItem('prism_did_key', v); else localStorage.removeItem('prism_did_key'); } catch {} }}

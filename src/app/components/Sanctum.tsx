@@ -388,22 +388,33 @@ export function SanctumPage() {
   useEffect(() => { if (typeof window !== 'undefined' && window.speechSynthesis) { window.speechSynthesis.getVoices(); window.speechSynthesis.addEventListener?.('voiceschanged', () => window.speechSynthesis.getVoices()); } }, []);
 
   // TTS
-  const speak = useCallback((text: string) => {
-    if (typeof window === 'undefined' || !window.speechSynthesis) {
-      setExpression('speaking'); setIsSpeaking(true);
-      setTimeout(() => { setIsSpeaking(false); setExpression('smiling'); setTimeout(() => setExpression('idle'), 1000); }, 2000 + text.length * 18);
-      return;
-    }
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.rate = vRate; u.pitch = vPitch; u.volume = 1;
-    const voices = window.speechSynthesis.getVoices();
-    const pick = voices.find(v => /Google.*US|Samantha|Daniel|Karen|Zira|David/i.test(v.name) && v.lang.startsWith('en')) || voices.find(v => v.lang.startsWith('en') && !v.name.includes('espeak')) || voices[0];
-    if (pick) u.voice = pick;
+  // TTS — tries ElevenLabs first (real voice), falls back to browser
+  const speak = useCallback(async (text: string) => {
     setExpression('speaking'); setIsSpeaking(true);
-    u.onend = () => { setIsSpeaking(false); setExpression('smiling'); setTimeout(() => setExpression('idle'), 1000); };
-    u.onerror = () => { setIsSpeaking(false); setExpression('idle'); };
-    window.speechSynthesis.speak(u);
+    try {
+      const { textToSpeech, playAudio } = await import('../services/voiceService');
+      const audio = await textToSpeech(text);
+      if (audio) {
+        await playAudio(audio);
+        setIsSpeaking(false); setExpression('smiling');
+        setTimeout(() => setExpression('idle'), 1000);
+        return;
+      }
+    } catch {}
+    // Browser TTS fallback
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = vRate; u.pitch = vPitch; u.volume = 1;
+      const voices = window.speechSynthesis.getVoices();
+      const pick = voices.find(v => /Google.*US|Samantha|Daniel|Karen|Zira|David/i.test(v.name) && v.lang.startsWith('en')) || voices.find(v => v.lang.startsWith('en') && !v.name.includes('espeak')) || voices[0];
+      if (pick) u.voice = pick;
+      u.onend = () => { setIsSpeaking(false); setExpression('smiling'); setTimeout(() => setExpression('idle'), 1000); };
+      u.onerror = () => { setIsSpeaking(false); setExpression('idle'); };
+      window.speechSynthesis.speak(u);
+    } else {
+      setTimeout(() => { setIsSpeaking(false); setExpression('smiling'); setTimeout(() => setExpression('idle'), 1000); }, 2000 + text.length * 18);
+    }
   }, [vRate, vPitch]);
 
   // AI reply

@@ -3,8 +3,14 @@
  * Demo: functional with API key, graceful fallback without.
  */
 
-const getKey = () => (import.meta as any).env?.VITE_ELEVENLABS_API_KEY || '';
-const getDefaultVoice = () => (import.meta as any).env?.VITE_ELEVENLABS_PRISM_VOICE_ID || '';
+const getKey = () => {
+  try { const k = localStorage.getItem('prism_elevenlabs_key'); if (k) return k; } catch {}
+  return (import.meta as any).env?.VITE_ELEVENLABS_API_KEY || '';
+};
+const getDefaultVoice = () => {
+  try { const v = localStorage.getItem('prism_elevenlabs_voice'); if (v) return v; } catch {}
+  return (import.meta as any).env?.VITE_ELEVENLABS_PRISM_VOICE_ID || '';
+};
 
 /** Convert text to speech via ElevenLabs, or browser fallback */
 export async function textToSpeech(text: string, voiceId?: string): Promise<ArrayBuffer | null> {
@@ -15,7 +21,7 @@ export async function textToSpeech(text: string, voiceId?: string): Promise<Arra
   if (!id) return null;
 
   try {
-    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${id}/stream`, {
+    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/yRnjtyFFRfGe0o4QjDzT/stream`, {
       method: 'POST',
       headers: { 'xi-api-key': key, 'Content-Type': 'application/json' },
       body: JSON.stringify({

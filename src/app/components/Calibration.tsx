@@ -712,6 +712,27 @@ export function Calibration() {
               </div>
             </div>
 
+            {/* ElevenLabs Voice */}
+            <div className="mb-6">
+              <p className="text-xs font-medium mb-1" style={{ color: 'var(--p-text-mid)' }}>ElevenLabs Voice</p>
+              <p className="text-[10px] mb-3" style={{ color: 'var(--p-text-ghost)' }}>Natural AI voice for Sanctum. Falls back to browser voice if not set. <a href="https://elevenlabs.io" target="_blank" rel="noopener noreferrer" style={{ color: '#c084fc' }}>Get key</a></p>
+              <div className="grid grid-cols-1 gap-2 mb-2">
+                <input type="password" placeholder="ElevenLabs API Key"
+                  defaultValue={(() => { try { return localStorage.getItem('prism_elevenlabs_key') || ''; } catch { return ''; } })()}
+                  onChange={e => { try { const v = e.target.value.trim(); if (v) localStorage.setItem('prism_elevenlabs_key', v); else localStorage.removeItem('prism_elevenlabs_key'); } catch {} }}
+                  className="bg-transparent text-sm font-mono outline-none rounded-xl px-4 py-3"
+                  style={{ color: 'var(--p-text-body)', background: 'var(--p-bg-input)', border: '1px solid var(--p-border)' }} />
+                <input type="text" placeholder="Voice ID (e.g. pNInz6obpgDQGcFmaJgB)"
+                  defaultValue={(() => { try { return localStorage.getItem('prism_elevenlabs_voice') || ''; } catch { return ''; } })()}
+                  onChange={e => { try { const v = e.target.value.trim(); if (v) localStorage.setItem('prism_elevenlabs_voice', v); else localStorage.removeItem('prism_elevenlabs_voice'); } catch {} }}
+                  className="bg-transparent text-sm font-mono outline-none rounded-xl px-4 py-3"
+                  style={{ color: 'var(--p-text-body)', background: 'var(--p-bg-input)', border: '1px solid var(--p-border)' }} />
+              </div>
+              <p className="text-[9px]" style={{ color: 'var(--p-text-ghost)' }}>Find voice IDs at elevenlabs.io/voice-library. Try "Adam" (pNInz6obpgDQGcFmaJgB) or "Rachel" (21m00Tcm4TlvDq8ikWAM).</p>
+            </div>
+
+            <p className="text-[9px]" style={{ color: 'var(--p-text-ghost)' }}>All keys stored in browser only. Never sent to Nexora servers.</p>
+
           </motion.div>
         </div>
 
